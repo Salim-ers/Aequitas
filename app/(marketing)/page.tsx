@@ -1,10 +1,6 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  Check,
-  FileText,
-  Banknote,
-  ShieldCheck,
   KeyRound,
   UsersRound,
   ScrollText,
@@ -17,12 +13,10 @@ import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { RevealScript } from "@/components/marketing/reveal";
 import {
   DashboardMockup,
-  InvoiceMockup,
-  TreasuryMockup,
   FloatingInvoiceCard,
   FloatingPaymentCard,
 } from "@/components/marketing/mockups";
-import { InfrastructureDiagram } from "@/components/marketing/infrastructure-diagram";
+import { ProductBento } from "@/components/marketing/bento";
 import {
   OrganizationJsonLd,
   SoftwareJsonLd,
@@ -33,38 +27,6 @@ import { REFORM_TIMELINE, PLATFORM_ROLES } from "@/src/content/reform";
 import { cn } from "@/src/lib/utils";
 
 const AUDIENCES = ["Indépendants", "TPE", "PME", "Cabinets comptables", "ESN"];
-
-/** Trois bénéfices majeurs, un grand visuel chacun — plus de vignettes. */
-const BENEFITS = [
-  {
-    icon: FileText,
-    eyebrow: "Facturer",
-    title: "Facturez sans friction.",
-    body: "Un devis accepté devient une facture en un clic, et la numérotation reste continue.",
-    bullets: [
-      "Devis, factures et avoirs",
-      "TVA multi-taux calculée en direct",
-      "Numérotation continue",
-    ],
-    visual: "invoice" as const,
-  },
-  {
-    icon: Banknote,
-    eyebrow: "Encaisser",
-    title: "Suivez votre trésorerie clairement.",
-    body: "Chaque règlement met le solde à jour. Les retards remontent d'eux-mêmes.",
-    bullets: ["Paiements et soldes", "Échéances et relances", "Retards mis en avant"],
-    visual: "treasury" as const,
-  },
-  {
-    icon: ShieldCheck,
-    eyebrow: "Anticiper",
-    title: "Préparez la réforme sans changer vos habitudes.",
-    body: "Aequitas absorbe la complexité réglementaire pendant que vous facturez comme avant.",
-    bullets: ["Contrôles avant envoi", "Suivi de chaque facture", "Formats structurés"],
-    visual: "diagram" as const,
-  },
-];
 
 const SECURITY = [
   { icon: KeyRound, title: "Accès sécurisé", body: "Authentification et sessions révocables." },
@@ -245,54 +207,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ————————————————— Trois bénéfices ————————————————— */}
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8 lg:py-32">
-          <div className="space-y-28 lg:space-y-40">
-            {BENEFITS.map((benefit, index) => (
-              <div
-                key={benefit.eyebrow}
-                className="reveal grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-24"
-              >
-                {/* Alternance : le visuel change de côté à chaque bloc. */}
-                <div className={cn("min-w-0", index % 2 === 1 && "lg:order-2")}>
-                  <span className="inline-flex size-12 items-center justify-center rounded-[12px] bg-blue-soft text-blue">
-                    <benefit.icon className="size-5" aria-hidden="true" />
-                  </span>
-                  <p className="eyebrow mt-6">{benefit.eyebrow}</p>
-                  <h3 className="display-2 mt-3 text-ink">{benefit.title}</h3>
-                  <p className="lead mt-5">{benefit.body}</p>
-                  <ul className="mt-8 space-y-3.5">
-                    {benefit.bullets.map((bullet) => (
-                      <li
-                        key={bullet}
-                        className="flex items-center gap-3 text-[16px] text-ink-soft"
-                      >
-                        <Check
-                          className="size-4 shrink-0 text-blue"
-                          strokeWidth={2.5}
-                          aria-hidden="true"
-                        />
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className={cn("min-w-0", index % 2 === 1 && "lg:order-1")}>
-                  {benefit.visual === "invoice" ? <InvoiceMockup /> : null}
-                  {benefit.visual === "treasury" ? <TreasuryMockup /> : null}
-                  {benefit.visual === "diagram" ? (
-                    <div className="on-navy rounded-[18px] bg-navy px-8 py-12">
-                      <InfrastructureDiagram />
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ————————————— Grille produit ————————————— */}
+      <ProductBento
+        cta={
+          <ButtonLink href="/fonctionnalites" variant="inverse" size="lg">
+            Voir toutes les fonctionnalités
+            <ArrowRight />
+          </ButtonLink>
+        }
+      />
 
       {/* ——————————— Infrastructure française ——————————— */}
       <section className="on-navy border-b border-line bg-navy">
