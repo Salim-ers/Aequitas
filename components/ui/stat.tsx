@@ -3,7 +3,8 @@ import { cn } from "@/src/lib/utils";
 
 /**
  * Un chiffre financier se lit d'abord, se qualifie ensuite.
- * Chiffres en tabular-nums pour qu'une colonne de montants s'aligne.
+ * Chiffres en tabular-nums pour qu'une colonne de montants s'aligne, et
+ * libellé en capitales discrètes pour que la valeur reste le point d'entrée.
  */
 export function StatCard({
   label,
@@ -30,18 +31,25 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-lg)] border border-line bg-surface px-5 py-4",
+        "rounded-[12px] border border-line bg-surface px-5 py-4 transition-colors hover:border-line-strong",
         className,
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[13px] font-medium text-muted">{label}</p>
+        <p className="text-[11.5px] font-medium uppercase tracking-[0.07em] text-faint">
+          {label}
+        </p>
         {icon ? <span className={cn("shrink-0", accent)}>{icon}</span> : null}
       </div>
-      <p className="tabular mt-2 text-[1.625rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+      <p
+        className={cn(
+          "tabular mt-3 text-[1.75rem] font-semibold leading-none tracking-[-0.03em]",
+          tone === "danger" ? "text-danger" : "text-ink",
+        )}
+      >
         {value}
       </p>
-      {hint ? <p className="mt-2 text-[12.5px] text-faint">{hint}</p> : null}
+      {hint ? <p className="mt-2.5 text-[12.5px] text-faint">{hint}</p> : null}
     </div>
   );
 }

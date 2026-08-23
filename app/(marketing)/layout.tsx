@@ -18,7 +18,7 @@ const FOOTER = [
     links: [
       { href: "/developers", label: "Documentation" },
       { href: "/facturation-electronique", label: "Réforme" },
-      { href: "/#faq", label: "Questions fréquentes" },
+      { href: "/faq", label: "Questions fréquentes" },
       { href: "/contact", label: "Contact" },
     ],
   },

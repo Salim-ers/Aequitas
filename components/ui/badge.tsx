@@ -8,7 +8,7 @@ import { cn } from "@/src/lib/utils";
  * de forme distincte.
  */
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[12px] font-medium whitespace-nowrap",
+  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] font-medium whitespace-nowrap",
   {
     variants: {
       tone: {
@@ -37,7 +37,7 @@ export function Badge({ className, tone, dot, children, ...props }: BadgeProps) 
   return (
     <span className={cn(badgeVariants({ tone }), className)} {...props}>
       {dot ? (
-        <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
+        <span className="size-1.5 shrink-0 rounded-full bg-current" aria-hidden="true" />
       ) : null}
       {children}
     </span>

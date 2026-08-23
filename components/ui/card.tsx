@@ -10,7 +10,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-lg)] border border-line bg-surface",
+        "rounded-[12px] border border-line bg-surface",
         interactive &&
           "transition-[border-color,box-shadow] duration-150 hover:border-line-strong hover:shadow-sm",
         className,
@@ -61,11 +61,11 @@ export function CardBar({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 border-b border-line px-5 py-4",
+        "flex items-center justify-between gap-4 border-b border-line px-6 py-4",
         className,
       )}
     >
-      <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
+      <h2 className="text-[16px] font-semibold text-ink">{title}</h2>
       {action}
     </div>
   );

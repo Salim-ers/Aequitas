@@ -154,12 +154,12 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-[var(--container-page)] px-5 py-10 sm:px-8">
       <div>
-        <h1 className="text-[1.5rem] font-semibold tracking-[-0.025em] text-ink sm:text-[1.75rem]">
+        <h1 className="display-3 text-ink">
           Bonjour {firstName(context.user.name || context.user.email)},
         </h1>
-        <p className="mt-1.5 text-[14.5px] text-muted">
+        <p className="mt-2 text-[16px] text-muted">
           {actions.length > 0
             ? "Voici ce qui nécessite votre attention aujourd'hui."
             : `Voici l'activité de ${context.organizationName}.`}
@@ -167,25 +167,25 @@ export default async function DashboardPage() {
       </div>
 
       {actions.length > 0 ? (
-        <ul className="mt-6 overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface">
+        <ul className="mt-8 overflow-hidden rounded-[12px] border border-line bg-surface">
           {actions.map((action, index) => (
             <li
               key={action.key}
               className={index > 0 ? "border-t border-line" : undefined}
             >
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-4 px-6 py-4">
                 <span
                   className={
                     action.tone === "danger"
-                      ? "flex size-8 shrink-0 items-center justify-center rounded-full bg-danger-soft text-danger"
-                      : "flex size-8 shrink-0 items-center justify-center rounded-full bg-warning-soft text-warning"
+                      ? "flex size-10 shrink-0 items-center justify-center rounded-full bg-danger-soft text-danger"
+                      : "flex size-10 shrink-0 items-center justify-center rounded-full bg-warning-soft text-warning"
                   }
                 >
-                  <action.icon className="size-4" aria-hidden="true" />
+                  <action.icon className="size-4.5" aria-hidden="true" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[14px] font-medium text-ink">{action.label}</p>
-                  <p className="tabular text-[13px] text-muted">{action.detail}</p>
+                  <p className="text-[15px] font-semibold text-ink">{action.label}</p>
+                  <p className="tabular mt-0.5 text-[13.5px] text-muted">{action.detail}</p>
                 </div>
               </div>
             </li>
@@ -193,7 +193,7 @@ export default async function DashboardPage() {
         </ul>
       ) : null}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {kpis.map((kpi) => (
           <StatCard
             key={kpi.label}
@@ -206,7 +206,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <Card className="mt-6">
+      <Card className="mt-8 overflow-hidden">
         <CardBar
           title="Dernières factures"
           action={
@@ -261,7 +261,7 @@ export default async function DashboardPage() {
         )}
       </Card>
 
-      <p className="mt-6 text-[13px] leading-relaxed text-faint">
+      <p className="mt-8 text-[13.5px] leading-relaxed text-faint">
         Les modules Factures, Devis et Clients sont en cours d&apos;activation.{" "}
         <Link href="/contact" className="font-medium text-blue hover:underline">
           Être prévenu de leur ouverture

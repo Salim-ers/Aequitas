@@ -9,6 +9,7 @@ const ROUTES = [
   "/securite",
   "/integrations",
   "/demarche-pa",
+  "/faq",
   "/developers",
   "/contact",
   "/mentions-legales",

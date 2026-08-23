@@ -37,7 +37,7 @@ export function Topbar(props: SidebarProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-surface/90 px-4 backdrop-blur-md sm:px-6">
+      <header className="sticky top-0 z-30 flex h-[72px] shrink-0 items-center gap-3 border-b border-line bg-surface/85 px-4 backdrop-blur-md sm:px-6">
         <Button
           variant="ghost"
           size="icon"
@@ -56,7 +56,7 @@ export function Topbar(props: SidebarProps) {
             <li className="hidden text-faint sm:block" aria-hidden="true">
               /
             </li>
-            <li className="truncate font-medium text-ink" aria-current="page">
+            <li className="truncate text-[15px] font-semibold text-ink" aria-current="page">
               {label}
             </li>
           </ol>

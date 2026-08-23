@@ -2,9 +2,9 @@ import * as React from "react";
 import { cn } from "@/src/lib/utils";
 
 /**
- * §46 — Tableaux financiers : lignes confortables, en-têtes discrets,
- * montants alignés à droite en chiffres tabulaires.
- * Le conteneur défile horizontalement plutôt que la page (§35).
+ * Tableaux financiers : lignes confortables, en-têtes discrets, montants
+ * alignés à droite en chiffres tabulaires. Le conteneur défile
+ * horizontalement plutôt que la page.
  */
 export function TableScroll({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   // `relative` est nécessaire : un descendant en position absolue — un
@@ -14,9 +14,7 @@ export function TableScroll({ className, ...props }: React.HTMLAttributes<HTMLDi
 }
 
 export function Table({ className, ...props }: React.TableHTMLAttributes<HTMLTableElement>) {
-  return (
-    <table className={cn("w-full min-w-[42rem] text-[13.5px]", className)} {...props} />
-  );
+  return <table className={cn("w-full min-w-[42rem] text-[14px]", className)} {...props} />;
 }
 
 export function Th({
@@ -28,7 +26,7 @@ export function Th({
     <th
       scope="col"
       className={cn(
-        "border-b border-line bg-surface-2/60 px-4 py-2.5 text-left text-[12px] font-medium uppercase tracking-[0.04em] text-faint",
+        "border-b border-line px-5 py-3 text-left text-[11.5px] font-medium uppercase tracking-[0.07em] text-faint",
         numeric && "text-right",
         className,
       )}
@@ -45,8 +43,8 @@ export function Td({
   return (
     <td
       className={cn(
-        "border-b border-line px-4 py-3.5 text-ink-soft",
-        numeric && "tabular text-right font-medium text-ink",
+        "border-b border-line px-5 py-4 text-ink-soft",
+        numeric && "tabular text-right font-semibold text-ink",
         className,
       )}
       {...props}
@@ -57,7 +55,10 @@ export function Td({
 export function Tr({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn("transition-colors last:[&>td]:border-0 hover:bg-surface-2/50", className)}
+      className={cn(
+        "transition-colors last:[&>td]:border-0 hover:bg-surface-2/60",
+        className,
+      )}
       {...props}
     />
   );
