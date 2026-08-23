@@ -1,0 +1,30 @@
+name: Migrations
+
+# §61 — Les migrations sont appliquées depuis le cloud, jamais depuis un poste.
+# Déclenchement manuel volontaire : une migration de production se décide.
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environnement cible
+        required: true
+        type: choice
+        options: [preview, production]
+
+jobs:
+  migrate:
+    name: Appliquer les migrations
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Migrer
+        run: npx tsx scripts/migrate.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

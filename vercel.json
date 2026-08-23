@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "regions": ["cdg1"],
+  "crons": [
+    { "path": "/api/cron/invoice-reminders", "schedule": "0 7 * * *" },
+    { "path": "/api/cron/recurring-invoices", "schedule": "15 6 * * *" },
+    { "path": "/api/cron/subscription-reconciliation", "schedule": "30 3 * * *" },
+    { "path": "/api/cron/cleanup-exports", "schedule": "0 4 * * *" }
+  ]
+}

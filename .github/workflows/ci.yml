@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # §107 — Chaque commit : lint, typecheck, tests, build.
+  verify:
+    name: Vérification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests unitaires
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Vérifier que les migrations sont à jour
+        run: |
+          npx drizzle-kit generate --name=ci_check
+          if [ -n "$(git status --porcelain drizzle/)" ]; then
+            echo "::error::Le schéma Drizzle a changé sans migration correspondante."
+            git status --porcelain drizzle/
+            exit 1
+          fi
+
+  # §64 / §65 — Playwright contre le Preview Deployment de la PR.
+  e2e:
+    name: Tests E2E (Preview)
+    runs-on: ubuntu-latest
+    needs: verify
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Attendre le Preview Deployment Vercel
+        id: preview
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 600
+
+      - name: Installer les navigateurs
+        run: npx playwright install --with-deps chromium
+
+      - name: Exécuter Playwright
+        run: npx playwright test
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.preview.outputs.url }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
