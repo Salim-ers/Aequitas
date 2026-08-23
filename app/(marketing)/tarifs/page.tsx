@@ -1,14 +1,38 @@
+import { Fragment } from "react";
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
-import { PLAN_ORDER, PLANS, formatPlanPrice } from "@/src/config/plans";
+import { Check, Minus } from "lucide-react";
+import { PLAN_ORDER, PLANS, formatPlanPrice, type FeatureKey } from "@/src/config/plans";
 import { PlanCta } from "@/components/marketing/plan-cta";
+import { SectionHeader } from "@/components/ui/page-header";
+import { TableScroll } from "@/components/ui/table";
 import { cn } from "@/src/lib/utils";
 
 export const metadata: Metadata = {
   title: "Tarifs",
   description:
-    "Quatre offres, un prix par mois et par entreprise. Essai de 14 jours, sans engagement.",
+    "Quatre offres, un prix par mois et par entreprise. Essai de 14 jours, sans carte bancaire et sans engagement.",
 };
+
+/** §19 — Le tableau détaillé vit sous les cartes, pas dedans. */
+const FEATURE_LABELS: { key: FeatureKey; label: string; group: string }[] = [
+  { group: "Facturer", key: "quotes", label: "Devis" },
+  { group: "Facturer", key: "invoices", label: "Factures" },
+  { group: "Facturer", key: "credit_notes", label: "Avoirs" },
+  { group: "Facturer", key: "recurring_invoices", label: "Factures récurrentes" },
+  { group: "Encaisser", key: "automated_reminders", label: "Relances automatiques" },
+  { group: "Centraliser", key: "suppliers", label: "Fournisseurs" },
+  { group: "Centraliser", key: "supplier_import", label: "Import de factures fournisseurs" },
+  { group: "Centraliser", key: "exports", label: "Exports CSV et PDF" },
+  { group: "Centraliser", key: "accounting_export", label: "Export comptable" },
+  { group: "Facturation électronique", key: "factur_x", label: "Format Factur-X" },
+  { group: "Facturation électronique", key: "e_reporting", label: "E-reporting" },
+  { group: "Développeurs", key: "api_access", label: "Accès API" },
+  { group: "Développeurs", key: "webhooks", label: "Webhooks" },
+  { group: "Organisation", key: "audit_log", label: "Journal d'audit" },
+  { group: "Organisation", key: "advanced_permissions", label: "Permissions avancées" },
+  { group: "Organisation", key: "sso", label: "Authentification unique (SSO)" },
+  { group: "Organisation", key: "priority_support", label: "Support prioritaire" },
+];
 
 const FAQ = [
   {
@@ -17,7 +41,7 @@ const FAQ = [
   },
   {
     q: "Puis-je changer d'offre en cours de mois ?",
-    a: "Oui, depuis la page Abonnement. Le prorata est calculé par Stripe et apparaît sur votre prochaine facture.",
+    a: "Oui, depuis votre page Abonnement. Le prorata est calculé automatiquement et apparaît sur votre prochaine facture.",
   },
   {
     q: "Que devient mon compte si j'annule ?",
@@ -27,52 +51,64 @@ const FAQ = [
     q: "Les prix sont-ils hors taxes ?",
     a: "Oui, tous les montants affichés sont hors taxes, par mois et par entreprise.",
   },
+  {
+    q: "Faut-il une carte bancaire pour l'essai ?",
+    a: "Non. Vous créez votre compte, vous testez pendant 14 jours, et vous choisissez une offre seulement si Aequitas vous convient.",
+  },
 ];
 
+function limitLabel(value: number): string {
+  if (value === -1) return "Illimité";
+  return new Intl.NumberFormat("fr-FR").format(value);
+}
+
 export default function PricingPage() {
+  const groups = [...new Set(FEATURE_LABELS.map((f) => f.group))];
+
   return (
     <>
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-6xl px-5 py-16 text-center">
-          <p className="eyebrow">Tarifs</p>
-          <h1 className="mx-auto mt-4 max-w-2xl font-semibold text-[2.5rem] leading-tight tracking-[-0.015em] text-ink">
-            Un prix par mois, par entreprise
-          </h1>
-          <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-muted">
-            Tous les montants sont hors taxes. Essai de 14 jours sur chaque offre, sans
-            engagement de durée.
-          </p>
+      <section>
+        <div className="mx-auto max-w-6xl px-5 pt-16 pb-10 text-center">
+          <SectionHeader
+            align="center"
+            eyebrow="Tarifs"
+            title="Un prix par mois, par entreprise."
+            description="Tous les montants sont hors taxes. Essai de 14 jours sur chaque offre, sans carte bancaire et sans engagement de durée."
+          />
         </div>
       </section>
 
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-6xl px-5 py-16">
-          <div className="grid gap-5 lg:grid-cols-4">
+      {/* ————————————————— Les offres ————————————————— */}
+      <section>
+        <div className="mx-auto max-w-6xl px-5 pb-20">
+          <div className="grid items-start gap-5 lg:grid-cols-4">
             {PLAN_ORDER.map((slug) => {
               const plan = PLANS[slug];
               return (
                 <div
                   key={plan.slug}
                   className={cn(
-                    "flex flex-col rounded-[var(--radius-lg)] border bg-surface p-6",
+                    "relative flex h-full flex-col rounded-[var(--radius-xl)] border bg-surface p-6",
                     plan.highlighted
-                      ? "border-blue shadow-[0_16px_40px_-20px_rgba(14,76,70,0.45)]"
+                      ? "border-blue shadow-lg lg:-my-3 lg:py-9"
                       : "border-line",
                   )}
                 >
                   {plan.highlighted ? (
-                    <span className="mb-4 -mt-1 self-start rounded-full bg-blue-soft px-2.5 py-1 text-[11px] font-medium text-blue">
-                      Le plus populaire
+                    <span className="absolute -top-3 left-6 rounded-full bg-blue px-2.5 py-1 text-[11px] font-semibold text-white">
+                      Recommandé
                     </span>
                   ) : null}
 
-                  <h2 className="font-semibold text-[1.375rem] text-ink">{plan.name}</h2>
-                  <p className="mt-1.5 min-h-[2.5rem] text-[13px] leading-relaxed text-muted">
+                  <h2 className="text-[19px] font-semibold tracking-[-0.01em] text-ink">
+                    {plan.name}
+                  </h2>
+                  <p className="mt-1.5 min-h-[2.75rem] text-[13px] leading-relaxed text-muted">
                     {plan.tagline}
                   </p>
 
-                  <p className="tabular mt-5 flex items-baseline gap-1.5">
-                    <span className="text-[2rem] font-medium tracking-tight text-ink">
+                  <p className="mt-5 flex items-baseline gap-1.5">
+                    <span className="tabular text-[2.25rem] font-semibold leading-none tracking-[-0.03em] text-ink">
                       {formatPlanPrice(plan)}
                     </span>
                     {plan.monthlyPriceCents !== null ? (
@@ -85,15 +121,21 @@ export default function PricingPage() {
                       plan={plan.slug}
                       highlighted={plan.highlighted}
                       label={
-                        plan.monthlyPriceCents === null ? "Nous contacter" : "Choisir cette offre"
+                        plan.monthlyPriceCents === null
+                          ? "Nous contacter"
+                          : "Commencer"
                       }
                     />
                   </div>
 
                   <ul className="mt-7 space-y-2.5 border-t border-line pt-6">
                     {plan.bullets.map((bullet) => (
-                      <li key={bullet} className="flex gap-2.5 text-[13px] text-ink-soft">
-                        <Check className="mt-0.5 size-3.5 shrink-0 text-blue" aria-hidden="true" />
+                      <li key={bullet} className="flex gap-2.5 text-[13.5px] text-ink-soft">
+                        <Check
+                          className="mt-0.5 size-4 shrink-0 text-blue"
+                          strokeWidth={2.5}
+                          aria-hidden="true"
+                        />
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -105,15 +147,149 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* ——————————— Comparatif détaillé ——————————— */}
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-16">
+          <h2 className="text-[1.5rem] font-semibold tracking-[-0.02em] text-ink">
+            Comparer toutes les fonctionnalités
+          </h2>
+
+          <TableScroll className="mt-8 rounded-[var(--radius-lg)] border border-line">
+            <table className="w-full min-w-[46rem] text-[13.5px]">
+              <caption className="sr-only">
+                Comparaison des fonctionnalités incluses dans chaque offre Aequitas
+              </caption>
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className="sticky left-0 z-10 border-b border-line bg-surface px-4 py-3 text-left text-[12px] font-medium uppercase tracking-[0.04em] text-faint"
+                  >
+                    Fonctionnalité
+                  </th>
+                  {PLAN_ORDER.map((slug) => (
+                    <th
+                      key={slug}
+                      scope="col"
+                      className={cn(
+                        "border-b border-line px-4 py-3 text-center text-[13px] font-semibold",
+                        PLANS[slug].highlighted ? "bg-blue-soft text-blue" : "text-ink",
+                      )}
+                    >
+                      {PLANS[slug].name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {/* Limites d'abord : c'est ce qui décide dans 90 % des cas. */}
+                <tr>
+                  <th
+                    scope="rowgroup"
+                    colSpan={5}
+                    className="border-b border-line bg-surface-2/60 px-4 py-2 text-left text-[12px] font-semibold text-ink"
+                  >
+                    Volumes
+                  </th>
+                </tr>
+                {(
+                  [
+                    ["invoices_per_month", "Factures par mois"],
+                    ["users", "Utilisateurs"],
+                    ["organizations", "Entreprises"],
+                  ] as const
+                ).map(([key, label]) => (
+                  <tr key={key}>
+                    <th
+                      scope="row"
+                      className="sticky left-0 border-b border-line bg-surface px-4 py-3 text-left font-normal text-ink-soft"
+                    >
+                      {label}
+                    </th>
+                    {PLAN_ORDER.map((slug) => (
+                      <td
+                        key={slug}
+                        className={cn(
+                          "tabular border-b border-line px-4 py-3 text-center text-ink",
+                          PLANS[slug].highlighted && "bg-blue-soft/40",
+                        )}
+                      >
+                        {limitLabel(PLANS[slug].limits[key])}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+
+                {groups.map((group) => (
+                  <Fragment key={group}>
+                    <tr>
+                      <th
+                        scope="rowgroup"
+                        colSpan={5}
+                        className="border-b border-line bg-surface-2/60 px-4 py-2 text-left text-[12px] font-semibold text-ink"
+                      >
+                        {group}
+                      </th>
+                    </tr>
+                    {FEATURE_LABELS.filter((f) => f.group === group).map((feature) => (
+                      <tr key={feature.key}>
+                        <th
+                          scope="row"
+                          className="sticky left-0 border-b border-line bg-surface px-4 py-3 text-left font-normal text-ink-soft"
+                        >
+                          {feature.label}
+                        </th>
+                        {PLAN_ORDER.map((slug) => {
+                          const included = PLANS[slug].features.includes(feature.key);
+                          return (
+                            <td
+                              key={slug}
+                              className={cn(
+                                "border-b border-line px-4 py-3 text-center",
+                                PLANS[slug].highlighted && "bg-blue-soft/40",
+                              )}
+                            >
+                              {included ? (
+                                <>
+                                  <Check
+                                    className="mx-auto size-4 text-success"
+                                    strokeWidth={2.5}
+                                    aria-hidden="true"
+                                  />
+                                  <span className="sr-only">Inclus</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Minus
+                                    className="mx-auto size-4 text-line-strong"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="sr-only">Non inclus</span>
+                                </>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
+          </TableScroll>
+        </div>
+      </section>
+
+      {/* ————————————————— Questions ————————————————— */}
       <section>
-        <div className="mx-auto max-w-3xl px-5 py-16">
-          <h2 className="font-semibold text-[1.75rem] tracking-[-0.01em] text-ink">
+        <div className="mx-auto max-w-3xl px-5 py-20">
+          <h2 className="text-[1.5rem] font-semibold tracking-[-0.02em] text-ink">
             Questions fréquentes
           </h2>
           <dl className="mt-8 divide-y divide-[color:var(--color-line)] border-t border-line">
             {FAQ.map((item) => (
               <div key={item.q} className="py-5">
-                <dt className="text-[15px] font-medium text-ink">{item.q}</dt>
+                <dt className="text-[15px] font-semibold text-ink">{item.q}</dt>
                 <dd className="mt-2 text-[14px] leading-relaxed text-muted">{item.a}</dd>
               </div>
             ))}

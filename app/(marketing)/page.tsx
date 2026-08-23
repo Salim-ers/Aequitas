@@ -2,155 +2,350 @@ import Link from "next/link";
 import {
   ArrowRight,
   FileText,
-  Receipt,
-  RotateCcw,
-  Users,
-  Truck,
   Banknote,
-  Repeat,
-  BellRing,
-  GitCompare,
-  Webhook,
-  KeyRound,
+  FolderOpen,
   ShieldCheck,
-  Fingerprint,
-  ScrollText,
-  Lock,
+  Check,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
+import { SectionHeader } from "@/components/ui/page-header";
+import { RevealScript } from "@/components/marketing/reveal";
+import {
+  MarketingDashboardPreview,
+  MarketingPaymentNotification,
+  MarketingInvoiceCard,
+  MarketingCompliancePreview,
+} from "@/components/marketing/mockups";
 import { InvoicePreview } from "@/components/marketing/invoice-preview";
 
-const CYCLE = [
-  { icon: FileText, title: "Devis", body: "Rédigez, envoyez, suivez l'acceptation, convertissez en facture en un clic." },
-  { icon: Receipt, title: "Factures", body: "Numérotation séquentielle, calcul de TVA multi-taux, remises, échéances." },
-  { icon: RotateCcw, title: "Avoirs", body: "Rectifiez une facture émise sans jamais réécrire l'original." },
-  { icon: Users, title: "Clients", body: "SIREN, TVA intracommunautaire, conditions de règlement par client." },
-  { icon: Truck, title: "Fournisseurs", body: "Recevez, rapprochez et suivez vos factures d'achat au même endroit." },
-  { icon: Banknote, title: "Paiements", body: "Règlements partiels, multiples, affectés à plusieurs factures." },
+/** §14 — Trois étapes, pas douze fonctionnalités interchangeables. */
+const STEPS = [
+  {
+    n: "01",
+    title: "Créez",
+    body: "Ajoutez votre client et vos prestations. Les totaux et la TVA se calculent au fur et à mesure.",
+  },
+  {
+    n: "02",
+    title: "Envoyez",
+    body: "Aequitas prépare la facture au bon format et l'envoie. Vous n'avez rien à paramétrer.",
+  },
+  {
+    n: "03",
+    title: "Suivez",
+    body: "Vous voyez immédiatement si elle est envoyée, payée ou en retard. Sans relancer votre comptable.",
+  },
 ];
 
-const AUTOMATION = [
-  { icon: Repeat, title: "Factures récurrentes", body: "Un modèle, une fréquence, et la facture part sans vous." },
-  { icon: BellRing, title: "Relances", body: "Avant échéance, le jour J, en retard : le message et le rythme sont les vôtres." },
-  { icon: GitCompare, title: "Rapprochement", body: "Affectez un encaissement à une ou plusieurs factures, le solde suit." },
-  { icon: Webhook, title: "Webhooks", body: "Vos systèmes sont notifiés dès qu'une facture change d'état." },
+/** §16 — Quatre besoins, pas une grille générique. */
+const NEEDS = [
+  {
+    icon: FileText,
+    eyebrow: "Facturez",
+    title: "Des devis aux factures, sans ressaisie",
+    body: "Un devis accepté devient une facture en un clic. La numérotation est continue, la TVA multi-taux calculée, les avoirs rectifient sans jamais réécrire l'original.",
+    bullets: ["Devis et factures", "Avoirs", "Factures récurrentes", "Numérotation continue"],
+  },
+  {
+    icon: Banknote,
+    eyebrow: "Encaissez",
+    title: "Savoir qui doit quoi, et depuis quand",
+    body: "Chaque règlement, même partiel, s'affecte à ses factures et met le solde à jour. Les retards remontent d'eux-mêmes en haut de votre écran.",
+    bullets: ["Paiements et soldes", "Échéances", "Relances", "Suivi des retards"],
+  },
+  {
+    icon: FolderOpen,
+    eyebrow: "Centralisez",
+    title: "Un seul endroit, plus de tableur parallèle",
+    body: "Clients, fournisseurs et documents vivent au même endroit que vos factures. Les conditions de règlement suivent le client, pas votre mémoire.",
+    bullets: ["Clients", "Fournisseurs", "Documents", "Conditions par client"],
+  },
+  {
+    icon: ShieldCheck,
+    eyebrow: "Préparez la réforme",
+    title: "La facturation électronique, prise en charge",
+    body: "Aequitas contrôle les informations exigées avant l'envoi et vous montre où en est chaque facture. Vous continuez de facturer comme aujourd'hui.",
+    bullets: ["Contrôles avant envoi", "Suivi des envois", "E-reporting", "Formats réglementaires"],
+  },
 ];
 
-const SECURITY = [
-  { icon: Lock, title: "Chiffrement", body: "En transit et au repos, sur toute la chaîne." },
-  { icon: Fingerprint, title: "Double authentification", body: "Protégez l'accès aux données fiscales de l'entreprise." },
-  { icon: ScrollText, title: "Journal d'audit", body: "Chaque action sensible est horodatée et conservée." },
-  { icon: ShieldCheck, title: "Permissions", body: "Six rôles, vérifiés côté serveur à chaque requête." },
+/** §13 — Catégories de clientèle, jamais de faux logos. */
+const AUDIENCES = [
+  "Indépendants",
+  "TPE",
+  "PME",
+  "Cabinets comptables",
+  "ESN",
+  "Agences",
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="border-b border-line">
-        <div className="mx-auto grid max-w-6xl gap-14 px-5 py-20 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-28">
-          <div>
-            <p className="eyebrow">Facturation d&apos;entreprise — France</p>
-            <h1 className="mt-5 font-semibold text-[2.75rem] leading-[1.08] tracking-[-0.015em] text-ink sm:text-[3.5rem]">
+      <RevealScript />
+
+      {/* ————————————————————————— Hero ————————————————————————— */}
+      <section className="relative overflow-hidden">
+        {/* Halo bleu très dilué : donne de la profondeur sans colorer la page. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 -top-40 h-[32rem] bg-[radial-gradient(60%_60%_at_50%_50%,var(--color-blue-soft),transparent_70%)]"
+        />
+
+        <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 lg:pt-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-border bg-blue-soft px-3 py-1 text-[12.5px] font-medium text-blue">
+              <span className="size-1.5 rounded-full bg-red" aria-hidden="true" />
+              Facturation électronique • France
+            </span>
+
+            <h1 className="mt-6 text-[2.5rem] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[3.5rem]">
               La facturation électronique,
               <br />
-              <span className="text-blue">simplement.</span>
+              <span className="text-blue">sans la complexité.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
-              Aequitas centralise vos factures, vos paiements et vos obligations de
-              facturation électronique dans une plateforme moderne conçue pour les
-              entreprises françaises.
+
+            <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
+              Créez vos devis, envoyez vos factures et suivez vos paiements depuis un
+              seul espace. Aequitas vous accompagne aussi dans le passage à la
+              facturation électronique.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link href="/inscription">
-                <Button size="lg">
-                  Commencer gratuitement
-                  <ArrowRight />
-                </Button>
-              </Link>
-              <Link href="/fonctionnalites">
-                <Button size="lg" variant="secondary">
-                  Découvrir Aequitas
-                </Button>
-              </Link>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <ButtonLink href="/inscription" size="xl" className="w-full sm:w-auto">
+                Essayer gratuitement
+                <ArrowRight />
+              </ButtonLink>
+              <ButtonLink
+                href="#comment-ca-marche"
+                variant="secondary"
+                size="xl"
+                className="w-full sm:w-auto"
+              >
+                Voir comment ça marche
+              </ButtonLink>
             </div>
 
             <p className="mt-5 text-[13px] text-faint">
-              Essai de 14 jours. Aucune carte requise pour créer votre compte.
+              14 jours gratuits • Sans carte bancaire • Configuration en quelques minutes
             </p>
           </div>
 
-          <div className="lg:pl-4">
-            <InvoicePreview />
+          {/* §12 — Le produit, montré grand, avec deux cartes en surimpression. */}
+          <div className="relative mx-auto mt-16 max-w-4xl">
+            <MarketingDashboardPreview />
+            <MarketingPaymentNotification className="reveal absolute -bottom-8 -left-6 hidden [--reveal-delay:220ms] md:flex lg:-left-24" />
+            <MarketingInvoiceCard className="reveal absolute -right-6 -top-10 hidden [--reveal-delay:340ms] md:block lg:-right-20" />
           </div>
         </div>
       </section>
 
-      {/* Cycle de facturation */}
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <p className="eyebrow">Le cycle complet</p>
-          <h2 className="mt-4 max-w-2xl font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
-            Tout votre cycle de facturation
-          </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
-            Du devis accepté au règlement encaissé, sans ressaisie et sans tableur
-            intermédiaire.
+      {/* ——————————————————— Pour qui ——————————————————— */}
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-12">
+          <p className="text-center text-[13px] font-medium text-faint">
+            Conçu pour les entreprises françaises
           </p>
-
-          <div className="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-            {CYCLE.map((item) => (
-              <div key={item.title} className="bg-surface p-6">
-                <item.icon className="size-5 text-blue" aria-hidden="true" />
-                <h3 className="mt-4 text-[15px] font-medium text-ink">{item.title}</h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{item.body}</p>
-              </div>
+          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
+            {AUDIENCES.map((audience) => (
+              <li
+                key={audience}
+                className="rounded-full border border-line bg-canvas px-4 py-1.5 text-[13.5px] font-medium text-ink-soft"
+              >
+                {audience}
+              </li>
             ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ——————————————— Comment ça marche ——————————————— */}
+      <section id="comment-ca-marche" className="scroll-mt-24">
+        <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
+          <SectionHeader
+            align="center"
+            eyebrow="En pratique"
+            title="Facturez en trois étapes."
+            description="Pas de paramétrage préalable, pas de vocabulaire à apprendre."
+          />
+
+          <ol className="mt-14 grid gap-px overflow-hidden rounded-[var(--radius-xl)] border border-line bg-line md:grid-cols-3">
+            {STEPS.map((step) => (
+              <li
+                key={step.n}
+                className="bg-surface p-7"
+              >
+                <span className="tabular text-[13px] font-semibold text-red">{step.n}</span>
+                <h3 className="mt-3 text-[19px] font-semibold tracking-[-0.01em] text-ink">
+                  {step.title}
+                </h3>
+                <p className="mt-2.5 text-[14px] leading-relaxed text-muted">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+            <InvoicePreview />
+            <div className="lg:pl-4">
+              <h3 className="text-[19px] font-semibold tracking-[-0.01em] text-ink">
+                Les totaux se calculent pendant que vous saisissez.
+              </h3>
+              <p className="mt-3 text-[14.5px] leading-relaxed text-muted">
+                Remises par ligne, TVA multi-taux, arrondis fiscaux : l&apos;échelle
+                HT → TVA → TTC est tenue par Aequitas. Les montants de cet aperçu sont
+                d&apos;ailleurs calculés par le moteur de TVA réellement utilisé par
+                l&apos;application.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Facturation électronique */}
-      <section className="border-b border-line bg-surface-2">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
+      {/* ————————————————— La réforme ————————————————— */}
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
+          <div className="grid gap-14 lg:grid-cols-[1fr_1fr] lg:items-start">
             <div>
-              <p className="eyebrow">Formats et transmissions</p>
-              <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
-                Facturation électronique
-              </h2>
-              <p className="mt-4 text-[15px] leading-relaxed text-muted">
-                Aequitas structure vos factures autour d&apos;un modèle canonique, puis
-                les rend dans le format attendu. Les contrôles, le cycle de vie et
-                l&apos;e-reporting reposent sur cette même base.
-              </p>
-              <p className="mt-4 rounded-[var(--radius)] border border-line-strong bg-surface px-4 py-3 text-[13px] leading-relaxed text-muted">
-                Les fonctionnalités réglementaires sont déployées progressivement en
-                fonction de l&apos;avancement de l&apos;immatriculation Aequitas.
-              </p>
+              <SectionHeader
+                eyebrow="Réforme"
+                title={
+                  <>
+                    La facturation électronique arrive.
+                    <br />
+                    <span className="text-muted">
+                      Vous n&apos;avez pas besoin d&apos;en devenir expert.
+                    </span>
+                  </>
+                }
+              />
+
+              <dl className="mt-10 space-y-6">
+                {[
+                  {
+                    term: "Ce qui change",
+                    detail:
+                      "Les factures entre entreprises devront circuler sous forme électronique, par une plateforme, et non plus par simple e-mail.",
+                  },
+                  {
+                    term: "Ce que vous devez faire",
+                    detail:
+                      "Disposer d'un outil raccordé et de fiches clients complètes. C'est tout : vous continuez de facturer comme aujourd'hui.",
+                  },
+                  {
+                    term: "Ce qu'Aequitas prend en charge",
+                    detail:
+                      "Le format, les contrôles avant envoi, la transmission et le suivi de chaque facture, depuis le même écran.",
+                  },
+                ].map((item) => (
+                  <div key={item.term} className="border-l-2 border-blue pl-4">
+                    <dt className="text-[15px] font-semibold text-ink">{item.term}</dt>
+                    <dd className="mt-1.5 text-[14px] leading-relaxed text-muted">
+                      {item.detail}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
               <Link
                 href="/facturation-electronique"
-                className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-blue hover:underline"
+                className="mt-8 inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-blue hover:underline"
               >
                 Comprendre le calendrier
                 <ArrowRight className="size-4" />
               </Link>
             </div>
 
-            <dl className="grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-line bg-line sm:grid-cols-2">
+            <div className="lg:pt-10">
+              <MarketingCompliancePreview />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ————————————————— Les besoins ————————————————— */}
+      <section>
+        <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
+          <SectionHeader
+            align="center"
+            eyebrow="Ce que vous faites avec Aequitas"
+            title="Quatre besoins, un seul outil."
+          />
+
+          <div className="mt-16 space-y-20">
+            {NEEDS.map((need, index) => (
+              <div
+                key={need.eyebrow}
+                className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16"
+              >
+                {/* Alternance : le visuel change de côté à chaque bloc. */}
+                <div className={index % 2 === 1 ? "lg:order-2" : undefined}>
+                  <span className="inline-flex size-10 items-center justify-center rounded-[var(--radius)] bg-blue-soft text-blue">
+                    <need.icon className="size-5" aria-hidden="true" />
+                  </span>
+                  <p className="eyebrow mt-4">{need.eyebrow}</p>
+                  <h3 className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.02em] text-ink">
+                    {need.title}
+                  </h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-muted">{need.body}</p>
+                  <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
+                    {need.bullets.map((bullet) => (
+                      <li
+                        key={bullet}
+                        className="flex items-center gap-2 text-[14px] text-ink-soft"
+                      >
+                        <Check
+                          className="size-4 shrink-0 text-blue"
+                          strokeWidth={2.5}
+                          aria-hidden="true"
+                        />
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className={index % 2 === 1 ? "lg:order-1" : undefined}>
+                  <NeedVisual index={index} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ————————————— La technique, derrière ————————————— */}
+      <section className="border-t border-line bg-navy on-navy">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+            <div>
+              <h2 className="text-[1.75rem] font-semibold leading-tight tracking-[-0.025em] text-white sm:text-[2.125rem]">
+                La complexité technique reste derrière Aequitas.
+              </h2>
+              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/70">
+                Formats réglementaires, contrôles, transmissions, API : tout cela
+                existe et fonctionne. Vous n&apos;avez simplement jamais besoin d&apos;y
+                toucher.
+              </p>
+              <Link
+                href="/developers"
+                className="mt-6 inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-white hover:underline"
+              >
+                Documentation pour les développeurs
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+
+            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-white/10 bg-white/10">
               {[
-                ["Factur-X", "PDF/A-3 avec données structurées embarquées."],
-                ["UBL", "Rendu à partir du même modèle canonique."],
-                ["CII", "Adaptateur distinct, mêmes données source."],
-                ["Contrôles", "Validation avant transmission, rapport détaillé."],
-                ["Transmissions", "File d'envoi, statuts, reprise sur échec."],
-                ["Cycle de vie", "Chaque changement d'état est daté et conservé."],
-              ].map(([term, description]) => (
-                <div key={term} className="bg-surface p-5">
-                  <dt className="text-[14px] font-medium text-ink">{term}</dt>
-                  <dd className="mt-1.5 text-[13px] leading-relaxed text-muted">
-                    {description}
+                ["Factur-X", "PDF lisible, données structurées embarquées."],
+                ["UBL", "Rendu depuis le même modèle de facture."],
+                ["CII", "Adaptateur distinct, données source identiques."],
+                ["API", "Chaque action de l'interface est aussi une requête."],
+              ].map(([term, detail]) => (
+                <div key={term} className="bg-navy p-5">
+                  <dt className="text-[14px] font-semibold text-white">{term}</dt>
+                  <dd className="mt-1.5 text-[12.5px] leading-relaxed text-white/60">
+                    {detail}
                   </dd>
                 </div>
               ))}
@@ -159,107 +354,110 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Automatisation */}
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <p className="eyebrow">Automatisation</p>
-          <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
-            Ce qui se répète n&apos;a pas à être refait
-          </h2>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {AUTOMATION.map((item) => (
-              <div key={item.title}>
-                <item.icon className="size-5 text-warning" aria-hidden="true" />
-                <h3 className="mt-4 text-[15px] font-medium text-ink">{item.title}</h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* API */}
-      <section className="border-b border-line bg-ink text-canvas">
-        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 lg:grid-cols-2 lg:items-center">
-          <div>
-            <p className="eyebrow text-warning">Plateforme API-first</p>
-            <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-canvas">
-              Vos systèmes facturent aussi
-            </h2>
-            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-faint">
-              Chaque action disponible dans l&apos;interface l&apos;est aussi par API :
-              clients, articles, devis, factures, paiements. Clés révocables, webhooks
-              signés, journal des livraisons.
-            </p>
-            <Link
-              href="/developers"
-              className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-warning hover:underline"
-            >
-              Lire la documentation
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
-
-          <pre className="overflow-x-auto rounded-[var(--radius-lg)] border border-white/10 bg-black/25 p-5 font-mono text-[12.5px] leading-relaxed text-faint">
-            <code>{`curl https://api.aequitas.fr/v1/invoices \\
-  -H "Authorization: Bearer aeq_live_..." \\
-  -d customer_id="cus_8f21" \\
-  -d issue_date="2026-08-23" \\
-  -d "lines[0][description]=Prestation" \\
-  -d "lines[0][quantity]=3" \\
-  -d "lines[0][unit_price_ht]=780.00" \\
-  -d "lines[0][tax_rate_id]=fr-standard-20"`}</code>
-          </pre>
-        </div>
-      </section>
-
-      {/* Sécurité */}
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <p className="eyebrow">Sécurité</p>
-          <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
-            Des données fiscales méritent mieux qu&apos;un mot de passe
-          </h2>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {SECURITY.map((item) => (
-              <div key={item.title}>
-                <item.icon className="size-5 text-blue" aria-hidden="true" />
-                <h3 className="mt-4 text-[15px] font-medium text-ink">{item.title}</h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{item.body}</p>
-              </div>
-            ))}
-          </div>
-          <Link
-            href="/securite"
-            className="mt-10 inline-flex items-center gap-1.5 text-[14px] font-medium text-blue hover:underline"
-          >
-            Voir les mesures en place
-            <ArrowRight className="size-4" />
-          </Link>
-        </div>
-      </section>
-
-      {/* CTA final */}
+      {/* ————————————————— CTA final ————————————————— */}
       <section>
-        <div className="mx-auto max-w-6xl px-5 py-24 text-center">
-          <h2 className="mx-auto max-w-2xl font-semibold text-[2.25rem] leading-tight tracking-[-0.015em] text-ink">
-            Passez à la facturation nouvelle génération.
+        <div className="mx-auto max-w-3xl px-5 py-24 text-center">
+          <h2 className="text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.5rem]">
+            Vos factures. Plus simples. Toujours prêtes.
           </h2>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/inscription">
-              <Button size="lg">
-                Commencer gratuitement
-                <ArrowRight />
-              </Button>
-            </Link>
-            <Link href="/tarifs">
-              <Button size="lg" variant="secondary">
-                Voir les tarifs
-              </Button>
-            </Link>
+          <p className="mx-auto mt-4 max-w-lg text-[16px] leading-relaxed text-muted">
+            Créez votre compte et envoyez votre première facture aujourd&apos;hui.
+          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <ButtonLink href="/inscription" size="xl" className="w-full sm:w-auto">
+              Essayer gratuitement
+              <ArrowRight />
+            </ButtonLink>
+            <ButtonLink
+              href="/tarifs"
+              variant="secondary"
+              size="xl"
+              className="w-full sm:w-auto"
+            >
+              Voir les tarifs
+            </ButtonLink>
           </div>
+          <p className="mt-5 text-[13px] text-faint">
+            14 jours gratuits • Sans carte bancaire
+          </p>
         </div>
       </section>
     </>
+  );
+}
+
+/**
+ * Aperçus produit des quatre besoins.
+ * Volontairement schématiques : ils montrent une forme d'interface,
+ * pas de fausses données présentées comme réelles.
+ */
+function NeedVisual({ index }: { index: number }) {
+  const CONTENT = [
+    {
+      title: "Facture F-2026-0148",
+      rows: [
+        ["Prestation de conseil", "3 900,00 €"],
+        ["Reprise des historiques", "2 160,00 €"],
+        ["Maintenance — trimestre", "870,00 €"],
+      ],
+      footer: ["Total TTC", "8 316,00 €"],
+    },
+    {
+      title: "Suivi des règlements",
+      rows: [
+        ["Delaunay & Associés", "Payée"],
+        ["Atelier Verdier", "Échéance dans 6 j"],
+        ["Groupe Marceau", "En retard de 12 j"],
+      ],
+      footer: ["Reste à encaisser", "8 420,00 €"],
+    },
+    {
+      title: "Clients",
+      rows: [
+        ["Delaunay & Associés", "SIREN 812 445 903"],
+        ["Atelier Verdier", "SIREN 519 220 774"],
+        ["Groupe Marceau", "SIREN 447 901 328"],
+      ],
+      footer: ["Fiches complètes", "3 sur 3"],
+    },
+    {
+      title: "Envois de la semaine",
+      rows: [
+        ["F-2026-0148", "Reçue"],
+        ["F-2026-0147", "Envoyée"],
+        ["F-2026-0146", "Contrôles passés"],
+      ],
+      footer: ["Envois sans erreur", "12 sur 12"],
+    },
+  ][index]!;
+
+  return (
+    <div
+      className="overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-sm"
+      aria-hidden="true"
+    >
+      <div className="border-b border-line px-5 py-3.5">
+        <p className="text-[13px] font-semibold text-ink">{CONTENT.title}</p>
+      </div>
+      <ul>
+        {CONTENT.rows.map((row, i) => (
+          <li
+            key={row[0]}
+            className={`flex items-center justify-between gap-4 px-5 py-3 text-[13px] ${
+              i > 0 ? "border-t border-line" : ""
+            }`}
+          >
+            <span className="min-w-0 truncate text-ink-soft">{row[0]}</span>
+            <span className="tabular shrink-0 font-medium text-muted">{row[1]}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="flex items-baseline justify-between border-t border-line bg-surface-2/60 px-5 py-3.5">
+        <span className="text-[12.5px] text-muted">{CONTENT.footer[0]}</span>
+        <span className="tabular text-[15px] font-semibold text-ink">
+          {CONTENT.footer[1]}
+        </span>
+      </div>
+    </div>
   );
 }

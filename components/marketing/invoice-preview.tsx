@@ -39,10 +39,10 @@ export function InvoicePreview() {
   const totals = computeDocumentTotals(DEMO_LINES);
 
   return (
-    <div className="overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-[0_24px_60px_-24px_rgba(11,22,20,0.28)]">
+    <div className="overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-sm">
       <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
         <div>
-          <p className="font-semibold uppercase tracking-[0.2em] text-[11px] text-muted">Facture</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-faint">Facture</p>
           <p className="tabular mt-0.5 text-[15px] font-medium text-ink">AEQ-2026-000148</p>
         </div>
         <span className="rounded-full bg-blue-soft px-2.5 py-1 text-[11px] font-medium text-blue">
@@ -76,7 +76,7 @@ export function InvoicePreview() {
                 <td className="px-5 py-3 text-ink-soft">
                   <span className="line-clamp-1">{line.description}</span>
                   {line.discountPercent !== "0" ? (
-                    <span className="mt-0.5 block text-[11px] text-warning">
+                    <span className="mt-0.5 block text-[11px] text-blue">
                       Remise {line.discountPercent} %
                     </span>
                   ) : null}
@@ -97,7 +97,7 @@ export function InvoicePreview() {
       </table>
 
       {/* L'échelle HT → TVA → TTC : le cœur du produit, montré tel quel. */}
-      <dl className="space-y-2 border-t border-line bg-surface-2 px-5 py-4 text-[13px]">
+      <dl className="space-y-2 border-t border-line bg-surface-2/60 px-5 py-4 text-[13px]">
         <div className="flex justify-between">
           <dt className="text-muted">Total HT</dt>
           <dd className="tabular text-ink-soft">{formatMoney(totals.totalHT.toDb())}</dd>
@@ -110,7 +110,7 @@ export function InvoicePreview() {
             <dd className="tabular text-ink-soft">{formatMoney(entry.taxAmount.toDb())}</dd>
           </div>
         ))}
-        <div className="beam flex justify-between border-t border-line-strong pt-3">
+        <div className="flex justify-between border-t border-line-strong pt-3">
           <dt className="font-medium text-ink">Total TTC</dt>
           <dd className="tabular text-[17px] font-medium text-ink">
             {formatMoney(totals.totalTTC.toDb())}

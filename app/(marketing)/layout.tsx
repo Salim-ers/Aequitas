@@ -1,15 +1,8 @@
 import Link from "next/link";
 import { AequitasLogo } from "@/components/brand/aequitas-logo";
-import { Button } from "@/components/ui/button";
+import { SiteHeader } from "@/components/marketing/site-header";
 
-const NAV = [
-  { href: "/fonctionnalites", label: "Produit" },
-  { href: "/facturation-electronique", label: "Facturation électronique" },
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/securite", label: "Sécurité" },
-  { href: "/developers", label: "Développeurs" },
-];
-
+/** §56 — Quatre colonnes, une phrase, la mention réglementaire en bas. */
 const FOOTER = [
   {
     title: "Produit",
@@ -21,7 +14,7 @@ const FOOTER = [
     ],
   },
   {
-    title: "Confiance",
+    title: "Entreprise",
     links: [
       { href: "/securite", label: "Sécurité" },
       { href: "/conformite", label: "Conformité" },
@@ -29,10 +22,10 @@ const FOOTER = [
     ],
   },
   {
-    title: "Développeurs",
+    title: "Ressources",
     links: [
       { href: "/developers", label: "Documentation API" },
-      { href: "/developers#webhooks", label: "Webhooks" },
+      { href: "/facturation-electronique", label: "Comprendre la réforme" },
     ],
   },
   {
@@ -49,58 +42,32 @@ const FOOTER = [
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-          <Link href="/" aria-label="Aequitas, accueil">
-            <AequitasLogo />
-          </Link>
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
 
-          <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigation principale">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-[13.5px] text-muted transition-colors hover:text-ink"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+      <main id="contenu" className="flex-1">
+        {children}
+      </main>
 
-          <div className="flex items-center gap-2">
-            <Link href="/connexion">
-              <Button variant="ghost" size="sm">
-                Connexion
-              </Button>
-            </Link>
-            <Link href="/inscription">
-              <Button size="sm">Commencer gratuitement</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1">{children}</main>
-
-      <footer className="border-t border-line bg-surface-2">
+      <footer className="border-t border-line bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-14">
-          <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
+          <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(4,1fr)]">
             <div>
               <AequitasLogo />
-              <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted">
-                Créez, envoyez et suivez vos factures depuis un seul espace.
+              <p className="mt-4 max-w-[15rem] text-[13.5px] leading-relaxed text-muted">
+                La facturation électronique, sans la complexité.
               </p>
             </div>
+
             {FOOTER.map((group) => (
               <div key={group.title}>
-                <p className="eyebrow mb-3">{group.title}</p>
-                <ul className="space-y-2">
+                <p className="text-[13px] font-semibold text-ink">{group.title}</p>
+                <ul className="mt-3 space-y-2.5">
                   {group.links.map((link) => (
-                    <li key={link.href}>
+                    <li key={`${group.title}-${link.href}`}>
                       <Link
                         href={link.href}
-                        className="text-[13px] text-muted transition-colors hover:text-ink"
+                        className="text-[13px] text-muted transition-colors hover:text-blue"
                       >
                         {link.label}
                       </Link>
@@ -111,15 +78,15 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             ))}
           </div>
 
-          {/* §122 — Mention obligatoire tant que l'immatriculation n'est pas délivrée. */}
-          <div className="mt-12 border-t border-line pt-6">
-            <p className="max-w-3xl text-[12px] leading-relaxed text-faint">
-              Aequitas n&apos;est pas actuellement présentée comme Plateforme Agréée tant que
-              l&apos;immatriculation correspondante n&apos;a pas été délivrée par
-              l&apos;administration fiscale.
-            </p>
-            <p className="mt-3 text-[12px] text-faint">
+          <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-baseline sm:justify-between">
+            <p className="text-[12.5px] text-faint">
               © {new Date().getFullYear()} Aequitas
+            </p>
+            {/* §42 / §122 — Mention tant que l'immatriculation n'est pas délivrée. */}
+            <p className="max-w-2xl text-[12px] leading-relaxed text-faint">
+              Aequitas prépare son infrastructure en vue de son immatriculation en
+              qualité de Plateforme Agréée. Les fonctionnalités réglementaires sont
+              activées progressivement.
             </p>
           </div>
         </div>
