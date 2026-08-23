@@ -1,14 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
+import { baseUrl } from "@/src/lib/env";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.APP_URL ??
-      (process.env.VERCEL_PROJECT_PRODUCTION_URL
-        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-        : "https://aequitas.fr"),
-  ),
+  metadataBase: new URL(baseUrl()),
   title: {
     default: "Aequitas — La facturation électronique, simplement",
     template: "%s — Aequitas",

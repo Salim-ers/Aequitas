@@ -6,6 +6,39 @@ import { z } from "zod";
  * intégration optionnelle n'est pas encore branchée.
  */
 
+const DEFAULT_APP_URL = "https://aequitas.fr";
+
+/** Une variable Vercel non renseignée arrive sous forme de chaîne vide, pas d'undefined. */
+function readEnv(name: string): string | undefined {
+  const value = process.env[name]?.trim();
+  return value ? value : undefined;
+}
+
+/** APP_URL est censée être une URL complète : on refuse tout ce qui n'en est pas une. */
+function asFullUrl(value: string | undefined): string | undefined {
+  if (!value || !URL.canParse(value)) return undefined;
+  const { protocol } = new URL(value);
+  return protocol === "https:" || protocol === "http:" ? value : undefined;
+}
+
+/** Les variables VERCEL_* contiennent un hôte nu (`mon-app.vercel.app`). */
+function asVercelHost(value: string | undefined): string | undefined {
+  return value ? asFullUrl(`https://${value}`) : undefined;
+}
+
+/**
+ * Base URL de l'application, sans slash final.
+ * Ne lève jamais : le build ne doit pas casser si APP_URL est vide ou invalide.
+ */
+export function baseUrl(): string {
+  const resolved =
+    asFullUrl(readEnv("APP_URL")) ??
+    asVercelHost(readEnv("VERCEL_PROJECT_PRODUCTION_URL")) ??
+    asVercelHost(readEnv("VERCEL_URL")) ??
+    (process.env.NODE_ENV === "development" ? "http://localhost:3000" : DEFAULT_APP_URL);
+  return resolved.replace(/\/$/, "");
+}
+
 const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   AUTH_SECRET: z.string().min(32),
@@ -45,13 +78,7 @@ export function serverEnv(): ServerEnv {
     serverEnvCache = parseOrThrow(serverSchema, {
       DATABASE_URL: process.env.DATABASE_URL,
       AUTH_SECRET: process.env.AUTH_SECRET ?? process.env.BETTER_AUTH_SECRET,
-      APP_URL:
-        process.env.APP_URL ??
-        (process.env.VERCEL_PROJECT_PRODUCTION_URL
-          ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-          : process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}`
-            : undefined),
+      APP_URL: baseUrl(),
     });
   }
   return serverEnvCache;
@@ -81,12 +108,5 @@ export function isDemoSeedEnabled(): boolean {
 }
 
 export function appUrl(path = ""): string {
-  const base =
-    process.env.APP_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000");
-  return `${base.replace(/\/$/, "")}${path}`;
+  return `${baseUrl()}${path}`;
 }
