@@ -1,87 +1,171 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Check,
   FileText,
   Banknote,
   FolderOpen,
   ShieldCheck,
-  Check,
+  KeyRound,
+  UsersRound,
+  ScrollText,
+  Layers,
 } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
-import { SectionHeader } from "@/components/ui/page-header";
+import { PLAN_ORDER, PLANS, formatPlanPrice } from "@/src/config/plans";
 import { RevealScript } from "@/components/marketing/reveal";
 import {
   MarketingDashboardPreview,
+  MarketingDeliveryCard,
   MarketingPaymentNotification,
-  MarketingInvoiceCard,
   MarketingCompliancePreview,
+  MarketingPanel,
 } from "@/components/marketing/mockups";
-import { InvoicePreview } from "@/components/marketing/invoice-preview";
 import {
   OrganizationJsonLd,
   SoftwareJsonLd,
+  FaqJsonLd,
 } from "@/components/marketing/structured-data";
+import { HOME_FAQ } from "@/src/content/faq";
+import { REFORM_TIMELINE } from "@/src/content/reform";
+import { cn } from "@/src/lib/utils";
 
-/** §14 — Trois étapes, pas douze fonctionnalités interchangeables. */
+const AUDIENCES = ["Indépendants", "TPE", "PME", "Cabinets comptables", "ESN"];
+
 const STEPS = [
   {
-    n: "01",
+    n: "1",
     title: "Créez",
-    body: "Ajoutez votre client et vos prestations. Les totaux et la TVA se calculent au fur et à mesure.",
+    body: "Choisissez votre client, ajoutez vos prestations et validez.",
+    panel: {
+      title: "Nouvelle facture",
+      rows: [
+        ["Prestation de conseil — 5 j", "3 900,00 €"],
+        ["Reprise des historiques", "2 160,00 €"],
+        ["TVA 20 %", "1 212,00 €"],
+      ] as const,
+      footer: ["Total TTC", "7 272,00 €"] as const,
+    },
   },
   {
-    n: "02",
-    title: "Envoyez",
-    body: "Aequitas prépare la facture au bon format et l'envoie. Vous n'avez rien à paramétrer.",
+    n: "2",
+    title: "Aequitas vérifie",
+    body: "Les informations nécessaires sont contrôlées avant l'envoi.",
+    panel: {
+      title: "Contrôles",
+      rows: [
+        ["Informations entreprise", "Complètes"],
+        ["Informations client", "Complètes"],
+        ["Numérotation et TVA", "Conformes"],
+      ] as const,
+      footer: ["Prêt à envoyer", "3 sur 3"] as const,
+    },
   },
   {
-    n: "03",
+    n: "3",
     title: "Suivez",
-    body: "Vous voyez immédiatement si elle est envoyée, payée ou en retard. Sans relancer votre comptable.",
+    body: "Vous voyez immédiatement où en est votre facture.",
+    panel: {
+      title: "Suivi",
+      rows: [
+        ["F-2026-0148", "Payée"],
+        ["F-2026-0147", "Envoyée"],
+        ["F-2026-0146", "En retard"],
+      ] as const,
+      footer: ["Reste à encaisser", "8 420,00 €"] as const,
+    },
   },
 ];
 
-/** §16 — Quatre besoins, pas une grille générique. */
-const NEEDS = [
+const BENEFITS = [
   {
     icon: FileText,
     eyebrow: "Facturez",
-    title: "Des devis aux factures, sans ressaisie",
-    body: "Un devis accepté devient une facture en un clic. La numérotation est continue, la TVA multi-taux calculée, les avoirs rectifient sans jamais réécrire l'original.",
+    title: "Des devis aux factures, sans ressaisie.",
+    body: "Un devis accepté devient une facture en un clic. La numérotation reste continue, la TVA multi-taux est calculée pendant que vous saisissez, et les avoirs rectifient sans jamais réécrire l'original.",
     bullets: ["Devis et factures", "Avoirs", "Factures récurrentes", "Numérotation continue"],
+    panel: {
+      title: "Devis et factures",
+      rows: [
+        ["Devis D-2026-0042", "Accepté"],
+        ["Converti en facture", "F-2026-0148"],
+        ["Avoir A-2026-0007", "Rattaché"],
+      ] as const,
+      footer: ["Ce mois-ci", "12 documents"] as const,
+    },
   },
   {
     icon: Banknote,
     eyebrow: "Encaissez",
-    title: "Savoir qui doit quoi, et depuis quand",
-    body: "Chaque règlement, même partiel, s'affecte à ses factures et met le solde à jour. Les retards remontent d'eux-mêmes en haut de votre écran.",
+    title: "Voyez immédiatement ce qui a été payé.",
+    body: "Chaque règlement, même partiel, s'affecte à ses factures et met le solde à jour. Les retards remontent d'eux-mêmes en haut de votre écran, sans que vous ayez à les chercher.",
     bullets: ["Paiements et soldes", "Échéances", "Relances", "Suivi des retards"],
+    panel: {
+      title: "Règlements",
+      rows: [
+        ["Delaunay & Associés", "Payée"],
+        ["Atelier Verdier", "Échéance dans 6 j"],
+        ["Groupe Marceau", "En retard de 12 j"],
+      ] as const,
+      footer: ["Reste à encaisser", "8 420,00 €"] as const,
+    },
   },
   {
     icon: FolderOpen,
     eyebrow: "Centralisez",
-    title: "Un seul endroit, plus de tableur parallèle",
-    body: "Clients, fournisseurs et documents vivent au même endroit que vos factures. Les conditions de règlement suivent le client, pas votre mémoire.",
+    title: "Clients, fournisseurs et documents au même endroit.",
+    body: "Les conditions de règlement suivent le client, pas votre mémoire. Vos factures d'achat vivent à côté de vos factures de vente, et vos exports partent d'un seul endroit.",
     bullets: ["Clients", "Fournisseurs", "Documents", "Conditions par client"],
+    panel: {
+      title: "Clients",
+      rows: [
+        ["Delaunay & Associés", "SIREN 812 445 903"],
+        ["Atelier Verdier", "SIREN 519 220 774"],
+        ["Groupe Marceau", "SIREN 447 901 328"],
+      ] as const,
+      footer: ["Fiches complètes", "3 sur 3"] as const,
+    },
   },
   {
     icon: ShieldCheck,
     eyebrow: "Préparez la réforme",
-    title: "La facturation électronique, prise en charge",
-    body: "Aequitas contrôle les informations exigées avant l'envoi et vous montre où en est chaque facture. Vous continuez de facturer comme aujourd'hui.",
-    bullets: ["Contrôles avant envoi", "Suivi des envois", "E-reporting", "Formats réglementaires"],
+    title: "Votre facturation évolue sans bouleverser votre quotidien.",
+    body: "Aequitas contrôle les informations attendues avant l'envoi et vous montre où en est chaque facture. Vous continuez de facturer exactement comme aujourd'hui.",
+    bullets: [
+      "Contrôles avant envoi",
+      "Suivi des factures",
+      "Fiches clients complètes",
+      "Formats structurés",
+    ],
+    panel: null,
   },
 ];
 
-/** §13 — Catégories de clientèle, jamais de faux logos. */
-const AUDIENCES = [
-  "Indépendants",
-  "TPE",
-  "PME",
-  "Cabinets comptables",
-  "ESN",
-  "Agences",
+const SECURITY = [
+  {
+    icon: KeyRound,
+    title: "Accès sécurisé",
+    body: "Authentification et gestion des sessions, révocables à tout moment.",
+  },
+  {
+    icon: UsersRound,
+    title: "Permissions",
+    body: "Chaque utilisateur accède uniquement à ce dont il a besoin.",
+  },
+  {
+    icon: ScrollText,
+    title: "Traçabilité",
+    body: "Les actions sensibles sont enregistrées et horodatées.",
+  },
+  {
+    icon: Layers,
+    title: "Isolation",
+    body: "Les données de chaque organisation restent séparées.",
+  },
 ];
+
+/** Trois offres sur la home ; le comparatif complet vit sur /tarifs. */
+const HOME_PLANS = PLAN_ORDER.filter((slug) => PLANS[slug].monthlyPriceCents !== null);
 
 export default function HomePage() {
   return (
@@ -89,215 +173,243 @@ export default function HomePage() {
       <RevealScript />
       <OrganizationJsonLd />
       <SoftwareJsonLd />
+      <FaqJsonLd items={HOME_FAQ} />
 
       {/* ————————————————————————— Hero ————————————————————————— */}
-      <section className="relative overflow-hidden">
-        {/* Halo bleu très dilué : donne de la profondeur sans colorer la page. */}
+      <section className="relative overflow-hidden border-b border-line bg-surface">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 -top-40 h-[32rem] bg-[radial-gradient(60%_60%_at_50%_50%,var(--color-blue-soft),transparent_70%)]"
+          className="pointer-events-none absolute inset-x-0 -top-32 h-[28rem] bg-[radial-gradient(55%_60%_at_50%_50%,var(--color-blue-soft),transparent_72%)]"
         />
 
-        <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 lg:pt-24">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-blue-border bg-blue-soft px-3 py-1 text-[12.5px] font-medium text-blue">
-              <span className="size-1.5 rounded-full bg-red" aria-hidden="true" />
+        <div className="relative mx-auto max-w-[var(--container-page)] px-5 pt-14 pb-16 lg:px-8 lg:pt-20">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="eyebrow" data-hero-step>
               Facturation électronique • France
-            </span>
+            </p>
+            <span className="tricolore mx-auto mt-3" data-hero-step aria-hidden="true" />
 
-            <h1 className="mt-6 text-[2.5rem] font-semibold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[3.5rem]">
-              La facturation électronique,
+            <h1 className="display-1 mt-6 text-ink" data-hero-step>
+              La plateforme française
               <br />
-              <span className="text-blue">sans la complexité.</span>
+              <span className="text-blue">de facturation électronique.</span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
-              Créez vos devis, envoyez vos factures et suivez vos paiements depuis un
-              seul espace. Aequitas vous accompagne aussi dans le passage à la
-              facturation électronique.
+            <p className="lead mx-auto mt-6 max-w-2xl" data-hero-step>
+              Créez vos factures comme aujourd&apos;hui. Aequitas s&apos;occupe de la
+              complexité de demain.
             </p>
 
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <ButtonLink href="/inscription" size="xl" className="w-full sm:w-auto">
-                Essayer gratuitement
+            <div
+              className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+              data-hero-step
+            >
+              <ButtonLink href="/inscription" size="2xl" className="w-full sm:w-auto">
+                Créer mon compte
                 <ArrowRight />
               </ButtonLink>
               <ButtonLink
-                href="#comment-ca-marche"
+                href="#produit"
                 variant="secondary"
-                size="xl"
+                size="2xl"
                 className="w-full sm:w-auto"
               >
-                Voir comment ça marche
+                Découvrir la plateforme
               </ButtonLink>
             </div>
 
-            <p className="mt-5 text-[13px] text-faint">
-              14 jours gratuits • Sans carte bancaire • Configuration en quelques minutes
+            <p className="mt-5 text-[13.5px] text-faint" data-hero-step>
+              14 jours gratuits • Sans carte bancaire • Mise en route en quelques minutes
             </p>
           </div>
 
-          {/* §12 — Le produit, montré grand, avec deux cartes en surimpression. */}
-          <div className="relative mx-auto mt-16 max-w-4xl">
+          {/* Le produit, montré grand, avec deux surimpressions au maximum. */}
+          <div className="relative mx-auto mt-14 max-w-5xl" data-hero-step>
             <MarketingDashboardPreview />
-            <MarketingPaymentNotification className="reveal absolute -bottom-8 -left-6 hidden [--reveal-delay:220ms] md:flex lg:-left-24" />
-            <MarketingInvoiceCard className="reveal absolute -right-6 -top-10 hidden [--reveal-delay:340ms] md:block lg:-right-20" />
+            <MarketingDeliveryCard className="reveal absolute -left-8 bottom-0 hidden translate-y-1/2 [--reveal-delay:260ms] xl:flex" />
+            <MarketingPaymentNotification className="reveal absolute -right-8 bottom-0 hidden translate-y-1/2 [--reveal-delay:400ms] xl:flex" />
           </div>
         </div>
       </section>
 
-      {/* ——————————————————— Pour qui ——————————————————— */}
-      <section className="border-y border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-12">
-          <p className="text-center text-[13px] font-medium text-faint">
-            Conçu pour les entreprises françaises
-          </p>
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
-            {AUDIENCES.map((audience) => (
-              <li
-                key={audience}
-                className="rounded-full border border-line bg-canvas px-4 py-1.5 text-[13.5px] font-medium text-ink-soft"
-              >
-                {audience}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ——————————————— Comment ça marche ——————————————— */}
-      <section id="comment-ca-marche" className="scroll-mt-24">
-        <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
-          <SectionHeader
-            align="center"
-            eyebrow="En pratique"
-            title="Facturez en trois étapes."
-            description="Pas de paramétrage préalable, pas de vocabulaire à apprendre."
-          />
-
-          <ol className="mt-14 grid gap-px overflow-hidden rounded-[var(--radius-xl)] border border-line bg-line md:grid-cols-3">
-            {STEPS.map((step) => (
-              <li
-                key={step.n}
-                className="bg-surface p-7"
-              >
-                <span className="tabular text-[13px] font-semibold text-red">{step.n}</span>
-                <h3 className="mt-3 text-[19px] font-semibold tracking-[-0.01em] text-ink">
-                  {step.title}
-                </h3>
-                <p className="mt-2.5 text-[14px] leading-relaxed text-muted">{step.body}</p>
-              </li>
-            ))}
-          </ol>
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_1fr] lg:items-center">
-            <InvoicePreview />
-            <div className="lg:pl-4">
-              <h3 className="text-[19px] font-semibold tracking-[-0.01em] text-ink">
-                Les totaux se calculent pendant que vous saisissez.
-              </h3>
-              <p className="mt-3 text-[14.5px] leading-relaxed text-muted">
-                Remises par ligne, TVA multi-taux, arrondis fiscaux : l&apos;échelle
-                HT → TVA → TTC est tenue par Aequitas. Les montants de cet aperçu sont
-                d&apos;ailleurs calculés par le moteur de TVA réellement utilisé par
-                l&apos;application.
-              </p>
-            </div>
+      {/* ——————————————————— Signal français ——————————————————— */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-12 lg:px-8">
+          <div className="flex flex-col items-center text-center">
+            <span className="tricolore" aria-hidden="true" />
+            <p className="mt-4 text-[17px] font-semibold text-ink">
+              Pensé pour les entreprises françaises.
+            </p>
+            <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+              {AUDIENCES.map((audience) => (
+                <li key={audience} className="text-[14.5px] font-medium text-muted">
+                  {audience}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
       {/* ————————————————— La réforme ————————————————— */}
-      <section className="border-y border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
-          <div className="grid gap-14 lg:grid-cols-[1fr_1fr] lg:items-start">
-            <div>
-              <SectionHeader
-                eyebrow="Réforme"
-                title={
-                  <>
-                    La facturation électronique arrive.
-                    <br />
-                    <span className="text-muted">
-                      Vous n&apos;avez pas besoin d&apos;en devenir expert.
-                    </span>
-                  </>
-                }
-              />
+      <section id="reforme" className="scroll-mt-28 border-b border-line bg-blue-soft/40">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="max-w-3xl">
+            <p className="eyebrow">Réforme 2026 — 2027</p>
+            <h2 className="display-2 mt-3 text-ink">
+              La facturation électronique change.
+              <br />
+              <span className="text-muted">
+                Votre façon de travailler n&apos;a pas à changer.
+              </span>
+            </h2>
+            <p className="lead mt-5">
+              À partir de septembre 2026, la facturation électronique se généralise
+              progressivement en France. Aequitas absorbe ces échéances pour vous.
+            </p>
+          </div>
 
-              <dl className="mt-10 space-y-6">
+          <ol className="mt-14 grid gap-6 lg:grid-cols-2">
+            {REFORM_TIMELINE.map((milestone) => (
+              <li
+                key={milestone.date}
+                className="reveal rounded-[var(--radius-xl)] border border-line bg-surface p-7"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="tabular text-[15px] font-semibold text-navy">
+                    {milestone.date}
+                  </span>
+                  <span className="h-px flex-1 bg-line" aria-hidden="true" />
+                </div>
+
+                <dl className="mt-5 space-y-5">
+                  {milestone.entries.map((entry) => (
+                    <div key={entry.who}>
+                      <dt className="text-[16px] font-semibold text-ink">{entry.who}</dt>
+                      <dd className="mt-1 text-[14.5px] leading-relaxed text-muted">
+                        {entry.what}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-10">
+            <ButtonLink href="/facturation-electronique" variant="secondary" size="lg">
+              Comprendre la réforme
+              <ArrowRight />
+            </ButtonLink>
+          </div>
+        </div>
+      </section>
+
+      {/* ————————————— Comment ça fonctionne ————————————— */}
+      <section id="produit" className="scroll-mt-28 border-b border-line">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="max-w-3xl">
+            <h2 className="display-2 text-ink">
+              Vous facturez.
+              <br />
+              <span className="text-muted">Aequitas s&apos;occupe du reste.</span>
+            </h2>
+          </div>
+
+          <ol className="mt-14 grid gap-8 lg:grid-cols-3">
+            {STEPS.map((step) => (
+              <li key={step.n} className="reveal">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-navy text-[13px] font-semibold text-white">
+                    {step.n}
+                  </span>
+                  <h3 className="text-[19px] font-semibold tracking-[-0.015em] text-ink">
+                    {step.title}
+                  </h3>
+                </div>
+                <p className="mt-3 text-[15px] leading-relaxed text-muted">{step.body}</p>
+                <MarketingPanel
+                  className="mt-6"
+                  title={step.panel.title}
+                  rows={step.panel.rows}
+                  footer={step.panel.footer}
+                />
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ————————————— Le tableau de bord ————————————— */}
+      <section className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-20">
+            <div>
+              <h2 className="display-2 text-ink">Tout ce qui compte, dès l&apos;ouverture.</h2>
+              <p className="lead mt-5">
+                Votre tableau de bord vous indique immédiatement ce qui est encaissé, ce
+                qui reste à recevoir et les actions à effectuer.
+              </p>
+
+              <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {[
-                  {
-                    term: "Ce qui change",
-                    detail:
-                      "Les factures entre entreprises devront circuler sous forme électronique, par une plateforme, et non plus par simple e-mail.",
-                  },
-                  {
-                    term: "Ce que vous devez faire",
-                    detail:
-                      "Disposer d'un outil raccordé et de fiches clients complètes. C'est tout : vous continuez de facturer comme aujourd'hui.",
-                  },
-                  {
-                    term: "Ce qu'Aequitas prend en charge",
-                    detail:
-                      "Le format, les contrôles avant envoi, la transmission et le suivi de chaque facture, depuis le même écran.",
-                  },
-                ].map((item) => (
-                  <div key={item.term} className="border-l-2 border-blue pl-4">
-                    <dt className="text-[15px] font-semibold text-ink">{item.term}</dt>
-                    <dd className="mt-1.5 text-[14px] leading-relaxed text-muted">
-                      {item.detail}
-                    </dd>
+                  { label: "Encaissé", value: "24 850 €", tone: "text-ink" },
+                  { label: "À recevoir", value: "8 420 €", tone: "text-ink" },
+                  { label: "En retard", value: "1 350 €", tone: "text-danger" },
+                ].map((kpi) => (
+                  <div
+                    key={kpi.label}
+                    className="rounded-[var(--radius-lg)] border border-line bg-canvas px-4 py-3.5"
+                  >
+                    <p className="text-[12px] uppercase tracking-[0.06em] text-faint">
+                      {kpi.label}
+                    </p>
+                    <p
+                      className={cn(
+                        "tabular mt-1.5 text-[22px] font-semibold tracking-tight",
+                        kpi.tone,
+                      )}
+                    >
+                      {kpi.value}
+                    </p>
                   </div>
                 ))}
-              </dl>
+              </div>
 
-              <Link
-                href="/facturation-electronique"
-                className="mt-8 inline-flex items-center gap-1.5 py-1 text-[14.5px] font-semibold text-blue hover:underline"
-              >
-                Comprendre le calendrier
-                <ArrowRight className="size-4" />
-              </Link>
+              <p className="mt-6 rounded-[var(--radius)] border border-warning-border bg-warning-soft px-4 py-3 text-[14px] font-medium text-warning">
+                3 factures nécessitent votre attention
+              </p>
             </div>
 
-            <div className="lg:pt-10">
-              <MarketingCompliancePreview />
+            <div className="reveal">
+              <MarketingDashboardPreview />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ————————————————— Les besoins ————————————————— */}
-      <section>
-        <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
-          <SectionHeader
-            align="center"
-            eyebrow="Ce que vous faites avec Aequitas"
-            title="Quatre besoins, un seul outil."
-          />
-
-          <div className="mt-16 space-y-20">
-            {NEEDS.map((need, index) => (
+      {/* ————————————————— Les bénéfices ————————————————— */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="space-y-24">
+            {BENEFITS.map((benefit, index) => (
               <div
-                key={need.eyebrow}
-                className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16"
+                key={benefit.eyebrow}
+                className="reveal grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20"
               >
                 {/* Alternance : le visuel change de côté à chaque bloc. */}
                 <div className={index % 2 === 1 ? "lg:order-2" : undefined}>
-                  <span className="inline-flex size-10 items-center justify-center rounded-[var(--radius)] bg-blue-soft text-blue">
-                    <need.icon className="size-5" aria-hidden="true" />
+                  <span className="inline-flex size-11 items-center justify-center rounded-[var(--radius)] bg-blue-soft text-blue">
+                    <benefit.icon className="size-5" aria-hidden="true" />
                   </span>
-                  <p className="eyebrow mt-4">{need.eyebrow}</p>
-                  <h3 className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.02em] text-ink">
-                    {need.title}
-                  </h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-muted">{need.body}</p>
-                  <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
-                    {need.bullets.map((bullet) => (
+                  <p className="eyebrow mt-5">{benefit.eyebrow}</p>
+                  <h3 className="display-3 mt-2.5 text-ink">{benefit.title}</h3>
+                  <p className="mt-4 text-[16px] leading-relaxed text-muted">{benefit.body}</p>
+                  <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                    {benefit.bullets.map((bullet) => (
                       <li
                         key={bullet}
-                        className="flex items-center gap-2 text-[14px] text-ink-soft"
+                        className="flex items-center gap-2.5 text-[15px] text-ink-soft"
                       >
                         <Check
                           className="size-4 shrink-0 text-blue"
@@ -311,7 +423,15 @@ export default function HomePage() {
                 </div>
 
                 <div className={index % 2 === 1 ? "lg:order-1" : undefined}>
-                  <NeedVisual index={index} />
+                  {benefit.panel ? (
+                    <MarketingPanel
+                      title={benefit.panel.title}
+                      rows={benefit.panel.rows}
+                      footer={benefit.panel.footer}
+                    />
+                  ) : (
+                    <MarketingCompliancePreview />
+                  )}
                 </div>
               </div>
             ))}
@@ -319,151 +439,282 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ————————————— La technique, derrière ————————————— */}
-      <section className="border-t border-line bg-navy on-navy">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+      {/* ——————————— Infrastructure française ——————————— */}
+      <section className="on-navy border-b border-line bg-navy">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
             <div>
-              <h2 className="text-[1.75rem] font-semibold leading-tight tracking-[-0.025em] text-white sm:text-[2.125rem]">
-                La complexité technique reste derrière Aequitas.
-              </h2>
-              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/70">
-                Formats réglementaires, contrôles, transmissions, API : tout cela
-                existe et fonctionne. Vous n&apos;avez simplement jamais besoin d&apos;y
-                toucher.
+              <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-white/60">
+                Infrastructure française
               </p>
+              <h2 className="display-2 mt-3 text-white">
+                Conçue pour la nouvelle infrastructure de facturation électronique
+                française.
+              </h2>
+              <p className="mt-5 text-[17px] leading-relaxed text-white/70">
+                Aequitas développe son architecture pour accompagner les entreprises dans
+                le nouveau modèle français de facturation électronique.
+              </p>
+
+              {/* Badge propriétaire Aequitas — jamais « Plateforme Agréée ». */}
+              <div className="mt-8 inline-flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/15 bg-white/5 px-4 py-3.5">
+                <span className="tricolore mt-1.5 w-8 shrink-0" aria-hidden="true" />
+                <div>
+                  <p className="text-[14px] font-semibold text-white">Démarche PA</p>
+                  <p className="text-[13px] text-white/60">Infrastructure en préparation</p>
+                </div>
+              </div>
+
+              <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-white/60">
+                Aequitas prépare son infrastructure en vue d&apos;une candidature à
+                l&apos;immatriculation en qualité de Plateforme Agréée auprès de
+                l&apos;administration fiscale.
+              </p>
+
               <Link
-                href="/developers"
-                className="mt-6 inline-flex items-center gap-1.5 py-1 text-[14.5px] font-semibold text-white hover:underline"
+                href="/demarche-pa"
+                className="mt-5 inline-flex items-center gap-1.5 py-1 text-[15px] font-semibold text-white hover:underline"
               >
-                Documentation pour les développeurs
+                En savoir plus sur notre démarche
                 <ArrowRight className="size-4" />
               </Link>
             </div>
 
-            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-lg)] border border-white/10 bg-white/10">
-              {[
-                ["Factur-X", "PDF lisible, données structurées embarquées."],
-                ["UBL", "Rendu depuis le même modèle de facture."],
-                ["CII", "Adaptateur distinct, données source identiques."],
-                ["API", "Chaque action de l'interface est aussi une requête."],
-              ].map(([term, detail]) => (
-                <div key={term} className="bg-navy p-5">
-                  <dt className="text-[14px] font-semibold text-white">{term}</dt>
-                  <dd className="mt-1.5 text-[12.5px] leading-relaxed text-white/60">
-                    {detail}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {/* Schéma : la dernière liaison est explicitement en préparation. */}
+            <div className="rounded-[var(--radius-xl)] border border-white/12 bg-white/[0.04] p-7">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">
+                Architecture cible
+              </p>
+
+              <ol className="mt-6">
+                {[
+                  { label: "Votre entreprise", state: "active" },
+                  { label: "Aequitas", state: "brand" },
+                  { label: "Facturation électronique", state: "planned" },
+                  { label: "Client / Administration", state: "planned" },
+                ].map((node, index, all) => (
+                  <li key={node.label}>
+                    <div
+                      className={cn(
+                        "rounded-[var(--radius)] border px-4 py-3.5 text-[14.5px]",
+                        node.state === "brand"
+                          ? "border-white/30 bg-white/10 font-semibold text-white"
+                          : node.state === "active"
+                            ? "border-white/15 bg-white/[0.06] text-white"
+                            : "border-dashed border-white/20 text-white/55",
+                      )}
+                    >
+                      <span className="flex items-center justify-between gap-3">
+                        {node.label}
+                        {node.state === "planned" ? (
+                          <span className="shrink-0 text-[11px] uppercase tracking-[0.06em] text-white/40">
+                            En préparation
+                          </span>
+                        ) : null}
+                      </span>
+                    </div>
+                    {index < all.length - 1 ? (
+                      <div className="flex justify-center py-1.5" aria-hidden="true">
+                        <span className="text-white/30">↓</span>
+                      </div>
+                    ) : null}
+                  </li>
+                ))}
+              </ol>
+
+              <p className="mt-6 border-t border-white/10 pt-4 text-[12.5px] leading-relaxed text-white/50">
+                Les liaisons marquées « en préparation » ne sont pas actives : elles
+                décrivent l&apos;architecture visée, pas un raccordement existant.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ————————————————— CTA final ————————————————— */}
-      <section>
-        <div className="mx-auto max-w-3xl px-5 py-24 text-center">
-          <h2 className="text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-ink sm:text-[2.5rem]">
-            Vos factures. Plus simples. Toujours prêtes.
+      {/* ————————— Ce qu'est une Plateforme Agréée ————————— */}
+      <section className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-20 lg:py-24">
+          <h2 className="display-3 text-ink">
+            Pourquoi les Plateformes Agréées sont-elles au cœur de la réforme ?
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-[16px] leading-relaxed text-muted">
-            Créez votre compte et envoyez votre première facture aujourd&apos;hui.
+          <p className="lead mt-5">
+            Dans le nouveau système français, les Plateformes Agréées assurent
+            l&apos;échange des factures électroniques entre entreprises et la
+            transmission des données prévues à l&apos;administration fiscale.
           </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <ButtonLink href="/inscription" size="xl" className="w-full sm:w-auto">
-              Essayer gratuitement
+          <p className="mt-4 text-[16px] leading-relaxed text-muted">
+            Aequitas est développée pour s&apos;inscrire dans cette architecture. Vous
+            n&apos;avez, de votre côté, rien à apprendre de ce fonctionnement : il reste
+            derrière la plateforme.
+          </p>
+        </div>
+      </section>
+
+      {/* ————————— Pour les équipes techniques ————————— */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-20">
+            <div>
+              <p className="eyebrow">Pour les équipes techniques</p>
+              <h2 className="display-3 mt-3 text-ink">
+                La complexité reste derrière Aequitas.
+              </h2>
+              <p className="mt-5 text-[16px] leading-relaxed text-muted">
+                Formats structurés, contrôles, API et interopérabilité sont gérés par
+                l&apos;infrastructure Aequitas afin que vos équipes puissent se concentrer
+                sur leur activité. L&apos;architecture est développée autour des standards
+                nécessaires à la facturation électronique.
+              </p>
+              <Link
+                href="/developers"
+                className="mt-6 inline-flex items-center gap-1.5 py-1 text-[15px] font-semibold text-blue hover:underline"
+              >
+                Documentation technique
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+
+            <ul className="flex flex-wrap gap-2.5">
+              {["Factur-X", "UBL", "CII", "API"].map((badge) => (
+                <li
+                  key={badge}
+                  className="rounded-[var(--radius)] border border-line bg-surface px-4 py-2.5 font-mono text-[13.5px] text-ink-soft"
+                >
+                  {badge}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ————————————————— Sécurité ————————————————— */}
+      <section className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="max-w-3xl">
+            <h2 className="display-2 text-ink">Conçue pour des données qui comptent.</h2>
+          </div>
+
+          <dl className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {SECURITY.map((item) => (
+              <div key={item.title}>
+                <span className="inline-flex size-10 items-center justify-center rounded-[var(--radius)] bg-blue-soft text-blue">
+                  <item.icon className="size-4" aria-hidden="true" />
+                </span>
+                <dt className="mt-4 text-[17px] font-semibold text-ink">{item.title}</dt>
+                <dd className="mt-2 text-[14.5px] leading-relaxed text-muted">{item.body}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-10">
+            <ButtonLink href="/securite" variant="secondary">
+              Voir les mesures en place
               <ArrowRight />
             </ButtonLink>
-            <ButtonLink
-              href="/tarifs"
-              variant="secondary"
-              size="xl"
-              className="w-full sm:w-auto"
-            >
-              Voir les tarifs
+          </div>
+        </div>
+      </section>
+
+      {/* ————————————————— Tarifs ————————————————— */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="max-w-3xl">
+            <h2 className="display-2 text-ink">Un prix par mois, par entreprise.</h2>
+            <p className="lead mt-5">
+              Tous les montants sont hors taxes. Essai de 14 jours sur chaque offre, sans
+              carte bancaire.
+            </p>
+          </div>
+
+          <div className="mt-12 grid items-start gap-5 lg:grid-cols-3">
+            {HOME_PLANS.map((slug) => {
+              const plan = PLANS[slug];
+              return (
+                <div
+                  key={plan.slug}
+                  className={cn(
+                    "relative flex h-full flex-col rounded-[var(--radius-xl)] border bg-surface p-7",
+                    plan.highlighted ? "border-navy shadow-lg" : "border-line",
+                  )}
+                >
+                  {plan.highlighted ? (
+                    <span className="absolute -top-3 left-7 rounded-full bg-navy px-2.5 py-1 text-[11px] font-semibold text-white">
+                      Recommandé
+                    </span>
+                  ) : null}
+
+                  <h3 className="text-[19px] font-semibold text-ink">{plan.name}</h3>
+                  <p className="mt-4 flex items-baseline gap-1.5">
+                    <span className="tabular text-[2.25rem] font-semibold leading-none tracking-[-0.03em] text-ink">
+                      {formatPlanPrice(plan)}
+                    </span>
+                    <span className="text-[13.5px] text-muted">HT / mois</span>
+                  </p>
+                  <p className="mt-3 text-[14px] leading-relaxed text-muted">{plan.tagline}</p>
+
+                  <ul className="mt-6 flex-1 space-y-2.5">
+                    {plan.bullets.slice(0, 4).map((bullet) => (
+                      <li key={bullet} className="flex gap-2.5 text-[14px] text-ink-soft">
+                        <Check
+                          className="mt-0.5 size-4 shrink-0 text-blue"
+                          strokeWidth={2.5}
+                          aria-hidden="true"
+                        />
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-10">
+            <ButtonLink href="/tarifs" variant="secondary" size="lg">
+              Voir tous les tarifs
+              <ArrowRight />
             </ButtonLink>
           </div>
-          <p className="mt-5 text-[13px] text-faint">
+        </div>
+      </section>
+
+      {/* ————————————————— FAQ ————————————————— */}
+      <section id="faq" className="scroll-mt-28 border-b border-line bg-surface">
+        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-20 lg:py-24">
+          <h2 className="display-2 text-ink">Questions fréquentes</h2>
+          <dl className="mt-10 divide-y divide-[color:var(--color-line)] border-t border-line">
+            {HOME_FAQ.map((item) => (
+              <div key={item.q} className="py-6">
+                <dt className="text-[17px] font-semibold text-ink">{item.q}</dt>
+                <dd className="mt-2.5 text-[15px] leading-relaxed text-muted">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* ————————————————— CTA final ————————————————— */}
+      <section className="on-navy bg-navy">
+        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-24 text-center">
+          <h2 className="display-2 text-white">
+            Préparez votre entreprise à la facturation électronique.
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-white/70">
+            Commencez dès aujourd&apos;hui à centraliser vos factures et vos clients avec
+            Aequitas.
+          </p>
+          <div className="mt-9 flex justify-center">
+            <ButtonLink href="/inscription" variant="inverse" size="2xl">
+              Créer mon compte
+              <ArrowRight />
+            </ButtonLink>
+          </div>
+          <p className="mt-5 text-[13.5px] text-white/50">
             14 jours gratuits • Sans carte bancaire
           </p>
         </div>
       </section>
     </>
-  );
-}
-
-/**
- * Aperçus produit des quatre besoins.
- * Volontairement schématiques : ils montrent une forme d'interface,
- * pas de fausses données présentées comme réelles.
- */
-function NeedVisual({ index }: { index: number }) {
-  const CONTENT = [
-    {
-      title: "Facture F-2026-0148",
-      rows: [
-        ["Prestation de conseil", "3 900,00 €"],
-        ["Reprise des historiques", "2 160,00 €"],
-        ["Maintenance — trimestre", "870,00 €"],
-      ],
-      footer: ["Total TTC", "8 316,00 €"],
-    },
-    {
-      title: "Suivi des règlements",
-      rows: [
-        ["Delaunay & Associés", "Payée"],
-        ["Atelier Verdier", "Échéance dans 6 j"],
-        ["Groupe Marceau", "En retard de 12 j"],
-      ],
-      footer: ["Reste à encaisser", "8 420,00 €"],
-    },
-    {
-      title: "Clients",
-      rows: [
-        ["Delaunay & Associés", "SIREN 812 445 903"],
-        ["Atelier Verdier", "SIREN 519 220 774"],
-        ["Groupe Marceau", "SIREN 447 901 328"],
-      ],
-      footer: ["Fiches complètes", "3 sur 3"],
-    },
-    {
-      title: "Envois de la semaine",
-      rows: [
-        ["F-2026-0148", "Reçue"],
-        ["F-2026-0147", "Envoyée"],
-        ["F-2026-0146", "Contrôles passés"],
-      ],
-      footer: ["Envois sans erreur", "12 sur 12"],
-    },
-  ][index]!;
-
-  return (
-    <div
-      className="overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface shadow-sm"
-      aria-hidden="true"
-    >
-      <div className="border-b border-line px-5 py-3.5">
-        <p className="text-[13px] font-semibold text-ink">{CONTENT.title}</p>
-      </div>
-      <ul>
-        {CONTENT.rows.map((row, i) => (
-          <li
-            key={row[0]}
-            className={`flex items-center justify-between gap-4 px-5 py-3 text-[13px] ${
-              i > 0 ? "border-t border-line" : ""
-            }`}
-          >
-            <span className="min-w-0 truncate text-ink-soft">{row[0]}</span>
-            <span className="tabular shrink-0 font-medium text-muted">{row[1]}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="flex items-baseline justify-between border-t border-line bg-surface-2/60 px-5 py-3.5">
-        <span className="text-[12.5px] text-muted">{CONTENT.footer[0]}</span>
-        <span className="tabular text-[15px] font-semibold text-ink">
-          {CONTENT.footer[1]}
-        </span>
-      </div>
-    </div>
   );
 }

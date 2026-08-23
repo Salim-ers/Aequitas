@@ -68,7 +68,11 @@ export function SoftwareJsonLd() {
   );
 }
 
-export function FaqJsonLd({ items }: { items: { q: string; a: string }[] }) {
+export function FaqJsonLd({
+  items,
+}: {
+  items: readonly { readonly q: string; readonly a: string }[];
+}) {
   return (
     <JsonLd
       data={{

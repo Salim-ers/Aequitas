@@ -8,7 +8,7 @@ const ROUTES = [
   "/tarifs",
   "/securite",
   "/integrations",
-  "/conformite",
+  "/demarche-pa",
   "/developers",
   "/contact",
   "/mentions-legales",

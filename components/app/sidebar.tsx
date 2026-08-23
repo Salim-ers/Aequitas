@@ -30,7 +30,7 @@ export function SidebarContent(props: SidebarProps) {
   return (
     <>
       <div className="flex h-16 shrink-0 items-center border-b border-line px-5">
-        <Link href="/dashboard" aria-label="Aequitas, vue d'ensemble">
+        <Link href="/dashboard" aria-label="Aequitas, accueil">
           <AequitasLogo />
         </Link>
       </div>

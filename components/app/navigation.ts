@@ -3,15 +3,12 @@ import {
   LayoutDashboard,
   FileText,
   Receipt,
-  RotateCcw,
   Users,
   ShoppingCart,
   Truck,
   Banknote,
   Send,
-  BarChart3,
   FolderOpen,
-  Plug,
   UsersRound,
   Settings,
   CreditCard,
@@ -38,21 +35,20 @@ export interface NavGroup {
 
 export const NAV_GROUPS: readonly NavGroup[] = [
   {
-    items: [{ label: "Vue d'ensemble", icon: LayoutDashboard, href: "/dashboard" }],
+    items: [{ label: "Accueil", icon: LayoutDashboard, href: "/dashboard" }],
   },
   {
     title: "Ventes",
     items: [
       { label: "Factures", icon: Receipt },
       { label: "Devis", icon: FileText },
-      { label: "Avoirs", icon: RotateCcw },
       { label: "Clients", icon: Users },
     ],
   },
   {
     title: "Achats",
     items: [
-      { label: "Factures fournisseurs", icon: ShoppingCart },
+      { label: "Factures reçues", icon: ShoppingCart },
       { label: "Fournisseurs", icon: Truck },
     ],
   },
@@ -62,23 +58,14 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   },
   {
     title: "Facturation électronique",
-    items: [
-      { label: "Suivi des envois", icon: Send },
-      { label: "E-reporting", icon: BarChart3 },
-    ],
-  },
-  {
-    title: "Autres",
-    items: [
-      { label: "Documents", icon: FolderOpen },
-      { label: "Intégrations", icon: Plug },
-    ],
+    items: [{ label: "Suivi des factures", icon: Send }],
   },
   {
     title: "Organisation",
     items: [
-      { label: "Abonnement", icon: CreditCard, href: "/abonnement" },
+      { label: "Documents", icon: FolderOpen },
       { label: "Équipe", icon: UsersRound },
+      { label: "Abonnement", icon: CreditCard, href: "/abonnement" },
       { label: "Paramètres", icon: Settings },
     ],
   },
@@ -86,7 +73,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
 
 /** Fil d'Ariane : libellé lisible d'une route de l'application. */
 export const ROUTE_LABELS: Record<string, string> = {
-  "/dashboard": "Vue d'ensemble",
+  "/dashboard": "Accueil",
   "/abonnement": "Abonnement",
   "/abonnement/succes": "Activation",
 };

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AequitasLogo } from "@/components/brand/aequitas-logo";
 import { SiteHeader } from "@/components/marketing/site-header";
 
-/** §56 — Quatre colonnes, une phrase, la mention réglementaire en bas. */
+/** Footer institutionnel : quatre colonnes, mention réglementaire en pied. */
 const FOOTER = [
   {
     title: "Produit",
@@ -10,31 +10,32 @@ const FOOTER = [
       { href: "/fonctionnalites", label: "Fonctionnalités" },
       { href: "/facturation-electronique", label: "Facturation électronique" },
       { href: "/tarifs", label: "Tarifs" },
-      { href: "/integrations", label: "Intégrations" },
-    ],
-  },
-  {
-    title: "Entreprise",
-    links: [
       { href: "/securite", label: "Sécurité" },
-      { href: "/conformite", label: "Conformité" },
-      { href: "/contact", label: "Contact" },
     ],
   },
   {
     title: "Ressources",
     links: [
-      { href: "/developers", label: "Documentation API" },
-      { href: "/facturation-electronique", label: "Comprendre la réforme" },
+      { href: "/developers", label: "Documentation" },
+      { href: "/facturation-electronique", label: "Réforme" },
+      { href: "/#faq", label: "Questions fréquentes" },
+      { href: "/contact", label: "Contact" },
+    ],
+  },
+  {
+    title: "Entreprise",
+    links: [
+      { href: "/demarche-pa", label: "Démarche PA" },
+      { href: "/integrations", label: "Intégrations" },
     ],
   },
   {
     title: "Légal",
     links: [
       { href: "/mentions-legales", label: "Mentions légales" },
-      { href: "/confidentialite", label: "Confidentialité" },
       { href: "/cgu", label: "CGU" },
       { href: "/cgv", label: "CGV" },
+      { href: "/confidentialite", label: "Confidentialité" },
       { href: "/cookies", label: "Cookies" },
     ],
   },
@@ -50,24 +51,25 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       </main>
 
       <footer className="border-t border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-14">
-          <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(4,1fr)]">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-16 lg:px-8">
+          <div className="grid gap-12 md:grid-cols-[1.4fr_repeat(4,1fr)]">
             <div>
               <AequitasLogo />
-              <p className="mt-4 max-w-[15rem] text-[13.5px] leading-relaxed text-muted">
-                La facturation électronique, sans la complexité.
+              <p className="mt-4 max-w-[16rem] text-[14px] leading-relaxed text-muted">
+                La plateforme française de facturation électronique.
               </p>
+              <span className="tricolore mt-5" aria-hidden="true" />
             </div>
 
             {FOOTER.map((group) => (
               <div key={group.title}>
-                <p className="text-[13px] font-semibold text-ink">{group.title}</p>
-                <ul className="mt-3 space-y-2.5">
+                <p className="text-[13.5px] font-semibold text-ink">{group.title}</p>
+                <ul className="mt-4 space-y-3">
                   {group.links.map((link) => (
-                    <li key={`${group.title}-${link.href}`}>
+                    <li key={`${group.title}-${link.href}-${link.label}`}>
                       <Link
                         href={link.href}
-                        className="text-[13px] text-muted transition-colors hover:text-blue"
+                        className="text-[13.5px] text-muted transition-colors hover:text-navy"
                       >
                         {link.label}
                       </Link>
@@ -78,15 +80,13 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             ))}
           </div>
 
-          <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-baseline sm:justify-between">
-            <p className="text-[12.5px] text-faint">
-              © {new Date().getFullYear()} Aequitas
-            </p>
-            {/* §42 / §122 — Mention tant que l'immatriculation n'est pas délivrée. */}
-            <p className="max-w-2xl text-[12px] leading-relaxed text-faint">
-              Aequitas prépare son infrastructure en vue de son immatriculation en
-              qualité de Plateforme Agréée. Les fonctionnalités réglementaires sont
-              activées progressivement.
+          <div className="mt-14 border-t border-line pt-6">
+            <p className="text-[13px] text-faint">© {new Date().getFullYear()} Aequitas</p>
+            {/* Mention tant que l'immatriculation n'est pas délivrée. */}
+            <p className="mt-3 max-w-3xl text-[12.5px] leading-relaxed text-faint">
+              Aequitas prépare son infrastructure en vue de son immatriculation en qualité
+              de Plateforme Agréée. Le statut réglementaire évoluera en fonction de
+              l&apos;avancement de la procédure officielle.
             </p>
           </div>
         </div>

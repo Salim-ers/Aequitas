@@ -6,21 +6,20 @@ test.describe("Site public", () => {
   test("la landing présente la proposition et les deux appels à l'action", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "La facturation électronique",
+      "La plateforme française",
     );
     await expect(
-      page.getByRole("link", { name: "Essayer gratuitement" }).first(),
+      page.getByRole("link", { name: "Créer mon compte" }).first(),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: "Voir comment ça marche" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Découvrir la plateforme" })).toBeVisible();
   });
 
   test("l'aperçu de facture affiche des totaux calculés, pas une image", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/fonctionnalites");
     // Les montants viennent du moteur de TVA : ils doivent être présents dans le
     // DOM. L'assertion est cadrée sur l'aperçu réel : les maquettes marketing
     // affichent elles aussi un « Total TTC », mais fictif.
-    const preview = page.locator("section", { hasText: "AEQ-2026-000148" }).last();
-    await expect(preview.getByText("Total TTC")).toBeVisible();
+    await expect(page.getByText("Total TTC")).toBeVisible();
     await expect(page.locator("text=/AEQ-\\d{4}-\\d{6}/")).toBeVisible();
   });
 

@@ -17,9 +17,8 @@ const NAV = [
 ];
 
 /**
- * §10 — Header collant, dépoli au défilement.
- *
- * Client uniquement pour l'état de défilement et le menu mobile ; tout le
+ * Header collant de 72 px, fond blanc, filet inférieur très fin.
+ * Client uniquement pour l'état de défilement et le tiroir mobile ; tout le
  * contenu de page reste en Server Components.
  */
 export function SiteHeader() {
@@ -28,13 +27,12 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 4);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Un changement de page referme le tiroir.
   useEffect(() => setOpen(false), [pathname]);
 
   // Tant que le tiroir est ouvert, la page dessous ne défile pas.
@@ -53,21 +51,16 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-[background-color,border-color,box-shadow] duration-200",
-        scrolled
-          ? "border-b border-line bg-canvas/85 backdrop-blur-md"
-          : "border-b border-transparent bg-canvas",
+        "sticky top-0 z-50 border-b bg-surface transition-shadow duration-200",
+        scrolled ? "border-line shadow-xs" : "border-transparent",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5">
+      <div className="mx-auto flex h-[72px] max-w-[var(--container-page)] items-center gap-8 px-5 lg:px-8">
         <Link href="/" aria-label="Aequitas, retour à l'accueil" className="shrink-0">
           <AequitasLogo />
         </Link>
 
-        <nav
-          className="hidden flex-1 items-center justify-center gap-1 lg:flex"
-          aria-label="Navigation principale"
-        >
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigation principale">
           {NAV.map((item) => {
             const active = pathname === item.href;
             return (
@@ -76,8 +69,8 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-[var(--radius-sm)] px-3 py-2 text-[13.5px] font-medium transition-colors",
-                  active ? "text-blue" : "text-muted hover:bg-surface-2 hover:text-ink",
+                  "rounded-[var(--radius-sm)] px-3 py-2 text-[14.5px] font-medium transition-colors",
+                  active ? "text-navy" : "text-muted hover:bg-surface-2 hover:text-ink",
                 )}
               >
                 {item.label}
@@ -87,12 +80,10 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto hidden items-center gap-2 lg:flex">
-          <ButtonLink href="/connexion" variant="ghost" size="sm">
+          <ButtonLink href="/connexion" variant="ghost">
             Se connecter
           </ButtonLink>
-          <ButtonLink href="/inscription" size="sm">
-            Essayer gratuitement
-          </ButtonLink>
+          <ButtonLink href="/inscription">Créer mon compte</ButtonLink>
         </div>
 
         <Button
@@ -109,10 +100,7 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <div
-          id="menu-mobile"
-          className="border-t border-line bg-canvas px-5 py-4 lg:hidden"
-        >
+        <div id="menu-mobile" className="border-t border-line bg-surface px-5 py-4 lg:hidden">
           <nav aria-label="Navigation principale" className="flex flex-col">
             {NAV.map((item) => (
               <Link
@@ -121,7 +109,7 @@ export function SiteHeader() {
                 aria-current={pathname === item.href ? "page" : undefined}
                 className={cn(
                   "rounded-[var(--radius)] px-3 py-3 text-[15px] font-medium",
-                  pathname === item.href ? "bg-blue-soft text-blue" : "text-ink-soft",
+                  pathname === item.href ? "bg-blue-soft text-navy" : "text-ink-soft",
                 )}
               >
                 {item.label}
@@ -130,7 +118,7 @@ export function SiteHeader() {
           </nav>
           <div className="mt-4 grid gap-2 border-t border-line pt-4">
             <ButtonLink href="/inscription" size="lg" className="w-full">
-              Essayer gratuitement
+              Créer mon compte
             </ButtonLink>
             <ButtonLink href="/connexion" variant="secondary" size="lg" className="w-full">
               Se connecter

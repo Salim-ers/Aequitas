@@ -3,8 +3,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/src/lib/utils";
 
 /**
- * Le bleu porte l'action. Le rouge de la marque n'est jamais un CTA :
- * la variante `danger` est réservée aux actions destructrices.
+ * Le navy porte l'action principale. Le rouge de la marque n'est jamais un
+ * appel à l'action : la variante `danger` est réservée aux actions
+ * destructrices, où le rouge est porteur de sens.
  */
 const buttonVariants = cva(
   [
@@ -16,19 +17,23 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-blue text-white shadow-xs hover:bg-blue-hover",
+        primary: "bg-navy text-white shadow-xs hover:bg-navy-hover",
+        blue: "bg-blue text-white shadow-xs hover:bg-blue-hover",
         secondary:
           "bg-surface text-ink border border-control shadow-xs hover:bg-surface-2 hover:border-ink-soft",
         ghost: "text-ink-soft hover:bg-surface-2 hover:text-ink",
         subtle: "bg-blue-soft text-blue hover:bg-blue-border/50",
         link: "text-blue underline-offset-4 hover:underline p-0 h-auto font-medium",
-        danger: "bg-danger text-white shadow-xs hover:bg-[#912018]",
+        danger: "bg-danger text-white shadow-xs hover:bg-red-dark",
+        // Posé sur un fond navy : inversion complète.
+        inverse: "bg-white text-navy shadow-xs hover:bg-blue-soft",
       },
       size: {
         sm: "h-8 px-3 text-[13px]",
         md: "h-10 px-4 text-sm",
         lg: "h-11 px-5 text-[15px]",
         xl: "h-12 px-6 text-[15px]",
+        "2xl": "h-14 px-7 text-[16px]",
         icon: "h-10 w-10",
         "icon-sm": "h-8 w-8",
       },

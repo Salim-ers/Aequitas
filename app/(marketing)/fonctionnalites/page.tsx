@@ -3,6 +3,7 @@ import { ArrowRight, Check, FileText, Banknote, FolderOpen, ShieldCheck } from "
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/page-header";
 import { Alert } from "@/components/ui/alert";
+import { InvoicePreview } from "@/components/marketing/invoice-preview";
 
 export const metadata: Metadata = {
   title: "Fonctionnalités",
@@ -117,6 +118,21 @@ export default function FeaturesPage() {
                 </dl>
               </div>
             ))}
+          </div>
+
+          <div className="mt-16 border-t border-line pt-12">
+            <h2 className="display-3 text-ink">
+              Les totaux se calculent pendant que vous saisissez.
+            </h2>
+            <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-muted">
+              Remises par ligne, TVA multi-taux, arrondis fiscaux : l&apos;échelle
+              HT → TVA → TTC est tenue par Aequitas. Les montants de cet aperçu ne sont
+              pas une capture d&apos;écran : ils sont calculés à la construction de la
+              page par le moteur de TVA réellement utilisé par l&apos;application.
+            </p>
+            <div className="mt-8 max-w-2xl">
+              <InvoicePreview />
+            </div>
           </div>
 
           <div className="mt-16 border-t border-line pt-12">
