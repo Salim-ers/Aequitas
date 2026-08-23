@@ -34,9 +34,9 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-line bg-paper-sunken p-6">
+      <div className="rounded-[var(--radius-lg)] border border-line bg-surface-2 p-6">
         <p className="text-[15px] font-medium text-ink">Message reçu</p>
-        <p className="mt-2 text-[14px] leading-relaxed text-slate">
+        <p className="mt-2 text-[14px] leading-relaxed text-muted">
           Nous répondons sous deux jours ouvrés à l&apos;adresse indiquée.
         </p>
       </div>
@@ -69,7 +69,7 @@ export function ContactForm() {
           required
           minLength={10}
           rows={6}
-          className="w-full rounded-[var(--radius)] border border-line-strong bg-paper-raised px-3 py-2 text-sm focus-visible:border-petrol focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-petrol"
+          className="w-full rounded-[var(--radius)] border border-line-strong bg-surface px-3 py-2 text-sm focus-visible:border-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue"
         />
       </div>
 

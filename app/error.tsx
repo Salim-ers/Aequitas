@@ -20,10 +20,10 @@ export default function GlobalError({
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
       <p className="eyebrow">Erreur 500</p>
-      <h1 className="mt-4 font-display text-[2rem] tracking-[-0.015em] text-ink">
+      <h1 className="mt-4 font-semibold text-[2rem] tracking-[-0.015em] text-ink">
         Cette page n&apos;a pas pu s&apos;afficher
       </h1>
-      <p className="mt-3 max-w-sm text-[14.5px] leading-relaxed text-slate">
+      <p className="mt-3 max-w-sm text-[14.5px] leading-relaxed text-muted">
         L&apos;incident a été enregistré. Réessayez ; si le problème persiste, écrivez à
         support@aequitas.fr en indiquant la référence {error.digest ?? "inconnue"}.
       </p>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 96" width="300" height="96" role="img" aria-label="Aequitas">
+  <g transform="translate(118 0)">
+    <path d="M20 6h11L13 58H2z" fill="#FFFFFF"/>
+    <path d="M19.9 38H31l-2.8 8H17.1z" fill="#FFFFFF"/>
+    <path d="M33 6h11l18 52H51z" fill="#FFFFFF"/>
+    <path d="M33 38h11.1l2.8 8H35.8z" fill="#FFFFFF"/>
+    <path d="M11.5 30H5.6" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="round"/>
+    <circle cx="2.8" cy="30" r="2.6" fill="#FFFFFF"/>
+    <path d="M52.5 30h5.9" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="round"/>
+    <circle cx="61.2" cy="30" r="2.6" fill="#FFFFFF"/>
+  </g>
+  <text x="150" y="88" text-anchor="middle" fill="#FFFFFF" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="5.5">AEQUITAS</text>
+</svg>

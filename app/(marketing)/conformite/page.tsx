@@ -22,7 +22,7 @@ const ROADMAP = [
 
 function tone(state: string) {
   if (state === "Livré") return "success" as const;
-  if (state === "En cours") return "brass" as const;
+  if (state === "En cours") return "warning" as const;
   return "neutral" as const;
 }
 

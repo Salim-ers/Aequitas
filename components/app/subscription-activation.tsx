@@ -26,20 +26,20 @@ export function SubscriptionActivation({ planName }: { planName: string }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 text-center">
       <div
-        className="mx-auto size-8 animate-spin rounded-full border-2 border-line-strong border-t-petrol"
+        className="mx-auto size-8 animate-spin rounded-full border-2 border-line-strong border-t-blue"
         role="status"
         aria-label="Activation en cours"
       />
-      <h1 className="mt-6 font-display text-[1.5rem] tracking-[-0.01em] text-ink">
+      <h1 className="mt-6 font-semibold text-[1.5rem] tracking-[-0.01em] text-ink">
         Activation de votre abonnement…
       </h1>
-      <p className="mt-3 text-[14px] leading-relaxed text-slate">
+      <p className="mt-3 text-[14px] leading-relaxed text-muted">
         Nous attendons la confirmation de Stripe pour l&apos;offre {planName}. Cela prend
         généralement quelques secondes.
       </p>
 
       {slow ? (
-        <div className="mt-8 rounded-[var(--radius)] border border-line bg-paper-sunken p-4 text-left">
+        <div className="mt-8 rounded-[var(--radius)] border border-line bg-surface-2 p-4 text-left">
           <p className="text-[13.5px] text-ink-soft">
             La confirmation tarde. Votre paiement n&apos;est pas perdu : l&apos;abonnement
             s&apos;activera dès réception. Vous pouvez fermer cette page.

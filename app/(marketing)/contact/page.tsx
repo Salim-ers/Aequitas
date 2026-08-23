@@ -12,10 +12,10 @@ export default function ContactPage() {
       <section className="border-b border-line">
         <div className="mx-auto max-w-3xl px-5 py-16">
           <p className="eyebrow">Contact</p>
-          <h1 className="mt-4 font-display text-[2.25rem] leading-tight tracking-[-0.015em] text-ink">
+          <h1 className="mt-4 font-semibold text-[2.25rem] leading-tight tracking-[-0.015em] text-ink">
             Nous écrire
           </h1>
-          <p className="mt-4 text-[16px] leading-relaxed text-slate">
+          <p className="mt-4 text-[16px] leading-relaxed text-muted">
             Pour une demande Enterprise, une question sur la facturation électronique, ou
             le signalement d&apos;une vulnérabilité.
           </p>

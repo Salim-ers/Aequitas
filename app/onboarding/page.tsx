@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
-import { AequitasWordmark } from "@/components/aequitas-mark";
+import { AequitasLogo } from "@/components/brand/aequitas-logo";
 import { createOrganizationAction, type OnboardingState } from "./actions";
 
 const INITIAL: OnboardingState = {};
@@ -14,14 +14,14 @@ export default function OnboardingPage() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-12">
-      <AequitasWordmark />
+      <AequitasLogo />
 
       <div className="mt-8">
         <p className="eyebrow">Étape 1 / 6</p>
-        <h1 className="mt-3 font-display text-[1.875rem] tracking-[-0.015em] text-ink">
+        <h1 className="mt-3 font-semibold text-[1.875rem] tracking-[-0.015em] text-ink">
           Votre entreprise
         </h1>
-        <p className="mt-2 text-[14px] leading-relaxed text-slate">
+        <p className="mt-2 text-[14px] leading-relaxed text-muted">
           Ces informations apparaîtront sur vos factures. Vous pourrez les compléter plus
           tard dans les paramètres.
         </p>

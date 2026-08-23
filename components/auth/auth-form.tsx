@@ -61,10 +61,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   return (
     <div>
-      <h1 className="font-display text-[1.75rem] tracking-[-0.01em] text-ink">
+      <h1 className="font-semibold text-[1.75rem] tracking-[-0.01em] text-ink">
         {isSignup ? "Créer votre compte" : "Se connecter"}
       </h1>
-      <p className="mt-2 text-[14px] text-slate">
+      <p className="mt-2 text-[14px] text-muted">
         {isSignup
           ? "Quelques secondes suffisent. Vous renseignerez votre entreprise juste après."
           : "Retrouvez vos devis, factures et règlements."}
@@ -104,7 +104,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           {!isSignup ? (
             <Link
               href="/mot-de-passe-oublie"
-              className="mt-2 inline-block text-[13px] text-petrol hover:underline"
+              className="mt-2 inline-block text-[13px] text-blue hover:underline"
             >
               Mot de passe oublié ?
             </Link>
@@ -131,18 +131,18 @@ export function AuthForm({ mode }: { mode: Mode }) {
         </Button>
       </form>
 
-      <p className="mt-6 text-[13.5px] text-slate">
+      <p className="mt-6 text-[13.5px] text-muted">
         {isSignup ? (
           <>
             Déjà un compte ?{" "}
-            <Link href="/connexion" className="text-petrol hover:underline">
+            <Link href="/connexion" className="text-blue hover:underline">
               Se connecter
             </Link>
           </>
         ) : (
           <>
             Pas encore de compte ?{" "}
-            <Link href="/inscription" className="text-petrol hover:underline">
+            <Link href="/inscription" className="text-blue hover:underline">
               Commencer gratuitement
             </Link>
           </>

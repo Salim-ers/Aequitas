@@ -35,10 +35,10 @@ export default function PricingPage() {
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-16 text-center">
           <p className="eyebrow">Tarifs</p>
-          <h1 className="mx-auto mt-4 max-w-2xl font-display text-[2.5rem] leading-tight tracking-[-0.015em] text-ink">
+          <h1 className="mx-auto mt-4 max-w-2xl font-semibold text-[2.5rem] leading-tight tracking-[-0.015em] text-ink">
             Un prix par mois, par entreprise
           </h1>
-          <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-slate">
+          <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-muted">
             Tous les montants sont hors taxes. Essai de 14 jours sur chaque offre, sans
             engagement de durée.
           </p>
@@ -54,20 +54,20 @@ export default function PricingPage() {
                 <div
                   key={plan.slug}
                   className={cn(
-                    "flex flex-col rounded-[var(--radius-lg)] border bg-paper-raised p-6",
+                    "flex flex-col rounded-[var(--radius-lg)] border bg-surface p-6",
                     plan.highlighted
-                      ? "border-petrol shadow-[0_16px_40px_-20px_rgba(14,76,70,0.45)]"
+                      ? "border-blue shadow-[0_16px_40px_-20px_rgba(14,76,70,0.45)]"
                       : "border-line",
                   )}
                 >
                   {plan.highlighted ? (
-                    <span className="mb-4 -mt-1 self-start rounded-full bg-petrol-soft px-2.5 py-1 text-[11px] font-medium text-petrol">
+                    <span className="mb-4 -mt-1 self-start rounded-full bg-blue-soft px-2.5 py-1 text-[11px] font-medium text-blue">
                       Le plus populaire
                     </span>
                   ) : null}
 
-                  <h2 className="font-display text-[1.375rem] text-ink">{plan.name}</h2>
-                  <p className="mt-1.5 min-h-[2.5rem] text-[13px] leading-relaxed text-slate">
+                  <h2 className="font-semibold text-[1.375rem] text-ink">{plan.name}</h2>
+                  <p className="mt-1.5 min-h-[2.5rem] text-[13px] leading-relaxed text-muted">
                     {plan.tagline}
                   </p>
 
@@ -76,7 +76,7 @@ export default function PricingPage() {
                       {formatPlanPrice(plan)}
                     </span>
                     {plan.monthlyPriceCents !== null ? (
-                      <span className="text-[13px] text-slate">HT / mois</span>
+                      <span className="text-[13px] text-muted">HT / mois</span>
                     ) : null}
                   </p>
 
@@ -93,7 +93,7 @@ export default function PricingPage() {
                   <ul className="mt-7 space-y-2.5 border-t border-line pt-6">
                     {plan.bullets.map((bullet) => (
                       <li key={bullet} className="flex gap-2.5 text-[13px] text-ink-soft">
-                        <Check className="mt-0.5 size-3.5 shrink-0 text-petrol" aria-hidden="true" />
+                        <Check className="mt-0.5 size-3.5 shrink-0 text-blue" aria-hidden="true" />
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -107,14 +107,14 @@ export default function PricingPage() {
 
       <section>
         <div className="mx-auto max-w-3xl px-5 py-16">
-          <h2 className="font-display text-[1.75rem] tracking-[-0.01em] text-ink">
+          <h2 className="font-semibold text-[1.75rem] tracking-[-0.01em] text-ink">
             Questions fréquentes
           </h2>
           <dl className="mt-8 divide-y divide-[color:var(--color-line)] border-t border-line">
             {FAQ.map((item) => (
               <div key={item.q} className="py-5">
                 <dt className="text-[15px] font-medium text-ink">{item.q}</dt>
-                <dd className="mt-2 text-[14px] leading-relaxed text-slate">{item.a}</dd>
+                <dd className="mt-2 text-[14px] leading-relaxed text-muted">{item.a}</dd>
               </div>
             ))}
           </dl>

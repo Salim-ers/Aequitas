@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Inscription", robots: { index: false
 
 export default function SignUpPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-slate">Chargement…</p>}>
+    <Suspense fallback={<p className="text-sm text-muted">Chargement…</p>}>
       <AuthForm mode="signup" />
     </Suspense>
   );

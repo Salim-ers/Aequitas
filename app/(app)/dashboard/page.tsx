@@ -78,10 +78,10 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-[1.75rem] tracking-[-0.01em] text-ink">
+          <h1 className="font-semibold text-[1.75rem] tracking-[-0.01em] text-ink">
             Bonjour 👋
           </h1>
-          <p className="mt-1 text-[14px] text-slate">{context.organizationName}</p>
+          <p className="mt-1 text-[14px] text-muted">{context.organizationName}</p>
         </div>
         <Link href="/factures/nouvelle">
           <Button>
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
         {kpis.map((kpi) => (
           <Card key={kpi.label}>
             <CardContent className="pt-5">
-              <p className="text-[12.5px] text-slate">{kpi.label}</p>
+              <p className="text-[12.5px] text-muted">{kpi.label}</p>
               <p className="tabular mt-2 text-[1.5rem] font-medium tracking-tight text-ink">
                 {formatMoney(kpi.value.toDb())}
               </p>
@@ -108,7 +108,7 @@ export default async function DashboardPage() {
         <Card>
           <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
             <h2 className="text-[14px] font-medium text-ink">Dernières factures</h2>
-            <Link href="/factures" className="text-[13px] text-petrol hover:underline">
+            <Link href="/factures" className="text-[13px] text-blue hover:underline">
               Tout voir
             </Link>
           </div>
@@ -116,10 +116,10 @@ export default async function DashboardPage() {
             <table className="w-full text-[13.5px]">
               <thead>
                 <tr className="border-b border-line text-left">
-                  <th scope="col" className="px-5 py-2.5 font-medium text-slate">Numéro</th>
-                  <th scope="col" className="px-3 py-2.5 font-medium text-slate">Date</th>
-                  <th scope="col" className="px-3 py-2.5 font-medium text-slate">Statut</th>
-                  <th scope="col" className="px-5 py-2.5 text-right font-medium text-slate">
+                  <th scope="col" className="px-5 py-2.5 font-medium text-muted">Numéro</th>
+                  <th scope="col" className="px-3 py-2.5 font-medium text-muted">Date</th>
+                  <th scope="col" className="px-3 py-2.5 font-medium text-muted">Statut</th>
+                  <th scope="col" className="px-5 py-2.5 text-right font-medium text-muted">
                     Montant TTC
                   </th>
                 </tr>
@@ -130,12 +130,12 @@ export default async function DashboardPage() {
                     <td className="px-5 py-3">
                       <Link
                         href={`/factures/${invoice.id}`}
-                        className="tabular text-ink hover:text-petrol"
+                        className="tabular text-ink hover:text-blue"
                       >
                         {invoice.number ?? "Brouillon"}
                       </Link>
                     </td>
-                    <td className="px-3 py-3 text-slate">{formatDate(invoice.issueDate)}</td>
+                    <td className="px-3 py-3 text-muted">{formatDate(invoice.issueDate)}</td>
                     <td className="px-3 py-3">
                       <Badge tone={invoice.paymentStatus === "PAID" ? "success" : "neutral"}>
                         {invoice.businessStatus === "DRAFT" ? "Brouillon" : "Émise"}
@@ -175,17 +175,17 @@ export default async function DashboardPage() {
             {Number(overdueCount[0]?.count ?? 0) > 0 ? (
               <Link
                 href="/factures?statut=retard"
-                className="block rounded-[var(--radius)] border border-line p-3 hover:bg-paper-sunken"
+                className="block rounded-[var(--radius)] border border-line p-3 hover:bg-surface-2"
               >
                 <p className="text-[13.5px] font-medium text-ink">
                   {overdueCount[0]?.count} facture(s) en retard
                 </p>
-                <p className="tabular mt-1 text-[13px] text-slate">
+                <p className="tabular mt-1 text-[13px] text-muted">
                   {formatMoney(Money.fromDb(totals?.overdue).toDb())} à recouvrer
                 </p>
               </Link>
             ) : (
-              <p className="text-[13.5px] text-slate">
+              <p className="text-[13.5px] text-muted">
                 Rien à traiter. Les retards et échéances proches apparaîtront ici.
               </p>
             )}

@@ -4,7 +4,7 @@ import {
   Users, Package, Banknote, Send, BarChart3, KeyRound, Webhook,
   UsersRound, ScrollText, Settings,
 } from "lucide-react";
-import { AequitasWordmark } from "@/components/aequitas-mark";
+import { AequitasLogo } from "@/components/brand/aequitas-logo";
 
 /** §79 — Sidebar applicative. */
 const GROUPS = [
@@ -69,10 +69,10 @@ export function Sidebar({
   const percent = Math.min(100, Math.round(usageRatio * 100));
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-line bg-paper-sunken">
+    <aside className="flex h-full w-60 shrink-0 flex-col border-r border-line bg-surface-2">
       <div className="flex h-16 items-center border-b border-line px-5">
         <Link href="/dashboard">
-          <AequitasWordmark />
+          <AequitasLogo />
         </Link>
       </div>
 
@@ -87,7 +87,7 @@ export function Sidebar({
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="flex items-center gap-2.5 rounded-[var(--radius)] px-2.5 py-1.5 text-[13.5px] text-slate transition-colors hover:bg-paper-raised hover:text-ink"
+                    className="flex items-center gap-2.5 rounded-[var(--radius)] px-2.5 py-1.5 text-[13.5px] text-muted transition-colors hover:bg-surface hover:text-ink"
                   >
                     <item.icon className="size-4 shrink-0" aria-hidden="true" />
                     {item.label}
@@ -100,7 +100,7 @@ export function Sidebar({
       </nav>
 
       <div className="border-t border-line p-4">
-        <Link href="/abonnement" className="block rounded-[var(--radius)] p-2 hover:bg-paper-raised">
+        <Link href="/abonnement" className="block rounded-[var(--radius)] p-2 hover:bg-surface">
           <p className="text-[13px] font-medium text-ink">Plan {planName}</p>
           <div
             className="mt-2 h-1 overflow-hidden rounded-full bg-line-strong"
@@ -110,14 +110,14 @@ export function Sidebar({
             aria-valuemax={100}
             aria-label="Utilisation du quota de factures"
           >
-            <div className="h-full bg-petrol" style={{ width: `${percent}%` }} />
+            <div className="h-full bg-blue" style={{ width: `${percent}%` }} />
           </div>
-          <p className="tabular mt-1.5 text-[12px] text-slate">{percent} % utilisé</p>
+          <p className="tabular mt-1.5 text-[12px] text-muted">{percent} % utilisé</p>
         </Link>
 
         <div className="mt-3 border-t border-line pt-3">
           <p className="truncate text-[13px] font-medium text-ink">{userName}</p>
-          <p className="truncate text-[12px] text-slate">{organizationName}</p>
+          <p className="truncate text-[12px] text-muted">{organizationName}</p>
         </div>
       </div>
     </aside>

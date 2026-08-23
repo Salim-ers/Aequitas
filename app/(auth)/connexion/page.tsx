@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Connexion", robots: { index: false }
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-slate">Chargement…</p>}>
+    <Suspense fallback={<p className="text-sm text-muted">Chargement…</p>}>
       <AuthForm mode="signin" />
     </Suspense>
   );

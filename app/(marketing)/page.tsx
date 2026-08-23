@@ -51,12 +51,12 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-6xl gap-14 px-5 py-20 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-28">
           <div>
             <p className="eyebrow">Facturation d&apos;entreprise — France</p>
-            <h1 className="mt-5 font-display text-[2.75rem] leading-[1.08] tracking-[-0.015em] text-ink sm:text-[3.5rem]">
+            <h1 className="mt-5 font-semibold text-[2.75rem] leading-[1.08] tracking-[-0.015em] text-ink sm:text-[3.5rem]">
               La facturation électronique,
               <br />
-              <span className="text-petrol">simplement.</span>
+              <span className="text-blue">simplement.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-slate">
+            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
               Aequitas centralise vos factures, vos paiements et vos obligations de
               facturation électronique dans une plateforme moderne conçue pour les
               entreprises françaises.
@@ -76,7 +76,7 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <p className="mt-5 text-[13px] text-slate-light">
+            <p className="mt-5 text-[13px] text-faint">
               Essai de 14 jours. Aucune carte requise pour créer votre compte.
             </p>
           </div>
@@ -91,20 +91,20 @@ export default function HomePage() {
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Le cycle complet</p>
-          <h2 className="mt-4 max-w-2xl font-display text-[2rem] leading-tight tracking-[-0.01em] text-ink">
+          <h2 className="mt-4 max-w-2xl font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
             Tout votre cycle de facturation
           </h2>
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-slate">
+          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
             Du devis accepté au règlement encaissé, sans ressaisie et sans tableur
             intermédiaire.
           </p>
 
           <div className="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
             {CYCLE.map((item) => (
-              <div key={item.title} className="bg-paper-raised p-6">
-                <item.icon className="size-5 text-petrol" aria-hidden="true" />
+              <div key={item.title} className="bg-surface p-6">
+                <item.icon className="size-5 text-blue" aria-hidden="true" />
                 <h3 className="mt-4 text-[15px] font-medium text-ink">{item.title}</h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-slate">{item.body}</p>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{item.body}</p>
               </div>
             ))}
           </div>
@@ -112,26 +112,26 @@ export default function HomePage() {
       </section>
 
       {/* Facturation électronique */}
-      <section className="border-b border-line bg-paper-sunken">
+      <section className="border-b border-line bg-surface-2">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
             <div>
               <p className="eyebrow">Formats et transmissions</p>
-              <h2 className="mt-4 font-display text-[2rem] leading-tight tracking-[-0.01em] text-ink">
+              <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
                 Facturation électronique
               </h2>
-              <p className="mt-4 text-[15px] leading-relaxed text-slate">
+              <p className="mt-4 text-[15px] leading-relaxed text-muted">
                 Aequitas structure vos factures autour d&apos;un modèle canonique, puis
                 les rend dans le format attendu. Les contrôles, le cycle de vie et
                 l&apos;e-reporting reposent sur cette même base.
               </p>
-              <p className="mt-4 rounded-[var(--radius)] border border-line-strong bg-paper-raised px-4 py-3 text-[13px] leading-relaxed text-slate">
+              <p className="mt-4 rounded-[var(--radius)] border border-line-strong bg-surface px-4 py-3 text-[13px] leading-relaxed text-muted">
                 Les fonctionnalités réglementaires sont déployées progressivement en
                 fonction de l&apos;avancement de l&apos;immatriculation Aequitas.
               </p>
               <Link
                 href="/facturation-electronique"
-                className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-petrol hover:underline"
+                className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-blue hover:underline"
               >
                 Comprendre le calendrier
                 <ArrowRight className="size-4" />
@@ -147,9 +147,9 @@ export default function HomePage() {
                 ["Transmissions", "File d'envoi, statuts, reprise sur échec."],
                 ["Cycle de vie", "Chaque changement d'état est daté et conservé."],
               ].map(([term, description]) => (
-                <div key={term} className="bg-paper-raised p-5">
+                <div key={term} className="bg-surface p-5">
                   <dt className="text-[14px] font-medium text-ink">{term}</dt>
-                  <dd className="mt-1.5 text-[13px] leading-relaxed text-slate">
+                  <dd className="mt-1.5 text-[13px] leading-relaxed text-muted">
                     {description}
                   </dd>
                 </div>
@@ -163,15 +163,15 @@ export default function HomePage() {
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Automatisation</p>
-          <h2 className="mt-4 font-display text-[2rem] leading-tight tracking-[-0.01em] text-ink">
+          <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
             Ce qui se répète n&apos;a pas à être refait
           </h2>
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {AUTOMATION.map((item) => (
               <div key={item.title}>
-                <item.icon className="size-5 text-brass" aria-hidden="true" />
+                <item.icon className="size-5 text-warning" aria-hidden="true" />
                 <h3 className="mt-4 text-[15px] font-medium text-ink">{item.title}</h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-slate">{item.body}</p>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{item.body}</p>
               </div>
             ))}
           </div>
@@ -179,28 +179,28 @@ export default function HomePage() {
       </section>
 
       {/* API */}
-      <section className="border-b border-line bg-ink text-paper">
+      <section className="border-b border-line bg-ink text-canvas">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="eyebrow text-brass">Plateforme API-first</p>
-            <h2 className="mt-4 font-display text-[2rem] leading-tight tracking-[-0.01em] text-paper">
+            <p className="eyebrow text-warning">Plateforme API-first</p>
+            <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-canvas">
               Vos systèmes facturent aussi
             </h2>
-            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-slate-light">
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-faint">
               Chaque action disponible dans l&apos;interface l&apos;est aussi par API :
               clients, articles, devis, factures, paiements. Clés révocables, webhooks
               signés, journal des livraisons.
             </p>
             <Link
               href="/developers"
-              className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-brass hover:underline"
+              className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-warning hover:underline"
             >
               Lire la documentation
               <ArrowRight className="size-4" />
             </Link>
           </div>
 
-          <pre className="overflow-x-auto rounded-[var(--radius-lg)] border border-white/10 bg-black/25 p-5 font-mono text-[12.5px] leading-relaxed text-slate-light">
+          <pre className="overflow-x-auto rounded-[var(--radius-lg)] border border-white/10 bg-black/25 p-5 font-mono text-[12.5px] leading-relaxed text-faint">
             <code>{`curl https://api.aequitas.fr/v1/invoices \\
   -H "Authorization: Bearer aeq_live_..." \\
   -d customer_id="cus_8f21" \\
@@ -217,21 +217,21 @@ export default function HomePage() {
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <p className="eyebrow">Sécurité</p>
-          <h2 className="mt-4 font-display text-[2rem] leading-tight tracking-[-0.01em] text-ink">
+          <h2 className="mt-4 font-semibold text-[2rem] leading-tight tracking-[-0.01em] text-ink">
             Des données fiscales méritent mieux qu&apos;un mot de passe
           </h2>
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {SECURITY.map((item) => (
               <div key={item.title}>
-                <item.icon className="size-5 text-petrol" aria-hidden="true" />
+                <item.icon className="size-5 text-blue" aria-hidden="true" />
                 <h3 className="mt-4 text-[15px] font-medium text-ink">{item.title}</h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-slate">{item.body}</p>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{item.body}</p>
               </div>
             ))}
           </div>
           <Link
             href="/securite"
-            className="mt-10 inline-flex items-center gap-1.5 text-[14px] font-medium text-petrol hover:underline"
+            className="mt-10 inline-flex items-center gap-1.5 text-[14px] font-medium text-blue hover:underline"
           >
             Voir les mesures en place
             <ArrowRight className="size-4" />
@@ -242,7 +242,7 @@ export default function HomePage() {
       {/* CTA final */}
       <section>
         <div className="mx-auto max-w-6xl px-5 py-24 text-center">
-          <h2 className="mx-auto max-w-2xl font-display text-[2.25rem] leading-tight tracking-[-0.015em] text-ink">
+          <h2 className="mx-auto max-w-2xl font-semibold text-[2.25rem] leading-tight tracking-[-0.015em] text-ink">
             Passez à la facturation nouvelle génération.
           </h2>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">

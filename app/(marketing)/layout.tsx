@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AequitasWordmark } from "@/components/aequitas-mark";
+import { AequitasLogo } from "@/components/brand/aequitas-logo";
 import { Button } from "@/components/ui/button";
 
 const NAV = [
@@ -50,10 +50,10 @@ const FOOTER = [
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 border-b border-line bg-paper/85 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Link href="/" aria-label="Aequitas, accueil">
-            <AequitasWordmark />
+            <AequitasLogo />
           </Link>
 
           <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigation principale">
@@ -61,7 +61,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-[13.5px] text-slate transition-colors hover:text-ink"
+                className="text-[13.5px] text-muted transition-colors hover:text-ink"
               >
                 {item.label}
               </Link>
@@ -83,12 +83,12 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 
       <main className="flex-1">{children}</main>
 
-      <footer className="border-t border-line bg-paper-sunken">
+      <footer className="border-t border-line bg-surface-2">
         <div className="mx-auto max-w-6xl px-5 py-14">
           <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
             <div>
-              <AequitasWordmark />
-              <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-slate">
+              <AequitasLogo />
+              <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted">
                 Créez, envoyez et suivez vos factures depuis un seul espace.
               </p>
             </div>
@@ -100,7 +100,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-[13px] text-slate transition-colors hover:text-ink"
+                        className="text-[13px] text-muted transition-colors hover:text-ink"
                       >
                         {link.label}
                       </Link>
@@ -113,12 +113,12 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 
           {/* §122 — Mention obligatoire tant que l'immatriculation n'est pas délivrée. */}
           <div className="mt-12 border-t border-line pt-6">
-            <p className="max-w-3xl text-[12px] leading-relaxed text-slate-light">
+            <p className="max-w-3xl text-[12px] leading-relaxed text-faint">
               Aequitas n&apos;est pas actuellement présentée comme Plateforme Agréée tant que
               l&apos;immatriculation correspondante n&apos;a pas été délivrée par
               l&apos;administration fiscale.
             </p>
-            <p className="mt-3 text-[12px] text-slate-light">
+            <p className="mt-3 text-[12px] text-faint">
               © {new Date().getFullYear()} Aequitas
             </p>
           </div>
