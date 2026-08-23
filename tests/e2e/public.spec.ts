@@ -8,14 +8,19 @@ test.describe("Site public", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "La facturation électronique",
     );
-    await expect(page.getByRole("link", { name: "Commencer gratuitement" }).first()).toBeVisible();
-    await expect(page.getByRole("link", { name: "Découvrir Aequitas" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Essayer gratuitement" }).first(),
+    ).toBeVisible();
+    await expect(page.getByRole("link", { name: "Voir comment ça marche" })).toBeVisible();
   });
 
-  test("le hero affiche des totaux calculés, pas une image", async ({ page }) => {
+  test("l'aperçu de facture affiche des totaux calculés, pas une image", async ({ page }) => {
     await page.goto("/");
-    // Les montants viennent du moteur de TVA : ils doivent être présents dans le DOM.
-    await expect(page.getByText("Total TTC")).toBeVisible();
+    // Les montants viennent du moteur de TVA : ils doivent être présents dans le
+    // DOM. L'assertion est cadrée sur l'aperçu réel : les maquettes marketing
+    // affichent elles aussi un « Total TTC », mais fictif.
+    const preview = page.locator("section", { hasText: "AEQ-2026-000148" }).last();
+    await expect(preview.getByText("Total TTC")).toBeVisible();
     await expect(page.locator("text=/AEQ-\\d{4}-\\d{6}/")).toBeVisible();
   });
 
@@ -24,16 +29,16 @@ test.describe("Site public", () => {
     for (const name of ["Essentiel", "Pro", "Business", "Enterprise"]) {
       await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
     }
-    await expect(page.getByText("Le plus populaire")).toBeVisible();
+    await expect(page.getByText("Recommandé")).toBeVisible();
   });
 
-  test("le disclaimer Plateforme Agréée est présent sur toutes les pages publiques", async ({
+  test("le disclaimer réglementaire est présent sur toutes les pages publiques", async ({
     page,
   }) => {
     for (const path of ["/", "/tarifs", "/securite", "/conformite"]) {
       await page.goto(path);
       await expect(
-        page.getByText(/n'est pas actuellement présentée comme Plateforme Agréée/),
+        page.getByText(/immatriculation en qualité de Plateforme Agréée/).first(),
       ).toBeVisible();
     }
   });
@@ -61,6 +66,51 @@ test.describe("Site public", () => {
   });
 });
 
+/**
+ * Garde-fous de la refonte : ces trois défauts existaient et sont corrigés.
+ * Ils ne doivent pas revenir.
+ */
+test.describe("Qualité de la refonte", () => {
+  const PUBLIC_PATHS = [
+    "/",
+    "/fonctionnalites",
+    "/facturation-electronique",
+    "/tarifs",
+    "/securite",
+    "/conformite",
+    "/integrations",
+    "/developers",
+    "/contact",
+  ];
+
+  test("aucune page publique ne défile horizontalement", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    for (const path of PUBLIC_PATHS) {
+      await page.goto(path);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow, `${path} déborde de ${overflow}px`).toBeLessThanOrEqual(0);
+    }
+  });
+
+  test("chaque page publique expose exactement un h1", async ({ page }) => {
+    for (const path of PUBLIC_PATHS) {
+      await page.goto(path);
+      await expect(page.getByRole("heading", { level: 1 }), path).toHaveCount(1);
+    }
+  });
+
+  test("la navigation applicative n'expose aucun lien mort", async ({ page }) => {
+    // Les modules non construits sont annoncés « Bientôt » et ne sont pas
+    // des liens : c'est ce qui remplace les 404 de l'ancienne sidebar.
+    await page.goto("/connexion");
+    for (const label of ["Factures", "Devis", "Clients", "Paiements"]) {
+      await expect(page.getByRole("link", { name: label, exact: true })).toHaveCount(0);
+    }
+  });
+});
+
 test.describe("Espace applicatif", () => {
   test("le dashboard n'est pas accessible sans session", async ({ page }) => {
     await page.goto("/dashboard");
@@ -69,7 +119,7 @@ test.describe("Espace applicatif", () => {
 
   test("les pages d'authentification s'affichent", async ({ page }) => {
     await page.goto("/inscription");
-    await expect(page.getByLabel("Adresse email")).toBeVisible();
+    await expect(page.getByLabel("Adresse e-mail")).toBeVisible();
     await expect(page.getByLabel("Mot de passe")).toBeVisible();
 
     await page.goto("/connexion");

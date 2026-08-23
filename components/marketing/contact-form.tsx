@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
+import { Input, Textarea, Field } from "@/components/ui/input";
+import { SuccessAlert } from "@/components/ui/alert";
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -34,44 +35,36 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-line bg-surface-2 p-6">
-        <p className="text-[15px] font-medium text-ink">Message reçu</p>
-        <p className="mt-2 text-[14px] leading-relaxed text-muted">
-          Nous répondons sous deux jours ouvrés à l&apos;adresse indiquée.
-        </p>
-      </div>
+      <SuccessAlert title="Message reçu">
+        Nous répondons sous deux jours ouvrés à l&apos;adresse indiquée.
+      </SuccessAlert>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="name">Nom</Label>
-          <Input id="name" name="name" required minLength={2} />
-        </div>
-        <div>
-          <Label htmlFor="email">Email professionnel</Label>
-          <Input id="email" name="email" type="email" required />
-        </div>
+        <Field id="name" label="Nom">
+          {(props) => <Input {...props} name="name" required minLength={2} autoComplete="name" />}
+        </Field>
+        <Field id="email" label="E-mail professionnel">
+          {(props) => (
+            <Input {...props} name="email" type="email" required autoComplete="email" />
+          )}
+        </Field>
       </div>
 
-      <div>
-        <Label htmlFor="company">Entreprise</Label>
-        <Input id="company" name="company" />
-      </div>
+      <Field id="company" label="Entreprise" optional>
+        {(props) => <Input {...props} name="company" autoComplete="organization" />}
+      </Field>
 
-      <div>
-        <Label htmlFor="message">Votre message</Label>
-        <textarea
-          id="message"
-          name="message"
-          required
-          minLength={10}
-          rows={6}
-          className="w-full rounded-[var(--radius)] border border-line-strong bg-surface px-3 py-2 text-sm focus-visible:border-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue"
-        />
-      </div>
+      <Field
+        id="message"
+        label="Votre message"
+        hint="Dix caractères minimum. Décrivez votre besoin en quelques lignes."
+      >
+        {(props) => <Textarea {...props} name="message" required minLength={10} rows={6} />}
+      </Field>
 
       {/* Champ piège, masqué aux lecteurs d'écran comme aux humains. */}
       <input

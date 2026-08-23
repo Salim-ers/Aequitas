@@ -35,6 +35,9 @@
   /* — Lignes —————————————————————————————————————— */
   --color-line: #e4e7ec;
   --color-line-strong: #d0d5dd;
+  /* Contour des champs et contrôles : 3,16:1 sur le fond de page,
+     seuil exigé par WCAG 2.2 pour les composants d'interface. */
+  --color-control: #858d9d;
 
   /* — États ——————————————————————————————————————— */
   --color-success: #067647;

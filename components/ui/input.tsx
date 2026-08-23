@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/src/lib/utils";
 
 const fieldBase = [
-  "w-full rounded-[var(--radius)] border border-line-strong bg-surface text-ink shadow-xs",
+  "w-full rounded-[var(--radius)] border border-control bg-surface text-ink shadow-xs",
   "placeholder:text-faint",
   "transition-[border-color,box-shadow] duration-150",
   "focus-visible:outline-none focus-visible:border-blue focus-visible:ring-4 focus-visible:ring-blue-soft",

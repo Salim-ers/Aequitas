@@ -7,7 +7,10 @@ import { cn } from "@/src/lib/utils";
  * Le conteneur défile horizontalement plutôt que la page (§35).
  */
 export function TableScroll({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("w-full overflow-x-auto", className)} {...props} />;
+  // `relative` est nécessaire : un descendant en position absolue — un
+  // libellé `sr-only`, par exemple — remonterait sinon jusqu'au document
+  // et ferait défiler la page entière horizontalement.
+  return <div className={cn("relative w-full overflow-x-auto", className)} {...props} />;
 }
 
 export function Table({ className, ...props }: React.TableHTMLAttributes<HTMLTableElement>) {

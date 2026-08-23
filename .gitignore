@@ -12,3 +12,5 @@ coverage
 __shot.mjs
 __dbg.mjs
 __serve.sh
+__a11y.mjs
+__audit.mjs

@@ -7,6 +7,7 @@ const ROUTES = [
   "/facturation-electronique",
   "/tarifs",
   "/securite",
+  "/integrations",
   "/conformite",
   "/developers",
   "/contact",

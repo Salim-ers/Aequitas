@@ -5,6 +5,7 @@ import { PLAN_ORDER, PLANS, formatPlanPrice, type FeatureKey } from "@/src/confi
 import { PlanCta } from "@/components/marketing/plan-cta";
 import { SectionHeader } from "@/components/ui/page-header";
 import { TableScroll } from "@/components/ui/table";
+import { FaqJsonLd } from "@/components/marketing/structured-data";
 import { cn } from "@/src/lib/utils";
 
 export const metadata: Metadata = {
@@ -67,12 +68,15 @@ export default function PricingPage() {
 
   return (
     <>
+      <FaqJsonLd items={FAQ} />
+
       <section>
         <div className="mx-auto max-w-6xl px-5 pt-16 pb-10 text-center">
           <SectionHeader
             align="center"
             eyebrow="Tarifs"
             title="Un prix par mois, par entreprise."
+            as="h1"
             description="Tous les montants sont hors taxes. Essai de 14 jours sur chaque offre, sans carte bancaire et sans engagement de durée."
           />
         </div>

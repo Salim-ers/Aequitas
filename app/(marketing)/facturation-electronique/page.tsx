@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/page-header";
 import { Alert } from "@/components/ui/alert";
 import { MarketingCompliancePreview } from "@/components/marketing/mockups";
+import { FaqJsonLd } from "@/components/marketing/structured-data";
 
 export const metadata: Metadata = {
   title: "Facturation électronique",
@@ -87,6 +88,8 @@ const TECHNICAL = [
 export default function EInvoicingPage() {
   return (
     <>
+      <FaqJsonLd items={QUESTIONS} />
+
       {/* ————————————————— Ouverture ————————————————— */}
       <section>
         <div className="mx-auto max-w-6xl px-5 pt-16 pb-14">
@@ -250,7 +253,7 @@ export default function EInvoicingPage() {
               </p>
               <Link
                 href="/developers"
-                className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-blue hover:underline"
+                className="mt-4 inline-flex items-center gap-1.5 py-1 text-[14px] font-semibold text-blue hover:underline"
               >
                 Documentation pour les développeurs
                 <ArrowRight className="size-4" />

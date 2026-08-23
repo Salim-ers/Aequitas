@@ -118,7 +118,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         {!isSignup ? (
           <Link
             href="/mot-de-passe-oublie"
-            className="inline-block text-[13px] font-medium text-blue hover:underline"
+            className="inline-block py-1 text-[13px] font-medium text-blue hover:underline"
           >
             Mot de passe oublié ?
           </Link>

@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
 
       <Link
         href="/connexion"
-        className="mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-blue hover:underline"
+        className="mt-6 inline-flex items-center gap-1.5 py-1 text-[13.5px] font-medium text-blue hover:underline"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         Retour à la connexion

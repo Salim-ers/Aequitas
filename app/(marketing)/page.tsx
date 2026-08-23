@@ -17,6 +17,10 @@ import {
   MarketingCompliancePreview,
 } from "@/components/marketing/mockups";
 import { InvoicePreview } from "@/components/marketing/invoice-preview";
+import {
+  OrganizationJsonLd,
+  SoftwareJsonLd,
+} from "@/components/marketing/structured-data";
 
 /** §14 — Trois étapes, pas douze fonctionnalités interchangeables. */
 const STEPS = [
@@ -83,6 +87,8 @@ export default function HomePage() {
   return (
     <>
       <RevealScript />
+      <OrganizationJsonLd />
+      <SoftwareJsonLd />
 
       {/* ————————————————————————— Hero ————————————————————————— */}
       <section className="relative overflow-hidden">
@@ -248,7 +254,7 @@ export default function HomePage() {
 
               <Link
                 href="/facturation-electronique"
-                className="mt-8 inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-blue hover:underline"
+                className="mt-8 inline-flex items-center gap-1.5 py-1 text-[14.5px] font-semibold text-blue hover:underline"
               >
                 Comprendre le calendrier
                 <ArrowRight className="size-4" />
@@ -328,7 +334,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/developers"
-                className="mt-6 inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-white hover:underline"
+                className="mt-6 inline-flex items-center gap-1.5 py-1 text-[14.5px] font-semibold text-white hover:underline"
               >
                 Documentation pour les développeurs
                 <ArrowRight className="size-4" />

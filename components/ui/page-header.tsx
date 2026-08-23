@@ -45,12 +45,15 @@ export function SectionHeader({
   title,
   description,
   align = "left",
+  as: Heading = "h2",
   className,
 }: {
   eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
   align?: "left" | "center";
+  /** `h1` quand ce bloc porte le titre de la page : une page, un seul h1. */
+  as?: "h1" | "h2";
   className?: string;
 }) {
   return (
@@ -61,14 +64,14 @@ export function SectionHeader({
       )}
     >
       {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-      <h2
+      <Heading
         className={cn(
           "text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.025em] text-ink sm:text-[2.125rem]",
           eyebrow && "mt-3",
         )}
       >
         {title}
-      </h2>
+      </Heading>
       {description ? (
         <p className="mt-4 text-[16px] leading-relaxed text-muted">{description}</p>
       ) : null}
