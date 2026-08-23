@@ -86,7 +86,13 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <p className="mt-3 max-w-3xl text-[12.5px] leading-relaxed text-faint">
               Aequitas prépare son infrastructure en vue de son immatriculation en qualité
               de Plateforme Agréée. Le statut réglementaire évoluera en fonction de
-              l&apos;avancement de la procédure officielle.
+              l&apos;avancement de la procédure officielle.{" "}
+              <Link
+                href="/demarche-pa"
+                className="font-medium text-blue hover:underline"
+              >
+                Suivre notre démarche PA →
+              </Link>
             </p>
           </div>
         </div>

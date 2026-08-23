@@ -6,6 +6,7 @@ import { requireOrganization } from "@/src/auth/session";
 import { getEntitlements } from "@/src/billing/entitlements";
 import { PLAN_ORDER, PLANS, formatPlanPrice, TRIAL_DAYS_DEFAULT } from "@/src/config/plans";
 import { PlanCta } from "@/components/marketing/plan-cta";
+import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { StepIndicator } from "@/components/ui/step-indicator";
 import { cn } from "@/src/lib/utils";
 
@@ -70,18 +71,7 @@ export default async function OnboardingBillingPage() {
 
               <p className="mt-1.5 text-[13.5px] text-muted">{plan.tagline}</p>
 
-              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                {plan.bullets.slice(0, 4).map((bullet) => (
-                  <li key={bullet} className="flex gap-2 text-[13px] text-ink-soft">
-                    <Check
-                      className="mt-0.5 size-3.5 shrink-0 text-blue"
-                      strokeWidth={2.5}
-                      aria-hidden="true"
-                    />
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
+              <PlanBullets bullets={plan.bullets} limit={4} className="mt-4" />
 
               <div className="mt-5">
                 <PlanCta

@@ -3,96 +3,82 @@ import { cn } from "@/src/lib/utils";
 /**
  * Identité Aequitas.
  *
- * Le symbole est un « A » géométrique scindé en deux jambages : navy à gauche,
- * rouge à droite, séparés par une réserve blanche. Les traverses horizontales
- * et les nœuds reprennent le motif de circuit du logo.
+ * Le symbole est la vectorisation du logo de référence
+ * (`public/brand/aequitas-logo-source.png`) : les contours ont été suivis sur
+ * le fichier source puis simplifiés, plutôt que redessinés à l'œil. Les
+ * amorces de circuit, les nœuds et le A intérieur en réserve sont donc ceux
+ * du dessin d'origine, au pixel près, pour environ 1,2 Ko de tracé.
  *
- * Le mot-marque est du texte réel plutôt qu'un tracé : il reste sélectionnable,
- * lisible par les lecteurs d'écran et net à toutes les tailles.
+ * Régénération : `node scripts/trace-logo.mjs`.
+ *
+ * Le mot-marque reste du texte réel : sélectionnable, lu par les lecteurs
+ * d'écran, et sans police à charger pour être net.
  */
 
 export type BrandTone = "color" | "light" | "mono";
+
+const NAVY_PATH =
+  "M32.63 2.88L8.76 48.89L26.41 48.89L36.9 29.64L39.21 25.95L39.67 24.68L38.75 24.45L26.06 47.86L19.6 47.97L42.78 3.23L42.78 3L32.75 2.88ZM44.86 19.49L44.05 19.95L43.82 20.41L44.17 21.45L43.94 22.03L28.25 50.28L7.96 50.28L6.92 52.47L10.38 52.47L11.07 51.78L11.99 51.78L12.68 52.47L12.68 53.39L12.11 54.08L10.95 54.08L10.49 53.51L2.31 53.51L1.61 52.7L0.69 52.7L0.12 53.16L0 54.43L0.81 55.12L1.61 55.12L2.31 54.31L5.77 54.2L5.3 55.47L13.72 55.47L15.57 52.35L27.91 52.35L44.28 22.49L44.63 21.91L45.43 21.91L46.13 21.45L46.36 20.87L46.13 19.95L45.55 19.49L44.97 19.49ZM16.37 53.85L14.53 56.85L4.5 56.85L2.42 61.12L16.49 61.12L20.06 54.66L26.64 54.66L27.1 53.97L16.49 53.85Z";
+
+const RED_PATH =
+  "M42.09 11.65L41.17 12.22L41.05 13.38L41.4 13.84L41.05 14.53L28.6 37.02L28.25 38.05L28.71 38.4L41.86 14.3L42.67 14.18L43.36 13.61L43.47 12.34L42.9 11.76L42.21 11.65ZM45.32 23.99L40.48 32.52L40.01 33.9L53.97 61.12L64 61.12L64 60.77L45.43 23.99ZM38.17 50.51L36.55 50.62L35.75 52.24L47.86 52.24L47.28 50.74L46.93 50.51L38.28 50.51ZM34.94 53.74L34.02 54.54L34.02 55.47L34.83 56.27L35.86 56.16L36.44 55.35L49.47 55.35L48.78 53.74L35.06 53.74ZM40.71 56.85L40.59 57.08L42.78 61L52.24 61L52.24 60.77L50.28 56.85L40.82 56.85Z";
 
 function palette(tone: BrandTone) {
   switch (tone) {
     case "light":
       // Posé sur un fond sombre : monochrome blanc.
-      return { left: "#FFFFFF", right: "#FFFFFF" };
+      return { navy: "#FFFFFF", red: "#FFFFFF" };
     case "mono":
       // Impression et contextes monochromes : suit la couleur du texte.
-      return { left: "currentColor", right: "currentColor" };
+      return { navy: "currentColor", red: "currentColor" };
     default:
-      return { left: "var(--color-navy)", right: "var(--color-red)" };
+      return { navy: "var(--color-navy)", red: "var(--color-red)" };
   }
 }
 
-/**
- * Symbole seul.
- * Les amorces de circuit ne sont dessinées qu'au-delà de ~32 px (`detailed`) ;
- * en dessous elles se referment en bouillie de pixels.
- */
+/** Symbole seul. */
 export function AequitasMark({
   className,
   tone = "color",
-  detailed = false,
   label,
 }: {
   className?: string;
   tone?: BrandTone;
-  detailed?: boolean;
   label?: string;
 }) {
   const c = palette(tone);
   return (
     <svg
       viewBox="0 0 64 64"
-      fill="none"
       className={cn("size-7 shrink-0", className)}
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
     >
-      {/* Jambage gauche. */}
-      <path d="M20 6h11L13 58H2z" fill={c.left} />
-      {/* Demi-traverse gauche. */}
-      <path d="M19.9 38H31l-2.8 8H17.1z" fill={c.left} />
-      {/* Jambage droit, pente miroir : les deux convergent au sommet. */}
-      <path d="M33 6h11l18 52H51z" fill={c.right} />
-      {/* Demi-traverse droite. Le canal blanc central n'est jamais comblé. */}
-      <path d="M33 38h11.1l2.8 8H35.8z" fill={c.right} />
-
-      {detailed ? (
-        <g>
-          <path d="M11.5 30H5.6" stroke={c.left} strokeWidth="2.1" strokeLinecap="round" />
-          <circle cx="2.8" cy="30" r="2.6" fill={c.left} />
-          <path d="M52.5 30h5.9" stroke={c.right} strokeWidth="2.1" strokeLinecap="round" />
-          <circle cx="61.2" cy="30" r="2.6" fill={c.right} />
-        </g>
-      ) : null}
+      <path fillRule="evenodd" fill={c.navy} d={NAVY_PATH} />
+      <path fillRule="evenodd" fill={c.red} d={RED_PATH} />
     </svg>
   );
 }
 
 /**
- * Logo complet : symbole + mot-marque.
- * `compact` réduit le mot-marque pour les barres denses ; `stacked` empile
- * pour les grands formats (page d'authentification, écrans d'accueil).
+ * Logo complet : symbole et mot-marque.
+ * `compact` resserre l'ensemble pour les barres denses ; `stacked` empile
+ * pour les grands formats.
  */
 export function AequitasLogo({
   className,
   tone = "color",
   variant = "full",
-  detailed = false,
 }: {
   className?: string;
   tone?: BrandTone;
   variant?: "full" | "compact" | "stacked";
-  detailed?: boolean;
 }) {
   if (variant === "stacked") {
     return (
       <span className={cn("inline-flex flex-col items-center gap-3", className)}>
-        <AequitasMark className="size-14" tone={tone} detailed={detailed} />
+        <AequitasMark className="size-16" tone={tone} />
         <Wordmark tone={tone} className="text-[17px] tracking-[0.3em]" />
       </span>
     );
@@ -101,11 +87,7 @@ export function AequitasLogo({
   const compact = variant === "compact";
   return (
     <span className={cn("inline-flex items-center", compact ? "gap-2" : "gap-2.5", className)}>
-      <AequitasMark
-        className={compact ? "size-6" : "size-7"}
-        tone={tone}
-        detailed={detailed}
-      />
+      <AequitasMark className={compact ? "size-6" : "size-8"} tone={tone} />
       <Wordmark
         tone={tone}
         className={compact ? "text-[13px] tracking-[0.2em]" : "text-[15px] tracking-[0.22em]"}

@@ -4,6 +4,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/page-header";
 import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { MarketingCompliancePreview } from "@/components/marketing/mockups";
 import { FaqJsonLd } from "@/components/marketing/structured-data";
 
@@ -39,7 +40,7 @@ const TIMELINE = [
 const WITH_AEQUITAS = [
   "Vous créez votre facture normalement, comme aujourd'hui",
   "Nous contrôlons les informations exigées avant l'envoi",
-  "Nous produisons le format attendu par le destinataire",
+  "Nous préparons les données nécessaires à son traitement électronique",
   "Vous suivez le statut de la facture depuis le même écran",
 ];
 
@@ -100,9 +101,9 @@ export default function EInvoicingPage() {
                 Votre entreprise sera concernée par la réforme.
               </h1>
               <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted">
-                Vous n&apos;avez pas besoin d&apos;en devenir expert. Aequitas
-                s&apos;occupe du format, des contrôles et de la transmission ; vous
-                continuez de facturer comme aujourd&apos;hui.
+                Vous n&apos;avez pas besoin d&apos;en devenir expert. Aequitas centralise
+                votre facturation et prépare progressivement les mécanismes nécessaires à
+                son traitement dans le nouveau dispositif français.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <ButtonLink href="/inscription" size="lg" className="w-full sm:w-auto">
@@ -185,10 +186,10 @@ export default function EInvoicingPage() {
 
             <dl className="grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-line bg-line sm:grid-cols-2">
               {[
-                ["Envoi de la facture", "Un bouton. Le format se choisit tout seul."],
-                ["Suivi de la facture", "Créée, envoyée, reçue, payée. En français."],
+                ["Préparation", "Les données de la facture, mises en forme pour vous."],
+                ["Suivi de la facture", "Créée, préparée, envoyée, payée. En français."],
                 ["Contrôles", "Les manques signalés avant l'envoi, pas après."],
-                ["E-reporting", "Construit depuis vos factures, sans ressaisie."],
+                ["Transmission", "Activée selon l'avancement de l'infrastructure Aequitas."],
               ].map(([term, detail]) => (
                 <div key={term} className="bg-surface p-5">
                   <dt className="text-[14px] font-semibold text-ink">{term}</dt>
@@ -196,6 +197,78 @@ export default function EInvoicingPage() {
                 </div>
               ))}
             </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* ——————————— Disponible, en cours, à venir ——————————— */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8">
+          <div className="max-w-3xl">
+            <h2 className="display-3 text-ink">
+              Ce qui est disponible, et ce qui ne l&apos;est pas encore.
+            </h2>
+            <p className="mt-4 text-[16px] leading-relaxed text-muted">
+              Cet état est tenu dans le code et partagé avec la page Tarifs : il ne peut
+              pas rester en retard sur la réalité du produit.
+            </p>
+          </div>
+
+          <dl className="mt-10 grid gap-px overflow-hidden rounded-[var(--radius-xl)] border border-line bg-line md:grid-cols-3">
+            {[
+              {
+                state: "Disponible",
+                tone: "success" as const,
+                items: [
+                  "Comptes, rôles et permissions",
+                  "Isolation des données par entreprise",
+                  "Journal d'audit",
+                  "Calcul de TVA et numérotation",
+                ],
+              },
+              {
+                state: "En développement",
+                tone: "blue" as const,
+                items: [
+                  "Écrans devis, factures et clients",
+                  "Formats Factur-X, UBL et CII",
+                  "Contrôles avant envoi",
+                ],
+              },
+              {
+                state: "Dépend de l'immatriculation",
+                tone: "neutral" as const,
+                items: [
+                  "Transmission par un canal officiel",
+                  "E-reporting réel",
+                  "Interopérabilité entre plateformes",
+                ],
+              },
+            ].map((group) => (
+              <div key={group.state} className="bg-surface p-6">
+                <dt>
+                  <Badge tone={group.tone} dot>
+                    {group.state}
+                  </Badge>
+                </dt>
+                <dd>
+                  <ul className="mt-4 space-y-2.5">
+                    {group.items.map((item) => (
+                      <li key={item} className="text-[14px] leading-relaxed text-ink-soft">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-10">
+            <ButtonLink href="/demarche-pa" variant="secondary" size="lg">
+              Suivre notre démarche PA
+              <ArrowRight />
+            </ButtonLink>
           </div>
         </div>
       </section>

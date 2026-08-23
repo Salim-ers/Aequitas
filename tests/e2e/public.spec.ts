@@ -110,6 +110,65 @@ test.describe("Qualité de la refonte", () => {
   });
 });
 
+/**
+ * Vérité produit. Ces assertions protègent des promesses commerciales que
+ * le code ne tient pas — c'est le genre de régression qui passe inaperçue
+ * en relecture et qui coûte cher dans un domaine réglementé.
+ */
+test.describe("Promesses produit", () => {
+  const FORBIDDEN = [
+    /Plateforme Agréée Aequitas/i,
+    /agréée? (par l'État|DGFiP)/i,
+    /certifiée? par l'État/i,
+    /partenaire officiel de l'État/i,
+    /tout cela existe et fonctionne/i,
+  ];
+
+  test("aucune revendication d'agrément sur les pages publiques", async ({ page }) => {
+    for (const path of ["/", "/facturation-electronique", "/tarifs", "/demarche-pa", "/securite"]) {
+      await page.goto(path);
+      // La page Démarche PA cite ces formulations pour dire qu'elle ne les
+      // emploie pas : ce bloc est exclu, le reste de la page ne l'est pas.
+      const body = await page.evaluate(() => {
+        const clone = document.body.cloneNode(true) as HTMLElement;
+        // Next embarque sa charge utile RSC dans des <script> du body :
+        // sans ce filtre, le test lirait du payload sérialisé et non le
+        // texte réellement affiché.
+        clone
+          .querySelectorAll("script, style, template, noscript, [data-claims-blocklist]")
+          .forEach((n) => n.remove());
+        return clone.textContent ?? "";
+      });
+      for (const pattern of FORBIDDEN) {
+        expect(body, `${path} contient « ${pattern} »`).not.toMatch(pattern);
+      }
+    }
+  });
+
+  test("la page démarche PA dit explicitement que le statut n'est pas acquis", async ({
+    page,
+  }) => {
+    await page.goto("/demarche-pa");
+    await expect(page.getByText(/n'est pas Plateforme Agréée/i).first()).toBeVisible();
+  });
+
+  test("le comparatif distingue disponible et à venir", async ({ page }) => {
+    await page.goto("/tarifs");
+    // La légende doit exister : sans elle, une horloge se lit comme une coche.
+    await expect(page.getByText("Inclus et disponible aujourd'hui")).toBeVisible();
+    await expect(page.getByText("Inclus dans l'offre, activation à venir")).toBeVisible();
+    // Au moins une fonctionnalité non livrée est marquée comme telle.
+    expect(
+      await page.getByText("Inclus dans l'offre, pas encore disponible").count(),
+    ).toBeGreaterThan(0);
+  });
+
+  test("les maquettes marketing sont identifiées comme des aperçus", async ({ page }) => {
+    await page.goto("/");
+    expect(await page.getByText("Aperçu", { exact: true }).count()).toBeGreaterThan(0);
+  });
+});
+
 test.describe("Espace plateforme", () => {
   const ADMIN_PATHS = ["/admin", "/admin/organisations", "/admin/journal", "/admin/bac-a-sable"];
 

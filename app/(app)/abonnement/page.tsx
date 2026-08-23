@@ -10,6 +10,7 @@ import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Alert } from "@/components/ui/alert";
 import { ButtonLink } from "@/components/ui/button";
 import { PortalButton } from "@/components/app/portal-button";
+import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { formatDate } from "@/src/lib/utils";
 import { cn } from "@/src/lib/utils";
 
@@ -138,18 +139,10 @@ export default async function SubscriptionPage() {
               ) : null}
             </dl>
 
-            <ul className="mt-5 grid gap-2 border-t border-line pt-4 sm:grid-cols-2">
-              {entitlements.plan.bullets.map((bullet) => (
-                <li key={bullet} className="flex gap-2 text-[13px] text-ink-soft">
-                  <Check
-                    className="mt-0.5 size-3.5 shrink-0 text-blue"
-                    strokeWidth={2.5}
-                    aria-hidden="true"
-                  />
-                  {bullet}
-                </li>
-              ))}
-            </ul>
+            <PlanBullets
+              bullets={entitlements.plan.bullets}
+              className="mt-5 border-t border-line pt-4"
+            />
           </CardContent>
         </Card>
 

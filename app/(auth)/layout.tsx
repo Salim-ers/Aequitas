@@ -26,7 +26,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       <aside className="on-navy hidden bg-navy px-14 lg:flex lg:flex-col lg:justify-center">
-        <AequitasMark className="size-10" tone="light" detailed />
+        <AequitasMark className="size-12" tone="light" />
         <p className="mt-8 max-w-md text-[1.625rem] font-semibold leading-snug tracking-[-0.02em] text-white">
           La facturation électronique, sans la complexité.
         </p>

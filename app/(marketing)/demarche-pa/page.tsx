@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Circle } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+import { PLATFORM_STATUS } from "@/src/content/status";
 import { cn } from "@/src/lib/utils";
 
 export const metadata: Metadata = {
@@ -21,57 +21,6 @@ export const metadata: Metadata = {
  * pour décrire le statut visé, jamais pour qualifier Aequitas.
  */
 
-const STEPS = [
-  {
-    label: "Socle applicatif",
-    detail:
-      "Modèle de facture unique, moteur de TVA, numérotation continue et isolation des données par entreprise.",
-    state: "done" as const,
-  },
-  {
-    label: "Formats structurés",
-    detail:
-      "Architecture développée autour des standards nécessaires à la facturation électronique.",
-    state: "current" as const,
-  },
-  {
-    label: "Contrôles et suivi",
-    detail:
-      "Vérification des informations attendues avant l'envoi, et suivi du parcours de chaque facture.",
-    state: "current" as const,
-  },
-  {
-    label: "Dossier d'immatriculation",
-    detail:
-      "Constitution et dépôt du dossier auprès de l'administration fiscale, selon la procédure applicable.",
-    state: "upcoming" as const,
-  },
-  {
-    label: "Immatriculation",
-    detail:
-      "Le statut ne sera affiché sur ce site qu'après avoir été effectivement délivré.",
-    state: "upcoming" as const,
-  },
-];
-
-/** Feuille de route produit, affichée sans surpromesse. */
-const ROADMAP = [
-  { step: "Facturation SaaS", state: "Livré" },
-  { step: "Gestion des factures", state: "Livré" },
-  { step: "Formats électroniques", state: "En cours" },
-  { step: "Routage électronique", state: "À venir" },
-  { step: "E-reporting", state: "À venir" },
-  { step: "Dépôt de candidature", state: "À venir" },
-  { step: "Interopérabilité officielle", state: "À venir" },
-  { step: "Immatriculation", state: "À venir" },
-] as const;
-
-function roadmapTone(state: string) {
-  if (state === "Livré") return "success" as const;
-  if (state === "En cours") return "warning" as const;
-  return "neutral" as const;
-}
-
 const NEVER = [
   "Agréée par l'État",
   "Certifiée DGFiP",
@@ -86,10 +35,12 @@ export default function PaProcessPage() {
         <div className="mx-auto max-w-[var(--container-prose)] px-5 py-16">
           <p className="eyebrow">Démarche PA</p>
           <span className="tricolore mt-3" aria-hidden="true" />
-          <h1 className="display-2 mt-5 text-ink">
-            Où en est Aequitas, précisément.
-          </h1>
+          <h1 className="display-2 mt-5 text-ink">Notre démarche Plateforme Agréée.</h1>
           <p className="lead mt-5">
+            Aequitas est développée avec l&apos;objectif de rejoindre l&apos;écosystème
+            français des Plateformes Agréées.
+          </p>
+          <p className="mt-4 text-[16px] leading-relaxed text-muted">
             Cette page existe pour une raison simple : dans un domaine réglementé, une
             formulation floue est une forme de mensonge. Voici donc ce qui est fait, ce
             qui est en cours, et ce qui ne l&apos;est pas.
@@ -106,41 +57,47 @@ export default function PaProcessPage() {
             affiché qu&apos;après avoir été officiellement délivré.
           </Alert>
 
-          <h2 className="display-3 mt-14 text-ink">L&apos;avancement</h2>
+          <h2 className="display-3 mt-14 text-ink">Où en est Aequitas ?</h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-muted">
+            Ces états sont tenus dans le code, dans un fichier unique que la page
+            Tarifs lit également. Ils ne peuvent donc pas se contredire, ni rester en
+            retard sur la réalité du produit.
+          </p>
+
           <ol className="mt-8">
-            {STEPS.map((step, index) => (
+            {PLATFORM_STATUS.map((step, index) => (
               <li key={step.label} className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <span
                     className={cn(
                       "flex size-6 shrink-0 items-center justify-center rounded-full border-2",
-                      step.state === "done" && "border-success bg-success text-white",
-                      step.state === "current" && "border-blue bg-blue-soft text-blue",
-                      step.state === "upcoming" && "border-line-strong bg-surface",
+                      step.state === "available" && "border-success bg-success text-white",
+                      step.state === "in-progress" && "border-blue bg-blue-soft text-blue",
+                      step.state === "soon" && "border-line-strong bg-surface",
                     )}
                   >
-                    {step.state === "done" ? (
+                    {step.state === "available" ? (
                       <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
-                    ) : step.state === "current" ? (
+                    ) : step.state === "in-progress" ? (
                       <Circle className="size-2 fill-current" aria-hidden="true" />
                     ) : null}
                   </span>
-                  {index < STEPS.length - 1 ? (
+                  {index < PLATFORM_STATUS.length - 1 ? (
                     <span
                       className={cn(
                         "w-0.5 flex-1",
-                        step.state === "done" ? "bg-success/30" : "bg-line",
+                        step.state === "available" ? "bg-success/30" : "bg-line",
                       )}
                     />
                   ) : null}
                 </div>
 
-                <div className={cn("min-w-0", index < STEPS.length - 1 && "pb-8")}>
+                <div className={cn("min-w-0", index < PLATFORM_STATUS.length - 1 && "pb-8")}>
                   <p className="flex flex-wrap items-center gap-2.5">
                     <span
                       className={cn(
                         "text-[16px] font-semibold",
-                        step.state === "upcoming" ? "text-faint" : "text-ink",
+                        step.state === "soon" ? "text-faint" : "text-ink",
                       )}
                     >
                       {step.label}
@@ -148,16 +105,16 @@ export default function PaProcessPage() {
                     <span
                       className={cn(
                         "rounded-full px-2 py-0.5 text-[11px] font-medium",
-                        step.state === "done" && "bg-success-soft text-success",
-                        step.state === "current" && "bg-blue-soft text-blue",
-                        step.state === "upcoming" && "bg-surface-2 text-faint",
+                        step.state === "available" && "bg-success-soft text-success",
+                        step.state === "in-progress" && "bg-blue-soft text-blue",
+                        step.state === "soon" && "bg-surface-2 text-faint",
                       )}
                     >
-                      {step.state === "done"
-                        ? "En place"
-                        : step.state === "current"
-                          ? "En cours"
-                          : "À venir"}
+                      {step.state === "available"
+                        ? "Disponible"
+                        : step.state === "in-progress"
+                          ? "En développement"
+                          : "En préparation"}
                     </span>
                   </p>
                   <p className="mt-1.5 text-[15px] leading-relaxed text-muted">
@@ -168,22 +125,14 @@ export default function PaProcessPage() {
             ))}
           </ol>
 
-          <h2 className="display-3 mt-16 text-ink">Feuille de route</h2>
-          <ul className="mt-6 divide-y divide-[color:var(--color-line)] border-y border-line">
-            {ROADMAP.map((item) => (
-              <li key={item.step} className="flex items-center justify-between gap-4 py-3.5">
-                <span className="text-[15px] text-ink-soft">{item.step}</span>
-                <Badge tone={roadmapTone(item.state)}>{item.state}</Badge>
-              </li>
-            ))}
-          </ul>
-
           <h2 className="display-3 mt-16 text-ink">Ce que nous n&apos;écrirons pas</h2>
           <p className="mt-4 text-[16px] leading-relaxed text-muted">
             Tant que l&apos;immatriculation n&apos;est pas délivrée, ces formulations
             n&apos;apparaîtront nulle part sur ce site, même sous forme suggérée :
           </p>
-          <ul className="mt-5 flex flex-wrap gap-2.5">
+          {/* Marqué pour que le contrôle e2e des promesses ignore cette
+              liste : elle cite les formulations proscrites pour les exclure. */}
+          <ul className="mt-5 flex flex-wrap gap-2.5" data-claims-blocklist>
             {NEVER.map((claim) => (
               <li
                 key={claim}

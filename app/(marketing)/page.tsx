@@ -10,8 +10,10 @@ import {
   UsersRound,
   ScrollText,
   Layers,
+  FileCheck2,
 } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
+import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { PLAN_ORDER, PLANS, formatPlanPrice } from "@/src/config/plans";
 import { RevealScript } from "@/components/marketing/reveal";
 import {
@@ -27,7 +29,8 @@ import {
   FaqJsonLd,
 } from "@/components/marketing/structured-data";
 import { HOME_FAQ } from "@/src/content/faq";
-import { REFORM_TIMELINE } from "@/src/content/reform";
+import { REFORM_TIMELINE, PLATFORM_ROLES } from "@/src/content/reform";
+import { InfrastructureDiagram } from "@/components/marketing/infrastructure-diagram";
 import { cn } from "@/src/lib/utils";
 
 const AUDIENCES = ["Indépendants", "TPE", "PME", "Cabinets comptables", "ESN"];
@@ -49,8 +52,8 @@ const STEPS = [
   },
   {
     n: "2",
-    title: "Aequitas vérifie",
-    body: "Les informations nécessaires sont contrôlées avant l'envoi.",
+    title: "Préparez",
+    body: "Aequitas vérifie votre facture et prépare les données nécessaires à son traitement électronique.",
     panel: {
       title: "Contrôles",
       rows: [
@@ -217,6 +220,14 @@ export default function HomePage() {
                 Découvrir la plateforme
               </ButtonLink>
             </div>
+
+            <p
+              className="mt-6 inline-flex items-center gap-3 rounded-full border border-line bg-surface px-4 py-2 text-[13.5px] text-ink-soft"
+              data-hero-step
+            >
+              <span className="tricolore w-7 shrink-0" aria-hidden="true" />
+              Conçu en France pour accompagner les entreprises dans la réforme 2026–2027.
+            </p>
 
             <p className="mt-5 text-[13.5px] text-faint" data-hero-step>
               14 jours gratuits • Sans carte bancaire • Mise en route en quelques minutes
@@ -442,111 +453,99 @@ export default function HomePage() {
       {/* ——————————— Infrastructure française ——————————— */}
       <section className="on-navy border-b border-line bg-navy">
         <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
-          <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
-            <div>
-              <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-white/60">
-                Infrastructure française
-              </p>
-              <h2 className="display-2 mt-3 text-white">
-                Conçue pour la nouvelle infrastructure de facturation électronique
-                française.
-              </h2>
-              <p className="mt-5 text-[17px] leading-relaxed text-white/70">
-                Aequitas développe son architecture pour accompagner les entreprises dans
-                le nouveau modèle français de facturation électronique.
-              </p>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.09em] text-white/60">
+              Infrastructure française
+            </p>
+            <span className="tricolore mx-auto mt-4" aria-hidden="true" />
+            <h2 className="display-2 mt-6 text-white">
+              Au cœur de la nouvelle facturation électronique française.
+            </h2>
+            <p className="mt-6 text-[17px] leading-relaxed text-white/70">
+              Le nouveau dispositif repose sur des plateformes spécialisées capables
+              d&apos;échanger les factures électroniques et de transmettre les données
+              prévues à l&apos;administration.
+            </p>
+            <p className="mt-4 text-[17px] leading-relaxed text-white/70">
+              Aequitas développe son infrastructure en vue de son immatriculation en
+              qualité de Plateforme Agréée.
+            </p>
+          </div>
 
-              {/* Badge propriétaire Aequitas — jamais « Plateforme Agréée ». */}
-              <div className="mt-8 inline-flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/15 bg-white/5 px-4 py-3.5">
-                <span className="tricolore mt-1.5 w-8 shrink-0" aria-hidden="true" />
+          <div className="mt-16 grid gap-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20">
+            <InfrastructureDiagram />
+
+            <div>
+              {/* Badge propriétaire Aequitas — jamais le logo officiel PA. */}
+              <div className="inline-flex items-start gap-3 rounded-[var(--radius-lg)] border border-white/15 bg-white/5 px-4 py-3.5">
+                <FileCheck2
+                  className="mt-0.5 size-5 shrink-0 text-white/70"
+                  aria-hidden="true"
+                />
                 <div>
-                  <p className="text-[14px] font-semibold text-white">Démarche PA</p>
+                  <p className="text-[14.5px] font-semibold text-white">Démarche PA</p>
                   <p className="text-[13px] text-white/60">Infrastructure en préparation</p>
                 </div>
               </div>
 
-              <p className="mt-5 max-w-lg text-[14px] leading-relaxed text-white/60">
-                Aequitas prépare son infrastructure en vue d&apos;une candidature à
-                l&apos;immatriculation en qualité de Plateforme Agréée auprès de
-                l&apos;administration fiscale.
+              <h3 className="display-3 mt-10 text-white">
+                Pourquoi les Plateformes Agréées sont-elles importantes ?
+              </h3>
+
+              <dl className="mt-8 space-y-6">
+                {PLATFORM_ROLES.map((role, index) => (
+                  <div key={role.title} className="flex gap-4">
+                    <span
+                      className="tabular shrink-0 text-[13px] font-semibold text-white/40"
+                      aria-hidden="true"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <dt className="text-[16px] font-semibold text-white">{role.title}</dt>
+                      <dd className="mt-1.5 text-[14.5px] leading-relaxed text-white/65">
+                        {role.body}
+                      </dd>
+                    </div>
+                  </div>
+                ))}
+              </dl>
+
+              <p className="mt-8 border-t border-white/10 pt-6 text-[15px] leading-relaxed text-white/70">
+                Aequitas est développée pour s&apos;inscrire dans ce fonctionnement.
               </p>
 
               <Link
                 href="/demarche-pa"
                 className="mt-5 inline-flex items-center gap-1.5 py-1 text-[15px] font-semibold text-white hover:underline"
               >
-                En savoir plus sur notre démarche
+                Suivre notre démarche PA
                 <ArrowRight className="size-4" />
               </Link>
-            </div>
-
-            {/* Schéma : la dernière liaison est explicitement en préparation. */}
-            <div className="rounded-[var(--radius-xl)] border border-white/12 bg-white/[0.04] p-7">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-white/50">
-                Architecture cible
-              </p>
-
-              <ol className="mt-6">
-                {[
-                  { label: "Votre entreprise", state: "active" },
-                  { label: "Aequitas", state: "brand" },
-                  { label: "Facturation électronique", state: "planned" },
-                  { label: "Client / Administration", state: "planned" },
-                ].map((node, index, all) => (
-                  <li key={node.label}>
-                    <div
-                      className={cn(
-                        "rounded-[var(--radius)] border px-4 py-3.5 text-[14.5px]",
-                        node.state === "brand"
-                          ? "border-white/30 bg-white/10 font-semibold text-white"
-                          : node.state === "active"
-                            ? "border-white/15 bg-white/[0.06] text-white"
-                            : "border-dashed border-white/20 text-white/55",
-                      )}
-                    >
-                      <span className="flex items-center justify-between gap-3">
-                        {node.label}
-                        {node.state === "planned" ? (
-                          <span className="shrink-0 text-[11px] uppercase tracking-[0.06em] text-white/40">
-                            En préparation
-                          </span>
-                        ) : null}
-                      </span>
-                    </div>
-                    {index < all.length - 1 ? (
-                      <div className="flex justify-center py-1.5" aria-hidden="true">
-                        <span className="text-white/30">↓</span>
-                      </div>
-                    ) : null}
-                  </li>
-                ))}
-              </ol>
-
-              <p className="mt-6 border-t border-white/10 pt-4 text-[12.5px] leading-relaxed text-white/50">
-                Les liaisons marquées « en préparation » ne sont pas actives : elles
-                décrivent l&apos;architecture visée, pas un raccordement existant.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ————————— Ce qu'est une Plateforme Agréée ————————— */}
+      {/* ————————— Ce qui est prêt, et ce qui ne l'est pas ————————— */}
       <section className="border-b border-line bg-surface">
         <div className="mx-auto max-w-[var(--container-prose)] px-5 py-20 lg:py-24">
-          <h2 className="display-3 text-ink">
-            Pourquoi les Plateformes Agréées sont-elles au cœur de la réforme ?
-          </h2>
+          <h2 className="display-3 text-ink">Ce qui est prêt, et ce qui ne l&apos;est pas.</h2>
           <p className="lead mt-5">
-            Dans le nouveau système français, les Plateformes Agréées assurent
-            l&apos;échange des factures électroniques entre entreprises et la
-            transmission des données prévues à l&apos;administration fiscale.
+            Aequitas est développée autour des formats, contrôles et mécanismes
+            d&apos;interopérabilité nécessaires à la facturation électronique.
           </p>
           <p className="mt-4 text-[16px] leading-relaxed text-muted">
-            Aequitas est développée pour s&apos;inscrire dans cette architecture. Vous
-            n&apos;avez, de votre côté, rien à apprendre de ce fonctionnement : il reste
-            derrière la plateforme.
+            Les fonctionnalités sont activées progressivement au fur et à mesure de
+            l&apos;avancement technique et réglementaire. Vous pouvez consulter à tout
+            moment l&apos;état exact de chaque brique.
           </p>
+          <div className="mt-8">
+            <ButtonLink href="/demarche-pa" variant="secondary" size="lg">
+              Voir où en est Aequitas
+              <ArrowRight />
+            </ButtonLink>
+          </div>
         </div>
       </section>
 
@@ -557,19 +556,17 @@ export default function HomePage() {
             <div>
               <p className="eyebrow">Pour les équipes techniques</p>
               <h2 className="display-3 mt-3 text-ink">
-                La complexité reste derrière Aequitas.
+                Nous gérons les standards. Vous gérez votre activité.
               </h2>
               <p className="mt-5 text-[16px] leading-relaxed text-muted">
-                Formats structurés, contrôles, API et interopérabilité sont gérés par
-                l&apos;infrastructure Aequitas afin que vos équipes puissent se concentrer
-                sur leur activité. L&apos;architecture est développée autour des standards
-                nécessaires à la facturation électronique.
+                Aequitas s&apos;appuie sur les standards de la facturation électronique
+                afin qu&apos;ils restent invisibles pour les utilisateurs au quotidien.
               </p>
               <Link
                 href="/developers"
                 className="mt-6 inline-flex items-center gap-1.5 py-1 text-[15px] font-semibold text-blue hover:underline"
               >
-                Documentation technique
+                Voir la documentation technique
                 <ArrowRight className="size-4" />
               </Link>
             </div>
@@ -653,18 +650,7 @@ export default function HomePage() {
                   </p>
                   <p className="mt-3 text-[14px] leading-relaxed text-muted">{plan.tagline}</p>
 
-                  <ul className="mt-6 flex-1 space-y-2.5">
-                    {plan.bullets.slice(0, 4).map((bullet) => (
-                      <li key={bullet} className="flex gap-2.5 text-[14px] text-ink-soft">
-                        <Check
-                          className="mt-0.5 size-4 shrink-0 text-blue"
-                          strokeWidth={2.5}
-                          aria-hidden="true"
-                        />
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
+                  <PlanBullets bullets={plan.bullets} limit={4} className="mt-6 flex-1" />
                 </div>
               );
             })}

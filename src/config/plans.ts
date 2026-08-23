@@ -35,6 +35,11 @@ export type LimitKey =
 /** -1 = illimité / négocié au contrat. */
 export type LimitValue = number;
 
+export interface PlanBullet {
+  readonly label: string;
+  readonly soon?: boolean;
+}
+
 export interface Plan {
   readonly slug: PlanSlug;
   readonly name: string;
@@ -50,8 +55,12 @@ export interface Plan {
   readonly trialDays: number;
   readonly features: readonly FeatureKey[];
   readonly limits: Readonly<Record<LimitKey, LimitValue>>;
-  /** Ce que le client lit sur la page tarifs. */
-  readonly bullets: readonly string[];
+  /**
+   * Ce que le client lit sur la page tarifs.
+   * `soon` marque une ligne incluse dans l'offre mais pas encore livrée :
+   * elle ne doit jamais apparaître comme disponible (voir src/content/status.ts).
+   */
+  readonly bullets: readonly PlanBullet[];
 }
 
 export const TRIAL_DAYS_DEFAULT = Number(process.env.TRIAL_DAYS ?? 14);
@@ -77,12 +86,12 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       storage_mb: 2048,
     },
     bullets: [
-      "1 entreprise, 1 utilisateur",
-      "100 factures par mois",
-      "Devis, factures, avoirs",
-      "Clients et fournisseurs",
-      "Exports CSV et PDF",
-      "Génération Factur-X",
+      { label: "1 entreprise, 1 utilisateur" },
+      { label: "100 factures par mois" },
+      { label: "Journal d'audit" },
+      { label: "Devis, factures, avoirs", soon: true },
+      { label: "Clients et fournisseurs", soon: true },
+      { label: "Exports CSV et PDF", soon: true },
     ],
   },
   pro: {
@@ -119,12 +128,12 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       storage_mb: 10_240,
     },
     bullets: [
-      "1 entreprise, 5 utilisateurs",
-      "1 000 factures par mois",
-      "Factures récurrentes et relances",
-      "API et webhooks",
-      "Journal d'audit",
-      "Import de factures fournisseurs",
+      { label: "1 entreprise, 5 utilisateurs" },
+      { label: "1 000 factures par mois" },
+      { label: "Rôles et permissions avancées" },
+      { label: "Journal d'audit" },
+      { label: "Factures récurrentes et relances", soon: true },
+      { label: "API et webhooks", soon: true },
     ],
   },
   business: {
@@ -165,12 +174,12 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       storage_mb: 51_200,
     },
     bullets: [
-      "3 entreprises, 20 utilisateurs",
-      "10 000 factures par mois",
-      "API avancée et permissions fines",
-      "Exports comptables",
-      "Intégrations",
-      "Support prioritaire",
+      { label: "3 entreprises, 20 utilisateurs" },
+      { label: "10 000 factures par mois" },
+      { label: "Rôles et permissions avancées" },
+      { label: "Support prioritaire" },
+      { label: "Exports comptables", soon: true },
+      { label: "API avancée et intégrations", soon: true },
     ],
   },
   enterprise: {
@@ -212,11 +221,11 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       storage_mb: -1,
     },
     bullets: [
-      "Volumes personnalisés",
-      "SSO et multi-entités",
-      "SLA contractuel",
-      "Intégrations sur mesure",
-      "Accompagnement dédié",
+      { label: "Volumes personnalisés" },
+      { label: "Accompagnement dédié" },
+      { label: "SLA contractuel" },
+      { label: "Multi-entités et SSO", soon: true },
+      { label: "Intégrations sur mesure", soon: true },
     ],
   },
 } as const;

@@ -1,10 +1,14 @@
 import { Fragment } from "react";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { Check, Minus } from "lucide-react";
+import { Check, Minus, Clock } from "lucide-react";
 import { PLAN_ORDER, PLANS, formatPlanPrice, type FeatureKey } from "@/src/config/plans";
 import { PlanCta } from "@/components/marketing/plan-cta";
+import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { SectionHeader } from "@/components/ui/page-header";
 import { TableScroll } from "@/components/ui/table";
+import { FEATURE_AVAILABILITY } from "@/src/content/status";
+import { Alert } from "@/components/ui/alert";
 import { FaqJsonLd } from "@/components/marketing/structured-data";
 import { cn } from "@/src/lib/utils";
 
@@ -85,6 +89,16 @@ export default function PricingPage() {
       {/* ————————————————— Les offres ————————————————— */}
       <section>
         <div className="mx-auto max-w-6xl px-5 pb-20">
+          <Alert tone="info" title="Ouverture progressive" className="mb-10">
+            Aequitas ouvre ses modules par vagues. Les lignes marquées
+            « Bientôt » sont comprises dans l&apos;offre mais pas encore
+            activées : elles ne vous sont pas facturées comme disponibles.{" "}
+            <Link href="/demarche-pa" className="font-medium text-blue underline">
+              Voir l&apos;état d&apos;avancement
+            </Link>
+            .
+          </Alert>
+
           <div className="grid items-start gap-5 lg:grid-cols-4">
             {PLAN_ORDER.map((slug) => {
               const plan = PLANS[slug];
@@ -132,18 +146,10 @@ export default function PricingPage() {
                     />
                   </div>
 
-                  <ul className="mt-7 space-y-2.5 border-t border-line pt-6">
-                    {plan.bullets.map((bullet) => (
-                      <li key={bullet} className="flex gap-2.5 text-[13.5px] text-ink-soft">
-                        <Check
-                          className="mt-0.5 size-4 shrink-0 text-blue"
-                          strokeWidth={2.5}
-                          aria-hidden="true"
-                        />
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <PlanBullets
+                    bullets={plan.bullets}
+                    className="mt-7 border-t border-line pt-6"
+                  />
                 </div>
               );
             })}
@@ -154,9 +160,23 @@ export default function PricingPage() {
       {/* ——————————— Comparatif détaillé ——————————— */}
       <section className="border-y border-line bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-16">
-          <h2 className="text-[1.5rem] font-semibold tracking-[-0.02em] text-ink">
-            Comparer toutes les fonctionnalités
-          </h2>
+          <h2 className="display-3 text-ink">Comparer toutes les fonctionnalités</h2>
+
+          {/* La distinction inclus / disponible est le cœur de ce tableau. */}
+          <ul className="mt-5 flex flex-wrap gap-x-7 gap-y-2 text-[13.5px] text-muted">
+            <li className="flex items-center gap-2">
+              <Check className="size-4 text-success" strokeWidth={2.5} aria-hidden="true" />
+              Inclus et disponible aujourd&apos;hui
+            </li>
+            <li className="flex items-center gap-2">
+              <Clock className="size-4 text-faint" aria-hidden="true" />
+              Inclus dans l&apos;offre, activation à venir
+            </li>
+            <li className="flex items-center gap-2">
+              <Minus className="size-4 text-line-strong" aria-hidden="true" />
+              Non inclus
+            </li>
+          </ul>
 
           <TableScroll className="mt-8 rounded-[var(--radius-lg)] border border-line">
             <table className="w-full min-w-[46rem] text-[13.5px]">
@@ -253,22 +273,32 @@ export default function PricingPage() {
                                 PLANS[slug].highlighted && "bg-blue-soft/40",
                               )}
                             >
-                              {included ? (
-                                <>
-                                  <Check
-                                    className="mx-auto size-4 text-success"
-                                    strokeWidth={2.5}
-                                    aria-hidden="true"
-                                  />
-                                  <span className="sr-only">Inclus</span>
-                                </>
-                              ) : (
+                              {!included ? (
                                 <>
                                   <Minus
                                     className="mx-auto size-4 text-line-strong"
                                     aria-hidden="true"
                                   />
                                   <span className="sr-only">Non inclus</span>
+                                </>
+                              ) : FEATURE_AVAILABILITY[feature.key] === "available" ? (
+                                <>
+                                  <Check
+                                    className="mx-auto size-4 text-success"
+                                    strokeWidth={2.5}
+                                    aria-hidden="true"
+                                  />
+                                  <span className="sr-only">Inclus et disponible</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Clock
+                                    className="mx-auto size-4 text-faint"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="sr-only">
+                                    Inclus dans l&apos;offre, pas encore disponible
+                                  </span>
                                 </>
                               )}
                             </td>
