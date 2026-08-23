@@ -5,22 +5,27 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
+import { Input, Field } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
 import { authClient } from "@/src/auth/client";
 
 type Mode = "signin" | "signup";
+
+const MIN_PASSWORD = 12;
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const isSignup = mode === "signup";
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    setPasswordError(null);
     setLoading(true);
 
     const data = new FormData(event.currentTarget);
@@ -28,8 +33,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const password = String(data.get("password") ?? "");
     const name = String(data.get("name") ?? "").trim();
 
-    if (isSignup && password.length < 12) {
-      setError("Le mot de passe doit contenir au moins 12 caractères.");
+    if (isSignup && password.length < MIN_PASSWORD) {
+      setPasswordError(`Choisissez un mot de passe d'au moins ${MIN_PASSWORD} caractères.`);
       setLoading(false);
       return;
     }
@@ -42,8 +47,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
       if (result.error) {
         setError(
           isSignup
-            ? "Ce compte n'a pas pu être créé. Vérifiez l'adresse email et réessayez."
-            : "Email ou mot de passe incorrect.",
+            ? "Ce compte n'a pas pu être créé. Vérifiez l'adresse e-mail et réessayez."
+            : "Adresse e-mail ou mot de passe incorrect.",
         );
         return;
       }
@@ -61,64 +66,65 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   return (
     <div>
-      <h1 className="font-semibold text-[1.75rem] tracking-[-0.01em] text-ink">
-        {isSignup ? "Créer votre compte" : "Se connecter"}
+      <h1 className="text-[1.75rem] font-semibold tracking-[-0.025em] text-ink">
+        {isSignup ? "Créer votre compte" : "Bon retour parmi nous."}
       </h1>
-      <p className="mt-2 text-[14px] text-muted">
+      <p className="mt-2 text-[14.5px] leading-relaxed text-muted">
         {isSignup
-          ? "Quelques secondes suffisent. Vous renseignerez votre entreprise juste après."
-          : "Retrouvez vos devis, factures et règlements."}
+          ? "Vous renseignerez votre entreprise juste après."
+          : "Retrouvez vos devis, vos factures et vos règlements."}
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
         {isSignup ? (
-          <div>
-            <Label htmlFor="name">Nom et prénom</Label>
-            <Input id="name" name="name" autoComplete="name" required placeholder="Salim Bereksi" />
-          </div>
+          <Field id="name" label="Nom et prénom">
+            {(props) => (
+              <Input {...props} name="name" autoComplete="name" required placeholder="Camille Dupont" />
+            )}
+          </Field>
         ) : null}
 
-        <div>
-          <Label htmlFor="email">Adresse email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            placeholder="vous@entreprise.fr"
-          />
-        </div>
+        <Field id="email" label="Adresse e-mail">
+          {(props) => (
+            <Input
+              {...props}
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              placeholder="vous@entreprise.fr"
+            />
+          )}
+        </Field>
 
-        <div>
-          <Label htmlFor="password">Mot de passe</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete={isSignup ? "new-password" : "current-password"}
-            required
-            minLength={isSignup ? 12 : undefined}
-            placeholder={isSignup ? "12 caractères minimum" : undefined}
-          />
-          {!isSignup ? (
-            <Link
-              href="/mot-de-passe-oublie"
-              className="mt-2 inline-block text-[13px] text-blue hover:underline"
-            >
-              Mot de passe oublié ?
-            </Link>
-          ) : null}
-        </div>
+        <Field
+          id="password"
+          label="Mot de passe"
+          error={passwordError ?? undefined}
+          hint={isSignup ? `${MIN_PASSWORD} caractères minimum.` : undefined}
+        >
+          {(props) => (
+            <Input
+              {...props}
+              name="password"
+              type="password"
+              autoComplete={isSignup ? "new-password" : "current-password"}
+              required
+              minLength={isSignup ? MIN_PASSWORD : undefined}
+            />
+          )}
+        </Field>
 
-        {error ? (
-          <p
-            role="alert"
-            className="rounded-[var(--radius)] border border-[color:var(--color-danger)]/30 bg-danger-soft px-3 py-2 text-[13px] text-danger"
+        {!isSignup ? (
+          <Link
+            href="/mot-de-passe-oublie"
+            className="inline-block text-[13px] font-medium text-blue hover:underline"
           >
-            {error}
-          </p>
+            Mot de passe oublié ?
+          </Link>
         ) : null}
+
+        {error ? <Alert tone="critical">{error}</Alert> : null}
 
         <Button type="submit" className="w-full" size="lg" disabled={loading}>
           {loading
@@ -135,15 +141,15 @@ export function AuthForm({ mode }: { mode: Mode }) {
         {isSignup ? (
           <>
             Déjà un compte ?{" "}
-            <Link href="/connexion" className="text-blue hover:underline">
+            <Link href="/connexion" className="font-medium text-blue hover:underline">
               Se connecter
             </Link>
           </>
         ) : (
           <>
             Pas encore de compte ?{" "}
-            <Link href="/inscription" className="text-blue hover:underline">
-              Commencer gratuitement
+            <Link href="/inscription" className="font-medium text-blue hover:underline">
+              Essayer gratuitement
             </Link>
           </>
         )}

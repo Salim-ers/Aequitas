@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/app/sidebar";
+import { Topbar } from "@/components/app/topbar";
 import { resolveOrganizationContext } from "@/src/auth/session";
 import { checkLimit, getEntitlements } from "@/src/billing/entitlements";
 
@@ -15,17 +16,27 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     checkLimit(context.organizationId, "invoices_per_month"),
   ]);
 
+  const nav = {
+    planName: entitlements.plan.name,
+    usageRatio: invoiceUsage.ratio,
+    invoiceUsed: invoiceUsage.used,
+    invoiceLimit: invoiceUsage.limit,
+    userName: context.user.name || context.user.email,
+    organizationName: context.organizationName,
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className="hidden lg:block">
-        <Sidebar
-          planName={entitlements.plan.name}
-          usageRatio={invoiceUsage.ratio}
-          userName={context.user.name || context.user.email}
-          organizationName={context.organizationName}
-        />
+    <div className="flex h-screen overflow-hidden bg-canvas">
+      <div className="hidden lg:flex">
+        <Sidebar {...nav} />
       </div>
-      <div className="flex-1 overflow-y-auto">{children}</div>
+
+      <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <Topbar {...nav} />
+        <main id="contenu" className="flex-1">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

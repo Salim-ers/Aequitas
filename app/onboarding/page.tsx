@@ -1,94 +1,133 @@
 "use client";
 
 import { useActionState } from "react";
-import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
-import { Input, Label } from "@/components/ui/input";
-import { AequitasLogo } from "@/components/brand/aequitas-logo";
+import { Input, Field } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
+import { StepIndicator } from "@/components/ui/step-indicator";
 import { createOrganizationAction, type OnboardingState } from "./actions";
 
 const INITIAL: OnboardingState = {};
 
+/**
+ * §31 — Le formulaire est découpé en trois blocs titrés plutôt que présenté
+ * d'un bloc. Il reste sur un seul écran : l'action serveur enregistre
+ * l'entreprise en une transaction, il n'y a pas d'état intermédiaire à
+ * conserver entre plusieurs pages.
+ */
 export default function OnboardingPage() {
   const [state, formAction, pending] = useActionState(createOrganizationAction, INITIAL);
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-12">
-      <AequitasLogo />
+    <div>
+      <StepIndicator current={1} total={2} label="Votre entreprise" />
 
-      <div className="mt-8">
-        <p className="eyebrow">Étape 1 / 6</p>
-        <h1 className="mt-3 font-semibold text-[1.875rem] tracking-[-0.015em] text-ink">
-          Votre entreprise
-        </h1>
-        <p className="mt-2 text-[14px] leading-relaxed text-muted">
-          Ces informations apparaîtront sur vos factures. Vous pourrez les compléter plus
-          tard dans les paramètres.
-        </p>
-      </div>
+      <h1 className="mt-8 text-[1.875rem] font-semibold tracking-[-0.03em] text-ink">
+        Parlez-nous de votre entreprise.
+      </h1>
+      <p className="mt-2.5 text-[15px] leading-relaxed text-muted">
+        Ces informations apparaîtront sur vos factures. Vous pourrez les compléter ou les
+        corriger plus tard.
+      </p>
 
-      <form action={formAction} className="mt-8 space-y-4">
-        <div>
-          <Label htmlFor="legalName">Raison sociale</Label>
-          <Input id="legalName" name="legalName" required placeholder="Aequitas SAS" />
-          {state.fieldErrors?.legalName ? (
-            <p className="mt-1 text-[12.5px] text-danger">{state.fieldErrors.legalName}</p>
-          ) : null}
-        </div>
+      <form action={formAction} className="mt-10 space-y-10">
+        <section>
+          <h2 className="text-[15px] font-semibold text-ink">Identité</h2>
+          <div className="mt-4 space-y-4">
+            <Field
+              id="legalName"
+              label="Raison sociale"
+              error={state.fieldErrors?.legalName}
+            >
+              {(props) => (
+                <Input {...props} name="legalName" required placeholder="Aequitas SAS" />
+              )}
+            </Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="legalForm">Forme juridique</Label>
-            <Input id="legalForm" name="legalForm" placeholder="SAS" />
+            <Field id="legalForm" label="Forme juridique" optional>
+              {(props) => <Input {...props} name="legalForm" placeholder="SAS" />}
+            </Field>
           </div>
-          <div>
-            <Label htmlFor="vatNumber">TVA intracommunautaire</Label>
-            <Input id="vatNumber" name="vatNumber" placeholder="FR12345678901" />
-          </div>
-        </div>
+        </section>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="siren">SIREN</Label>
-            <Input id="siren" name="siren" inputMode="numeric" placeholder="123456789" />
-            {state.fieldErrors?.siren ? (
-              <p className="mt-1 text-[12.5px] text-danger">{state.fieldErrors.siren}</p>
-            ) : null}
-          </div>
-          <div>
-            <Label htmlFor="siret">SIRET</Label>
-            <Input id="siret" name="siret" inputMode="numeric" placeholder="12345678900012" />
-            {state.fieldErrors?.siret ? (
-              <p className="mt-1 text-[12.5px] text-danger">{state.fieldErrors.siret}</p>
-            ) : null}
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="addressLine1">Adresse</Label>
-          <Input id="addressLine1" name="addressLine1" placeholder="12 rue de la Paix" />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-[1fr_2fr]">
-          <div>
-            <Label htmlFor="postalCode">Code postal</Label>
-            <Input id="postalCode" name="postalCode" placeholder="75002" />
-          </div>
-          <div>
-            <Label htmlFor="city">Ville</Label>
-            <Input id="city" name="city" placeholder="Paris" />
-          </div>
-        </div>
-
-        {state.error ? (
-          <p role="alert" className="rounded-[var(--radius)] border border-[color:var(--color-danger)]/30 bg-danger-soft px-3 py-2 text-[13px] text-danger">
-            {state.error}
+        <section>
+          <h2 className="text-[15px] font-semibold text-ink">Immatriculation</h2>
+          <p className="mt-1 text-[13px] leading-relaxed text-muted">
+            Ces numéros sont obligatoires sur une facture. Si vous ne les avez pas sous la
+            main, vous pourrez les ajouter avant votre première facture.
           </p>
-        ) : null}
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <Field
+              id="siren"
+              label="SIREN"
+              optional
+              error={state.fieldErrors?.siren}
+              hint="9 chiffres"
+            >
+              {(props) => (
+                <Input {...props} name="siren" inputMode="numeric" placeholder="123456789" />
+              )}
+            </Field>
 
-        <Button type="submit" size="lg" className="w-full" disabled={pending}>
-          {pending ? "Création…" : "Continuer"}
-        </Button>
+            <Field
+              id="siret"
+              label="SIRET"
+              optional
+              error={state.fieldErrors?.siret}
+              hint="14 chiffres"
+            >
+              {(props) => (
+                <Input
+                  {...props}
+                  name="siret"
+                  inputMode="numeric"
+                  placeholder="12345678900012"
+                />
+              )}
+            </Field>
+          </div>
+
+          <Field
+            id="vatNumber"
+            label="TVA intracommunautaire"
+            optional
+            className="mt-4"
+            hint="Laissez vide si votre entreprise n'y est pas assujettie."
+          >
+            {(props) => <Input {...props} name="vatNumber" placeholder="FR12345678901" />}
+          </Field>
+        </section>
+
+        <section>
+          <h2 className="text-[15px] font-semibold text-ink">Adresse</h2>
+          <div className="mt-4 space-y-4">
+            <Field id="addressLine1" label="Adresse" optional>
+              {(props) => (
+                <Input {...props} name="addressLine1" placeholder="12 rue de la Paix" />
+              )}
+            </Field>
+
+            <div className="grid gap-4 sm:grid-cols-[1fr_2fr]">
+              <Field id="postalCode" label="Code postal" optional>
+                {(props) => (
+                  <Input {...props} name="postalCode" inputMode="numeric" placeholder="75002" />
+                )}
+              </Field>
+              <Field id="city" label="Ville" optional>
+                {(props) => <Input {...props} name="city" placeholder="Paris" />}
+              </Field>
+            </div>
+          </div>
+        </section>
+
+        {state.error ? <Alert tone="critical">{state.error}</Alert> : null}
+
+        <div className="flex items-center justify-between gap-4 border-t border-line pt-6">
+          <p className="text-[13px] text-faint">Étape 1 sur 2</p>
+          <Button type="submit" size="lg" disabled={pending}>
+            {pending ? "Enregistrement…" : "Continuer"}
+          </Button>
+        </div>
       </form>
     </div>
   );
