@@ -23,6 +23,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     invoiceLimit: invoiceUsage.limit,
     userName: context.user.name || context.user.email,
     organizationName: context.organizationName,
+    // §98 — Le rôle plateforme est distinct du rôle dans l'organisation.
+    isPlatformAdmin:
+      context.user.platformRole === "ADMIN" || context.user.platformRole === "SUPER_ADMIN",
   };
 
   return (

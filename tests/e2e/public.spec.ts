@@ -111,6 +111,25 @@ test.describe("Qualité de la refonte", () => {
   });
 });
 
+test.describe("Espace plateforme", () => {
+  const ADMIN_PATHS = ["/admin", "/admin/organisations", "/admin/journal", "/admin/bac-a-sable"];
+
+  test("aucun écran d'administration n'est atteignable sans session", async ({ page }) => {
+    for (const path of ADMIN_PATHS) {
+      await page.goto(path);
+      await expect(page, path).toHaveURL(/\/(connexion|dashboard|onboarding)/);
+    }
+  });
+
+  test("l'espace plateforme est exclu de l'indexation", async ({ page, request }) => {
+    const robots = await (await request.get("/robots.txt")).text();
+    expect(robots).toContain("Disallow: /admin");
+
+    const sitemap = await (await request.get("/sitemap.xml")).text();
+    expect(sitemap).not.toContain("/admin");
+  });
+});
+
 test.describe("Espace applicatif", () => {
   test("le dashboard n'est pas accessible sans session", async ({ page }) => {
     await page.goto("/dashboard");

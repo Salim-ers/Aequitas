@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ShieldCheck } from "lucide-react";
 import { AequitasLogo } from "@/components/brand/aequitas-logo";
 import { NAV_GROUPS } from "./navigation";
 import { cn } from "@/src/lib/utils";
@@ -13,6 +14,8 @@ export interface SidebarProps {
   invoiceLimit: number;
   userName: string;
   organizationName: string;
+  /** Ouvre l'entrée vers l'espace plateforme. Le rôle est résolu côté serveur. */
+  isPlatformAdmin?: boolean;
 }
 
 /**
@@ -94,6 +97,16 @@ export function SidebarContent(props: SidebarProps) {
       </nav>
 
       <div className="shrink-0 border-t border-line p-3">
+        {props.isPlatformAdmin ? (
+          <Link
+            href="/admin"
+            className="mb-2 flex items-center gap-2.5 rounded-[var(--radius)] bg-navy px-2.5 py-2 text-[13px] font-medium text-white transition-colors hover:bg-navy/90"
+          >
+            <ShieldCheck className="size-4 shrink-0" aria-hidden="true" />
+            Administration
+          </Link>
+        ) : null}
+
         <Link
           href="/abonnement"
           className="block rounded-[var(--radius)] p-2.5 transition-colors hover:bg-surface-2"
