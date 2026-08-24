@@ -11,11 +11,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { PLAN_ORDER, PLANS, formatPlanPrice } from "@/src/config/plans";
 import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { RevealScript } from "@/components/marketing/reveal";
-import {
-  DashboardMockup,
-  FloatingInvoiceCard,
-  FloatingPaymentCard,
-} from "@/components/marketing/mockups";
+import { DashboardMockup, TreasuryMockup } from "@/components/marketing/mockups";
 import { ProductBento } from "@/components/marketing/bento";
 import {
   OrganizationJsonLd,
@@ -48,59 +44,51 @@ export default function HomePage() {
       <SoftwareJsonLd />
       <FaqJsonLd items={HOME_FAQ} />
 
-      {/* ————————————————————————— Hero ————————————————————————— */}
-      <section className="relative overflow-hidden border-b border-line bg-surface">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 -top-40 h-[34rem] bg-[radial-gradient(50%_58%_at_50%_50%,var(--color-blue-soft),transparent_74%)]"
-        />
+      {/* ————————————————————————— Hero —————————————————————————
+          Deux colonnes : le texte et la maquette tiennent dans une seule
+          fenêtre, sans que le produit soit coupé par le bas. */}
+      <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-blue-soft via-blue-soft/40 to-canvas">
+        <div className="relative mx-auto max-w-[var(--container-page)] px-5 pt-10 pb-14 lg:px-8 lg:pt-12 lg:pb-10">
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-14">
+            <div className="min-w-0">
+              <p className="eyebrow" data-hero-step>
+                Facturation électronique • France
+              </p>
+              <span className="tricolore mt-3.5" data-hero-step aria-hidden="true" />
 
-        <div className="relative mx-auto max-w-[var(--container-page)] px-5 pt-20 pb-24 lg:px-8 lg:pt-28">
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="eyebrow" data-hero-step>
-              Facturation électronique • France
-            </p>
-            <span className="tricolore mx-auto mt-4" data-hero-step aria-hidden="true" />
+              <h1 className="display-1 mt-4 text-ink" data-hero-step>
+                La plateforme française de{" "}
+                <span className="text-blue">facturation électronique.</span>
+              </h1>
 
-            <h1 className="display-1 mt-7 text-ink" data-hero-step>
-              La plateforme française
-              <br />
-              <span className="text-blue">de facturation électronique.</span>
-            </h1>
+              <p className="lead mt-4 max-w-lg" data-hero-step>
+                Créez vos factures comme aujourd&apos;hui. Aequitas simplifie la réforme
+                française et prépare votre transition.
+              </p>
 
-            <p className="lead mx-auto mt-7 max-w-xl" data-hero-step>
-              Créez vos factures comme aujourd&apos;hui. Aequitas simplifie la réforme
-              française et prépare votre transition vers la facturation électronique.
-            </p>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row" data-hero-step>
+                <ButtonLink href="/inscription" size="xl" className="w-full sm:w-auto">
+                  Créer mon compte
+                  <ArrowRight />
+                </ButtonLink>
+                <ButtonLink
+                  href="#produit"
+                  variant="secondary"
+                  size="xl"
+                  className="w-full sm:w-auto"
+                >
+                  Découvrir la plateforme
+                </ButtonLink>
+              </div>
 
-            <div
-              className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
-              data-hero-step
-            >
-              <ButtonLink href="/inscription" size="2xl" className="w-full sm:w-auto">
-                Créer mon compte
-                <ArrowRight />
-              </ButtonLink>
-              <ButtonLink
-                href="#produit"
-                variant="secondary"
-                size="2xl"
-                className="w-full sm:w-auto"
-              >
-                Découvrir la plateforme
-              </ButtonLink>
+              <p className="mt-4 text-[13px] text-faint" data-hero-step>
+                14 jours gratuits • Sans carte bancaire • Mise en route en quelques minutes
+              </p>
             </div>
 
-            <p className="mt-6 text-[13.5px] text-faint" data-hero-step>
-              14 jours gratuits • Sans carte bancaire • Mise en route en quelques minutes
-            </p>
-          </div>
-
-          {/* Une seule grande mise en scène, deux cartes flottantes au plus. */}
-          <div className="relative mx-auto mt-20 max-w-5xl" data-hero-step>
-            <DashboardMockup />
-            <FloatingInvoiceCard className="reveal absolute -left-60 top-28 hidden [--reveal-delay:280ms] 2xl:flex" />
-            <FloatingPaymentCard className="reveal absolute -right-60 bottom-24 hidden [--reveal-delay:420ms] 2xl:flex" />
+            <div className="min-w-0" data-hero-step>
+              <DashboardMockup />
+            </div>
           </div>
         </div>
       </section>
@@ -123,8 +111,8 @@ export default function HomePage() {
       </section>
 
       {/* ————————————————— La réforme ————————————————— */}
-      <section className="border-b border-line bg-blue-soft/35">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8 lg:py-32">
+      <section className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow">Réforme 2026 — 2027</p>
             <h2 className="display-2 mt-4 text-ink">
@@ -175,8 +163,8 @@ export default function HomePage() {
       </section>
 
       {/* ————————————— Grand bloc produit ————————————— */}
-      <section id="produit" className="scroll-mt-28 border-b border-line bg-surface">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8 lg:py-32">
+      <section id="produit" className="scroll-mt-28 border-b border-line bg-canvas">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
           <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-24">
             <div className="min-w-0">
               <h2 className="display-2 text-ink">Tout votre pilotage au même endroit.</h2>
@@ -201,7 +189,7 @@ export default function HomePage() {
             </div>
 
             <div className="reveal min-w-0">
-              <DashboardMockup />
+              <TreasuryMockup />
             </div>
           </div>
         </div>
@@ -218,40 +206,40 @@ export default function HomePage() {
       />
 
       {/* ——————————— Infrastructure française ——————————— */}
-      <section className="on-navy border-b border-line bg-navy">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8 lg:py-32">
+      <section className="border-b border-line bg-blue-soft/45">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-white/55">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-blue">
               Infrastructure française
             </p>
             <span className="tricolore mx-auto mt-5" aria-hidden="true" />
-            <h2 className="display-2 mt-7 text-white">
+            <h2 className="display-2 mt-7 text-ink">
               Construite pour la nouvelle architecture de facturation électronique.
             </h2>
-            <p className="mt-7 text-[18px] leading-relaxed text-white/70">
+            <p className="lead mt-6">
               Le dispositif français repose sur des plateformes spécialisées. Aequitas
               développe son infrastructure en vue de son immatriculation.
             </p>
 
-            <div className="mt-9 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/[0.07] px-5 py-2.5">
-              <FileCheck2 className="size-4 shrink-0 text-white/70" aria-hidden="true" />
-              <span className="text-[14px] font-semibold text-white">Démarche PA</span>
-              <span className="size-1 rounded-full bg-white/30" aria-hidden="true" />
-              <span className="text-[14px] text-white/60">En préparation</span>
+            <div className="mt-9 inline-flex items-center gap-3 rounded-full border border-blue-border bg-surface px-5 py-2.5">
+              <FileCheck2 className="size-4 shrink-0 text-blue" aria-hidden="true" />
+              <span className="text-[14px] font-semibold text-navy">Démarche PA</span>
+              <span className="size-1 rounded-full bg-line-strong" aria-hidden="true" />
+              <span className="text-[14px] text-muted">En préparation</span>
             </div>
           </div>
 
-          <dl className="mx-auto mt-20 grid max-w-4xl gap-x-12 gap-y-10 sm:grid-cols-3">
+          <dl className="mx-auto mt-16 grid max-w-4xl gap-x-12 gap-y-10 sm:grid-cols-3">
             {PLATFORM_ROLES.map((role, index) => (
               <div key={role.title}>
                 <span
-                  className="tabular text-[13px] font-semibold text-white/35"
+                  className="tabular text-[13px] font-semibold text-faint"
                   aria-hidden="true"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <dt className="mt-3 text-[18px] font-semibold text-white">{role.title}</dt>
-                <dd className="mt-2 text-[15px] leading-relaxed text-white/60">{role.body}</dd>
+                <dt className="mt-3 text-[18px] font-semibold text-ink">{role.title}</dt>
+                <dd className="mt-2 text-[15px] leading-relaxed text-muted">{role.body}</dd>
               </div>
             ))}
           </dl>
@@ -259,7 +247,7 @@ export default function HomePage() {
           <div className="mt-16 flex justify-center">
             <Link
               href="/demarche-pa"
-              className="inline-flex items-center gap-2 rounded-[var(--radius)] border border-white/20 px-5 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-[var(--radius)] border border-line-strong bg-surface px-5 py-3 text-[15px] font-semibold text-navy transition-colors hover:border-navy"
             >
               Suivre notre démarche PA
               <ArrowRight className="size-4" />
@@ -270,7 +258,7 @@ export default function HomePage() {
 
       {/* ————————————————— Sécurité ————————————————— */}
       <section className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="display-2 text-ink">Conçue pour des données qui comptent.</h2>
           </div>
@@ -296,7 +284,7 @@ export default function HomePage() {
 
       {/* ————————————————— Tarifs ————————————————— */}
       <section className="border-b border-line">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8 lg:py-32">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="display-2 text-ink">Un prix par mois, par entreprise.</h2>
             <p className="lead mt-6">
@@ -364,7 +352,7 @@ export default function HomePage() {
 
       {/* ————————————————— FAQ ————————————————— */}
       <section id="faq" className="scroll-mt-28 border-b border-line bg-surface">
-        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-24">
+        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-20">
           <h2 className="display-2 text-ink">Questions fréquentes</h2>
           <dl className="mt-12 divide-y divide-[color:var(--color-line)] border-t border-line">
             {FAQ_ON_HOME.map((item) => (
@@ -386,7 +374,7 @@ export default function HomePage() {
 
       {/* ————————————————— CTA final ————————————————— */}
       <section className="on-navy bg-navy">
-        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-28 text-center">
+        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-24 text-center">
           <h2 className="display-2 text-white">
             Préparez votre entreprise à la facturation électronique.
           </h2>

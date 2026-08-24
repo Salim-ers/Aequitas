@@ -92,7 +92,7 @@ function AppWindow({
       </div>
 
       <div className="flex">
-        <div className="hidden w-48 shrink-0 border-r border-line p-3 lg:block">
+        <div className="hidden w-48 shrink-0 flex-col border-r border-line p-3 lg:flex">
           {nav.map((item) => (
             <div
               key={item.label}
@@ -112,9 +112,18 @@ function AppWindow({
               {item.label}
             </div>
           ))}
+
+          {/* Pied de colonne : sans lui, la sidebar laisse un grand vide. */}
+          <div className="mt-auto rounded-[8px] border border-line bg-canvas px-3 py-2.5">
+            <p className="text-[10.5px] font-semibold text-ink">Plan Pro</p>
+            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line">
+              <div className="h-full w-[38%] rounded-full bg-blue" />
+            </div>
+            <p className="tabular mt-1.5 text-[9.5px] text-faint">380 / 1 000 factures</p>
+          </div>
         </div>
 
-        <div className="min-w-0 flex-1 bg-canvas p-5 sm:p-6">{children}</div>
+        <div className="min-w-0 flex-1 bg-canvas p-4 sm:p-5">{children}</div>
       </div>
     </div>
   );
@@ -159,10 +168,9 @@ const KPIS = [
 ];
 
 const ROWS = [
-  { client: "Delaunay & Associés", ref: "F-2026-0148", amount: eur(4680), state: "Payée" },
+  { client: "Delaunay & Cie", ref: "F-2026-0148", amount: eur(4680), state: "Payée" },
   { client: "Atelier Verdier", ref: "F-2026-0147", amount: eur(1290), state: "Envoyée" },
   { client: "Groupe Marceau", ref: "F-2026-0146", amount: eur(2450), state: "En retard" },
-  { client: "Studio Bellac", ref: "F-2026-0145", amount: eur(3120), state: "Payée" },
 ];
 
 function StateChip({ state }: { state: string }) {
@@ -195,7 +203,7 @@ export function DashboardMockup({ className }: { className?: string }) {
         {KPIS.map((kpi) => (
           <div
             key={kpi.label}
-            className="rounded-[10px] border border-line bg-surface px-4 py-3.5"
+            className="rounded-[10px] border border-line bg-surface px-4 py-3"
           >
             <p className="text-[10.5px] uppercase tracking-[0.07em] text-faint">
               {kpi.label}
@@ -219,7 +227,7 @@ export function DashboardMockup({ className }: { className?: string }) {
         ))}
       </div>
 
-      <div className="mt-3 rounded-[10px] border border-line bg-surface p-4">
+      <div className="mt-2.5 rounded-[10px] border border-line bg-surface p-3.5">
         <div className="flex items-baseline justify-between">
           <p className="text-[12px] font-medium text-ink">Encaissements</p>
           <span className="flex gap-1">
@@ -236,10 +244,10 @@ export function DashboardMockup({ className }: { className?: string }) {
             ))}
           </span>
         </div>
-        <Sparkline className="mt-3 h-20" />
+        <Sparkline className="mt-2.5 h-16" />
       </div>
 
-      <div className="mt-3 overflow-hidden rounded-[10px] border border-line bg-surface">
+      <div className="mt-2.5 overflow-hidden rounded-[10px] border border-line bg-surface">
         <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
           <p className="text-[12px] font-medium text-ink">Factures récentes</p>
           <span className="text-[11px] text-faint">Tout voir</span>
@@ -258,7 +266,7 @@ export function DashboardMockup({ className }: { className?: string }) {
             <span className="min-w-0 flex-1 truncate font-medium text-ink">
               {row.client}
             </span>
-            <span className="tabular hidden shrink-0 text-faint sm:block">{row.ref}</span>
+            <span className="tabular hidden shrink-0 text-faint xl:block">{row.ref}</span>
             <StateChip state={row.state} />
             <span className="tabular w-16 shrink-0 text-right font-semibold text-ink">
               {row.amount}
@@ -267,111 +275,6 @@ export function DashboardMockup({ className }: { className?: string }) {
         ))}
       </div>
     </AppWindow>
-  );
-}
-
-/** Facture et son suivi — bénéfice « Facturez sans friction ». */
-export function InvoiceMockup({ className }: { className?: string }) {
-  const lines = [
-    ["Accompagnement — 5 jours", "3 900,00 €"],
-    ["Reprise des historiques", "2 160,00 €"],
-    ["Maintenance — trimestre", "870,00 €"],
-  ];
-
-  return (
-    <div
-      className={cn(
-        "overflow-hidden rounded-[18px] border border-line/80 bg-surface shadow-xl",
-        className,
-      )}
-      aria-hidden="true"
-    >
-      <div className="flex items-center justify-between gap-3 border-b border-line px-6 py-4">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.12em] text-faint">Facture</p>
-          <p className="tabular mt-1 text-[17px] font-semibold text-ink">F-2026-0148</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <StateChip state="Envoyée" />
-          <PreviewTag />
-        </div>
-      </div>
-
-      <div className="px-6 py-5">
-        <div className="flex items-baseline justify-between text-[12px]">
-          <span className="text-faint">Client</span>
-          <span className="font-medium text-ink">Delaunay &amp; Associés</span>
-        </div>
-
-        <ul className="mt-4 space-y-2.5 border-t border-line pt-4">
-          {lines.map(([label, amount]) => (
-            <li key={label} className="flex items-baseline justify-between gap-4 text-[13px]">
-              <span className="min-w-0 truncate text-ink-soft">{label}</span>
-              <span className="tabular shrink-0 text-muted">{amount}</span>
-            </li>
-          ))}
-        </ul>
-
-        <dl className="mt-5 space-y-2 border-t border-line pt-4 text-[13px]">
-          <div className="flex justify-between">
-            <dt className="text-muted">Total HT</dt>
-            <dd className="tabular text-ink-soft">6 930,00 €</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-muted">TVA 20 %</dt>
-            <dd className="tabular text-ink-soft">1 386,00 €</dd>
-          </div>
-          <div className="flex items-baseline justify-between border-t border-line-strong pt-3">
-            <dt className="font-semibold text-ink">Total TTC</dt>
-            <dd className="tabular text-[19px] font-semibold text-ink">8 316,00 €</dd>
-          </div>
-        </dl>
-      </div>
-
-      {/* Suivi en langage courant : aucune étape officielle n'est simulée. */}
-      <div className="border-t border-line bg-canvas px-6 py-5">
-        <p className="text-[12px] font-medium text-ink">Suivi</p>
-        <ol className="mt-3 flex items-center">
-          {[
-            { label: "Créée", done: true },
-            { label: "Préparée", done: true },
-            { label: "Envoyée", done: true },
-            { label: "Payée", done: false },
-          ].map((step, index, all) => (
-            <li key={step.label} className="flex flex-1 items-center last:flex-none">
-              <div className="flex flex-col items-center gap-1.5">
-                <span
-                  className={cn(
-                    "flex size-5 items-center justify-center rounded-full border-2",
-                    step.done
-                      ? "border-success bg-success text-white"
-                      : "border-line-strong bg-surface",
-                  )}
-                >
-                  {step.done ? <Check className="size-2.5" strokeWidth={4} /> : null}
-                </span>
-                <span
-                  className={cn(
-                    "whitespace-nowrap text-[10.5px]",
-                    step.done ? "font-medium text-ink" : "text-faint",
-                  )}
-                >
-                  {step.label}
-                </span>
-              </div>
-              {index < all.length - 1 ? (
-                <span
-                  className={cn(
-                    "-mt-4 h-0.5 flex-1",
-                    all[index + 1]!.done ? "bg-success/40" : "bg-line",
-                  )}
-                />
-              ) : null}
-            </li>
-          ))}
-        </ol>
-      </div>
-    </div>
   );
 }
 
@@ -392,7 +295,7 @@ export function TreasuryMockup({ className }: { className?: string }) {
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-[10px] border border-line bg-surface px-4 py-3.5">
+        <div className="rounded-[10px] border border-line bg-surface px-4 py-3">
           <p className="text-[10.5px] uppercase tracking-[0.07em] text-faint">Encaissé</p>
           <p className="tabular mt-2 text-[22px] font-semibold tracking-[-0.02em] text-ink">
             {eur(24850)}
@@ -408,7 +311,7 @@ export function TreasuryMockup({ className }: { className?: string }) {
         </div>
       </div>
 
-      <div className="mt-3 overflow-hidden rounded-[10px] border border-line bg-surface">
+      <div className="mt-2.5 overflow-hidden rounded-[10px] border border-line bg-surface">
         {items.map((item, index) => (
           <div
             key={item.client}
@@ -439,47 +342,7 @@ export function TreasuryMockup({ className }: { className?: string }) {
   );
 }
 
-/** Carte flottante « facture envoyée ». Deux au maximum sur le hero. */
-export function FloatingInvoiceCard({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        "flex w-52 items-center gap-3 rounded-[14px] border border-line-strong bg-surface px-4 py-3 shadow-xl",
-        className,
-      )}
-      aria-hidden="true"
-    >
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-blue-soft text-blue">
-        <Send className="size-4" />
-      </span>
-      <div className="min-w-0">
-        <p className="text-[12.5px] font-semibold text-ink">Facture envoyée</p>
-        <p className="text-[11.5px] text-muted">Atelier Verdier</p>
-      </div>
-    </div>
-  );
-}
 
-/** Carte flottante « paiement reçu ». */
-export function FloatingPaymentCard({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        "flex w-52 items-center gap-3 rounded-[14px] border border-line-strong bg-surface px-4 py-3 shadow-xl",
-        className,
-      )}
-      aria-hidden="true"
-    >
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-success-soft text-success">
-        <Check className="size-4" strokeWidth={3} />
-      </span>
-      <div className="min-w-0">
-        <p className="text-[12.5px] font-semibold text-ink">Paiement reçu</p>
-        <p className="tabular text-[11.5px] text-muted">{eur(4680)} — Delaunay</p>
-      </div>
-    </div>
-  );
-}
 
 /**
  * Suivi seul, utilisé par la page Facturation électronique.
