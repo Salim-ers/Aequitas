@@ -17,6 +17,8 @@ import { PlanBullets } from "@/components/marketing/plan-bullets";
 import { RevealScript } from "@/components/marketing/reveal";
 import { DashboardMockup, TreasuryMockup } from "@/components/marketing/mockups";
 import { ProductBento } from "@/components/marketing/bento";
+import { FaqAccordion } from "@/components/marketing/faq-accordion";
+import { SecurityVisual } from "@/components/marketing/security-visual";
 import {
   OrganizationJsonLd,
   SoftwareJsonLd,
@@ -292,27 +294,44 @@ export default function HomePage() {
       </section>
 
       {/* ————————————————— Sécurité ————————————————— */}
-      <section className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="display-2 text-ink">Conçue pour des données qui comptent.</h2>
-          </div>
+      <section className="border-b border-line bg-canvas">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="grid items-center gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
+            <div className="min-w-0">
+              <span className="tricolore" aria-hidden="true" />
+              <h2 className="display-2 mt-5 text-ink">
+                Conçue pour des données qui comptent.
+              </h2>
+              <p className="lead mt-5 max-w-lg">
+                Vos factures sont des documents fiscaux. Elles méritent mieux qu&apos;un
+                simple mot de passe.
+              </p>
 
-          <dl className="mx-auto mt-16 grid max-w-5xl gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {SECURITY.map((item) => (
-              <div key={item.title}>
-                <item.icon className="size-5 text-blue" aria-hidden="true" />
-                <dt className="mt-4 text-[17px] font-semibold text-ink">{item.title}</dt>
-                <dd className="mt-2 text-[15px] leading-relaxed text-muted">{item.body}</dd>
+              <dl className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+                {SECURITY.map((item) => (
+                  <div key={item.title}>
+                    <span className="inline-flex size-10 items-center justify-center rounded-[12px] bg-blue-soft text-blue">
+                      <item.icon className="size-4.5" aria-hidden="true" />
+                    </span>
+                    <dt className="mt-4 text-[17px] font-semibold text-ink">{item.title}</dt>
+                    <dd className="mt-1.5 text-[14.5px] leading-relaxed text-muted">
+                      {item.body}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="mt-10">
+                <ButtonLink href="/securite" variant="secondary" size="lg">
+                  Voir les mesures en place
+                  <ArrowRight />
+                </ButtonLink>
               </div>
-            ))}
-          </dl>
+            </div>
 
-          <div className="mt-14 flex justify-center">
-            <ButtonLink href="/securite" variant="secondary" size="lg">
-              Voir les mesures en place
-              <ArrowRight />
-            </ButtonLink>
+            <div className="reveal min-w-0">
+              <SecurityVisual />
+            </div>
           </div>
         </div>
       </section>
@@ -414,45 +433,58 @@ export default function HomePage() {
       </section>
 
       {/* ————————————————— FAQ ————————————————— */}
-      <section id="faq" className="scroll-mt-28 border-b border-line bg-surface">
-        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-20">
-          <h2 className="display-2 text-ink">Questions fréquentes</h2>
-          <dl className="mt-12 divide-y divide-[color:var(--color-line)] border-t border-line">
-            {FAQ_ON_HOME.map((item) => (
-              <div key={item.q} className="py-7">
-                <dt className="text-[18px] font-semibold text-ink">{item.q}</dt>
-                <dd className="mt-3 text-[16px] leading-relaxed text-muted">{item.a}</dd>
-              </div>
-            ))}
-          </dl>
-          <Link
-            href="/faq"
-            className="mt-10 inline-flex items-center gap-1.5 py-1 text-[15px] font-semibold text-blue hover:underline"
-          >
-            Toutes les questions
-            <ArrowRight className="size-4" />
-          </Link>
+      <section id="faq" className="scroll-mt-28 border-b border-line bg-canvas">
+        <div className="mx-auto max-w-3xl px-5 py-20 lg:py-24">
+          <div className="text-center">
+            <span className="tricolore mx-auto" aria-hidden="true" />
+            <h2 className="display-2 mt-5 text-ink">Questions fréquentes</h2>
+          </div>
+
+          <FaqAccordion items={FAQ_ON_HOME} className="mt-12" />
+
+          <div className="mt-10 text-center">
+            <ButtonLink href="/faq" variant="secondary">
+              Toutes les questions
+              <ArrowRight />
+            </ButtonLink>
+          </div>
         </div>
       </section>
 
       {/* ————————————————— CTA final ————————————————— */}
-      <section className="on-navy bg-navy">
-        <div className="mx-auto max-w-[var(--container-prose)] px-5 py-24 text-center">
-          <h2 className="display-2 text-white">
+      <section className="on-navy relative overflow-hidden bg-navy">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 -top-24 h-[30rem] bg-[radial-gradient(45%_60%_at_50%_50%,rgba(111,155,234,0.22),transparent_70%)]"
+        />
+        <div className="relative mx-auto max-w-3xl px-5 py-24 text-center lg:py-28">
+          <span className="tricolore mx-auto" aria-hidden="true" />
+          <h2 className="display-2 mt-6 text-white">
             Préparez votre entreprise à la facturation électronique.
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-[18px] leading-relaxed text-white/70">
-            Créez votre compte et centralisez vos factures dès aujourd&apos;hui.
+            Créez votre compte, centralisez vos factures, et laissez la réforme
+            arriver sans y penser.
           </p>
-          <div className="mt-10 flex justify-center">
+
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <ButtonLink href="/inscription" variant="inverse" size="2xl">
               Créer mon compte
               <ArrowRight />
             </ButtonLink>
+            <Link
+              href="/tarifs"
+              className="inline-flex h-14 items-center rounded-[var(--radius)] border border-white/25 px-7 text-[16px] font-medium text-white transition-colors hover:bg-white/10"
+            >
+              Voir les tarifs
+            </Link>
           </div>
-          <p className="mt-6 text-[13.5px] text-white/45">
-            14 jours gratuits • Sans carte bancaire
-          </p>
+
+          <ul className="mt-9 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-[13.5px] text-white/55">
+            <li>14 jours gratuits</li>
+            <li>Sans carte bancaire</li>
+            <li>À partir de 19 € HT / mois</li>
+          </ul>
         </div>
       </section>
     </>

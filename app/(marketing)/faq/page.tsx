@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { HOME_FAQ } from "@/src/content/faq";
 import { FaqJsonLd } from "@/components/marketing/structured-data";
+import { FaqAccordion } from "@/components/marketing/faq-accordion";
 
 export const metadata: Metadata = {
   title: "Questions fréquentes",
@@ -34,16 +35,9 @@ export default function FaqPage() {
 
       <section>
         <div className="mx-auto max-w-[var(--container-prose)] px-5 py-20">
-          <dl className="divide-y divide-[color:var(--color-line)] border-t border-line">
-            {HOME_FAQ.map((item) => (
-              <div key={item.q} className="py-8">
-                <dt className="text-[19px] font-semibold text-ink">{item.q}</dt>
-                <dd className="mt-3 text-[16px] leading-relaxed text-muted">{item.a}</dd>
-              </div>
-            ))}
-          </dl>
+          <FaqAccordion items={HOME_FAQ} />
 
-          <div className="mt-14 rounded-[18px] border border-line bg-surface p-8">
+          <div className="card-3d mt-14 rounded-[24px] p-8">
             <h2 className="text-[19px] font-semibold text-ink">
               Votre question n&apos;est pas là ?
             </h2>

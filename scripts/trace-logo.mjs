@@ -16,7 +16,7 @@ const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.setContent("<canvas id='c'></canvas>");
 
-const result = await page.evaluate(async ({ b64, tolerance }) => {
+const result = await page.evaluate(async ({ b64, tolerance, wordTolerance }) => {
   const img = new Image();
   img.src = "data:image/png;base64," + b64;
   await img.decode();
@@ -180,13 +180,30 @@ const result = await page.evaluate(async ({ b64, tolerance }) => {
   const oy = mark.y0 - ((size - (mark.y1 - mark.y0 + 1)) / 2);
   const eps = tolerance / scale;
 
+  // Mot-marque : tout ce qui se trouve sous la séparation.
+  const wordNavy = cropMask(navy, splitY, box.y1);
+  const wordRed = cropMask(red, splitY, box.y1);
+  const wb1 = bounds(wordNavy), wb2 = bounds(wordRed);
+  const word = {
+    x0: Math.min(wb1.x0, wb2.x0), y0: Math.min(wb1.y0, wb2.y0),
+    x1: Math.max(wb1.x1, wb2.x1), y1: Math.max(wb1.y1, wb2.y1),
+  };
+  // Normalisé sur une hauteur de 100 : la largeur suit le dessin.
+  const wordH = word.y1 - word.y0 + 1;
+  const wordScale = 100 / wordH;
+  const wordEps = wordTolerance / wordScale;
+  const wordWidth = +(((word.x1 - word.x0 + 1) * wordScale).toFixed(2));
+
   return {
     splitY,
     markBox: mark,
     navy: toPath(contours(markNavy), ox, oy, scale, eps),
     red: toPath(contours(markRed), ox, oy, scale, eps),
+    wordWidth,
+    wordPath: toPath(contours(wordNavy), word.x0, word.y0, wordScale, wordEps)
+      + toPath(contours(wordRed), word.x0, word.y0, wordScale, wordEps),
   };
-}, { b64, tolerance: 0.3 });
+}, { b64, tolerance: 0.3, wordTolerance: 1.1 });
 
 console.log("séparation symbole/mot-marque à y =", result.splitY);
 console.log("cadre du symbole :", JSON.stringify(result.markBox));

@@ -86,7 +86,7 @@ function AppWindow({
           </span>
           <Bell className="size-4 text-faint" />
           <span className="flex size-7 items-center justify-center rounded-full bg-navy text-[10.5px] font-semibold text-white">
-            SC
+            JD
           </span>
         </div>
       </div>
@@ -195,7 +195,7 @@ export function DashboardMockup({ className }: { className?: string }) {
   return (
     <AppWindow active="Accueil" className={className}>
       <div className="flex items-baseline justify-between gap-4">
-        <p className="text-[15px] font-semibold text-ink">Bonjour Salim</p>
+        <p className="text-[15px] font-semibold text-ink">Bonjour Jean</p>
         <p className="text-[11px] text-faint">Août 2026</p>
       </div>
 
