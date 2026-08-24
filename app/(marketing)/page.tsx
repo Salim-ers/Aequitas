@@ -198,7 +198,7 @@ export default function HomePage() {
       {/* ————————————— Grille produit ————————————— */}
       <ProductBento
         cta={
-          <ButtonLink href="/fonctionnalites" variant="inverse" size="lg">
+          <ButtonLink href="/fonctionnalites" variant="secondary" size="lg">
             Voir toutes les fonctionnalités
             <ArrowRight />
           </ButtonLink>
@@ -206,7 +206,7 @@ export default function HomePage() {
       />
 
       {/* ——————————— Infrastructure française ——————————— */}
-      <section className="border-b border-line bg-blue-soft/45">
+      <section className="border-b border-line bg-surface">
         <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-blue">

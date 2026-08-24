@@ -3,15 +3,19 @@ import { ArrowRight, Check, Hash } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
 /**
- * Grille bento sur fond navy.
+ * Grille bento sur fond clair.
  *
  * Composition asymétrique : une colonne gauche empilant une carte courte et
  * une carte haute, et une zone droite de deux cartes surmontant une carte
  * large. Chaque carte porte un titre, une phrase, et un fragment
  * d'interface — pas une illustration décorative.
  *
- * Les fragments sont fictifs et le disent : l'étiquette « Aperçu » de la
- * section couvre l'ensemble. Aucun ne simule de statut réglementaire.
+ * Le relief vient de `card-3d` et `panel-3d` (voir globals.css) : dégradé
+ * interne, liseré de lumière sur l'arête haute, ombres empilées. Le fragment
+ * flotte d'un cran au-dessus de sa carte, ce qui creuse la profondeur.
+ *
+ * Les fragments sont fictifs et le disent. Aucun ne simule de statut
+ * réglementaire.
  */
 
 function Card({
@@ -28,27 +32,20 @@ function Card({
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.045] p-7 transition-colors duration-200 hover:border-white/20",
+        "card-3d flex flex-col overflow-hidden rounded-[28px] p-7 sm:p-9",
         className,
       )}
     >
-      <h3 className="text-[19px] font-semibold tracking-[-0.01em] text-white">{title}</h3>
-      <p className="mt-2.5 text-[14.5px] leading-relaxed text-white/60">{body}</p>
+      <h3 className="text-[20px] font-semibold tracking-[-0.02em] text-ink">{title}</h3>
+      <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{body}</p>
       {children ? <div className="mt-7 min-h-0 flex-1">{children}</div> : null}
     </div>
   );
 }
 
-/** Surface interne d'un fragment d'interface. */
 function Panel({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div
-      className={cn(
-        "rounded-[12px] border border-white/10 bg-navy/60 p-4 backdrop-blur-sm",
-        className,
-      )}
-      aria-hidden="true"
-    >
+    <div className={cn("panel-3d rounded-[16px] p-4", className)} aria-hidden="true">
       {children}
     </div>
   );
@@ -72,33 +69,33 @@ function InvoiceFragment() {
   return (
     <Panel className="flex h-full flex-col">
       <div className="flex items-baseline justify-between">
-        <span className="tabular text-[12px] font-semibold text-white">F-2026-0148</span>
-        <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-white/70">
+        <span className="tabular text-[12.5px] font-semibold text-ink">F-2026-0148</span>
+        <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[10.5px] font-medium text-muted">
           Brouillon
         </span>
       </div>
 
       <ul className="mt-4 space-y-2.5">
         {lines.map(([label, amount]) => (
-          <li key={label} className="flex items-baseline justify-between gap-3 text-[12px]">
-            <span className="min-w-0 truncate text-white/70">{label}</span>
-            <span className="tabular shrink-0 text-white/50">{amount} €</span>
+          <li key={label} className="flex items-baseline justify-between gap-3 text-[12.5px]">
+            <span className="min-w-0 truncate text-ink-soft">{label}</span>
+            <span className="tabular shrink-0 text-muted">{amount} €</span>
           </li>
         ))}
       </ul>
 
-      <dl className="mt-auto space-y-1.5 border-t border-white/10 pt-4 text-[12px]">
+      <dl className="mt-auto space-y-1.5 border-t border-line pt-4 text-[12.5px]">
         <div className="flex justify-between">
-          <dt className="text-white/50">Total HT</dt>
-          <dd className="tabular text-white/70">6 930,00 €</dd>
+          <dt className="text-muted">Total HT</dt>
+          <dd className="tabular text-ink-soft">6 930,00 €</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-white/50">TVA 20 %</dt>
-          <dd className="tabular text-white/70">1 386,00 €</dd>
+          <dt className="text-muted">TVA 20 %</dt>
+          <dd className="tabular text-ink-soft">1 386,00 €</dd>
         </div>
-        <div className="flex items-baseline justify-between border-t border-white/10 pt-2.5">
-          <dt className="font-semibold text-white">Total TTC</dt>
-          <dd className="tabular text-[17px] font-semibold text-white">8 316,00 €</dd>
+        <div className="flex items-baseline justify-between border-t border-line pt-2.5">
+          <dt className="font-semibold text-ink">Total TTC</dt>
+          <dd className="tabular text-[18px] font-semibold text-ink">8 316,00 €</dd>
         </div>
       </dl>
     </Panel>
@@ -116,10 +113,10 @@ function TreasuryFragment() {
   return (
     <Panel>
       <div className="flex items-baseline justify-between">
-        <span className="text-[11px] uppercase tracking-[0.08em] text-white/45">
+        <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">
           Reste à encaisser
         </span>
-        <span className="tabular text-[17px] font-semibold text-white">{eur(8420)}</span>
+        <span className="tabular text-[18px] font-semibold text-ink">{eur(8420)}</span>
       </div>
 
       <ul className="mt-4 space-y-3">
@@ -128,23 +125,23 @@ function TreasuryFragment() {
             <span
               className={cn(
                 "size-1.5 shrink-0 rounded-full",
-                row.tone === "ok" && "bg-[#5ee0a0]",
-                row.tone === "wait" && "bg-white/40",
-                row.tone === "late" && "bg-[#ff7a70]",
+                row.tone === "ok" && "bg-success",
+                row.tone === "wait" && "bg-line-strong",
+                row.tone === "late" && "bg-danger",
               )}
             />
-            <span className="min-w-0 flex-1 truncate text-[12px] text-white/80">
+            <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-ink">
               {row.client}
             </span>
             <span
               className={cn(
-                "shrink-0 text-[10.5px]",
-                row.tone === "late" ? "text-[#ff7a70]" : "text-white/45",
+                "shrink-0 text-[11px]",
+                row.tone === "late" ? "text-danger" : "text-faint",
               )}
             >
               {row.detail}
             </span>
-            <span className="tabular w-14 shrink-0 text-right text-[12px] font-medium text-white">
+            <span className="tabular w-14 shrink-0 text-right text-[12.5px] font-semibold text-ink">
               {row.amount}
             </span>
           </li>
@@ -163,14 +160,14 @@ function ChecksFragment() {
       <ul className="space-y-3">
         {checks.map((check) => (
           <li key={check} className="flex items-center gap-3">
-            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-[#5ee0a0]/15 text-[#5ee0a0]">
+            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-success-soft text-success">
               <Check className="size-3" strokeWidth={3} />
             </span>
-            <span className="text-[12.5px] text-white/75">{check}</span>
+            <span className="text-[13px] text-ink-soft">{check}</span>
           </li>
         ))}
       </ul>
-      <p className="mt-4 border-t border-white/10 pt-3 text-[11.5px] text-white/45">
+      <p className="mt-4 border-t border-line pt-3 text-[12px] text-faint">
         Rien n&apos;est envoyé tant qu&apos;une information manque.
       </p>
     </Panel>
@@ -180,9 +177,9 @@ function ChecksFragment() {
 /** Parcours d'une facture, dernier maillon explicitement en préparation. */
 function PathwayFragment() {
   const nodes = [
-    { label: "Votre entreprise", planned: false },
+    { label: "Votre entreprise", planned: false, brand: false },
     { label: "Aequitas", planned: false, brand: true },
-    { label: "Écosystème français", planned: true },
+    { label: "Écosystème français", planned: true, brand: false },
   ];
 
   return (
@@ -191,24 +188,24 @@ function PathwayFragment() {
         <div key={node.label} className="flex flex-1 items-center gap-4">
           <div
             className={cn(
-              "flex-1 rounded-[10px] border px-4 py-3 text-center text-[12.5px]",
+              "flex-1 rounded-[12px] border px-4 py-3 text-center text-[13px]",
               node.brand
-                ? "border-white/30 bg-white/10 font-semibold text-white"
+                ? "border-navy bg-navy font-semibold text-white shadow-sm"
                 : node.planned
-                  ? "border-dashed border-white/20 text-white/50"
-                  : "border-white/12 bg-white/[0.05] text-white/80",
+                  ? "border-dashed border-line-strong text-faint"
+                  : "border-line bg-surface-2 text-ink-soft",
             )}
           >
             {node.label}
             {node.planned ? (
-              <span className="mt-1 block text-[10px] uppercase tracking-[0.06em] text-white/35">
+              <span className="mt-1 block text-[10px] uppercase tracking-[0.06em] text-faint">
                 Après immatriculation
               </span>
             ) : null}
           </div>
           {index < nodes.length - 1 ? (
             <ArrowRight
-              className="hidden size-4 shrink-0 text-white/25 sm:block"
+              className="hidden size-4 shrink-0 text-line-strong sm:block"
               aria-hidden="true"
             />
           ) : null}
@@ -220,26 +217,31 @@ function PathwayFragment() {
 
 export function ProductBento({ cta }: { cta?: ReactNode }) {
   return (
-    <section className="on-navy border-b border-line bg-navy">
-      <div className="mx-auto max-w-[var(--container-page)] px-5 py-24 lg:px-8 lg:py-32">
+    <section className="relative overflow-hidden border-b border-line bg-canvas">
+      {/* Voile coloré très dilué : il détache les cartes du fond sans le teinter. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] bg-[radial-gradient(48%_60%_at_50%_0%,var(--color-blue-soft),transparent_70%)]"
+      />
+
+      <div className="relative mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
         <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
           <div className="max-w-xl">
             <span className="tricolore" aria-hidden="true" />
-            <h2 className="display-2 mt-5 text-white">Tout votre cycle de facturation.</h2>
+            <h2 className="display-2 mt-5 text-ink">Tout votre cycle de facturation.</h2>
           </div>
           {cta}
         </div>
 
-        {/* Colonne gauche empilée, zone droite en 2 × 2 dont une carte large. */}
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
           <div className="flex min-w-0 flex-col gap-5">
             <Card
               title="Numérotation continue"
               body="Une séquence sans trou, année après année, comme l'exige la réglementation."
             >
-              <div className="flex items-center gap-2.5 rounded-[10px] border border-white/10 bg-navy/60 px-3.5 py-2.5">
-                <Hash className="size-3.5 shrink-0 text-white/40" aria-hidden="true" />
-                <span className="tabular text-[12.5px] text-white/80">
+              <div className="panel-3d flex items-center gap-2.5 rounded-[14px] px-4 py-3">
+                <Hash className="size-3.5 shrink-0 text-faint" aria-hidden="true" />
+                <span className="tabular text-[13px] font-medium text-ink-soft">
                   F-2026-0146 · 0147 · 0148
                 </span>
               </div>
