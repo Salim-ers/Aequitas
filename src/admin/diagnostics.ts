@@ -69,6 +69,12 @@ export function collectDiagnostics(): CheckGroup[] {
             : "Stripe non configuré : souscription et portail sont indisponibles.",
         },
         {
+          label: "Cohérence des prix",
+          level: isStripeConfigured() ? "warn" : "off",
+          detail:
+            "Les montants affichés viennent du code ; les montants prélevés viennent des tarifs Stripe. Après toute modification de prix, vérifiez que les deux concordent.",
+        },
+        {
           label: "Tarifs Stripe",
           level: missingPrices.length === 0 ? "ok" : "warn",
           detail:

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Tag,
+  Users,
+  Eye,
+  ShieldCheck,
   KeyRound,
   UsersRound,
   ScrollText,
@@ -29,6 +33,37 @@ const SECURITY = [
   { icon: UsersRound, title: "Permissions", body: "Chacun accède à ce dont il a besoin." },
   { icon: ScrollText, title: "Traçabilité", body: "Les actions sensibles sont enregistrées." },
   { icon: Layers, title: "Isolation", body: "Les données de chaque entreprise restent séparées." },
+];
+
+/**
+ * Engagements différenciants.
+ *
+ * Chacun porte sur Aequitas et se vérifie sur ce site : aucun n'affirme quoi
+ * que ce soit sur un concurrent. La publicité comparative est encadrée en
+ * France — elle doit être objective et vérifiable — et un prix concurrent
+ * cité de mémoire serait à la fois faux et attaquable.
+ */
+const DIFFERENTIATORS = [
+  {
+    icon: Tag,
+    title: "Un prix public, pas un devis",
+    body: "Les trois offres et leurs limites sont affichées. Vous savez ce que vous payez avant de créer un compte.",
+  },
+  {
+    icon: Users,
+    title: "Les utilisateurs sont inclus",
+    body: "Le prix est par entreprise, pas par utilisateur. Ajouter un collaborateur ne change pas votre facture.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Conçu pour la réforme française",
+    body: "Le modèle de facture, les contrôles et le suivi sont pensés pour le dispositif français, pas adaptés après coup.",
+  },
+  {
+    icon: Eye,
+    title: "Vous savez ce qui est disponible",
+    body: "Chaque fonctionnalité indique si elle est active ou à venir. Nous ne facturons pas une promesse.",
+  },
 ];
 
 const HOME_PLANS = PLAN_ORDER.filter((slug) => PLANS[slug].monthlyPriceCents !== null);
@@ -126,7 +161,7 @@ export default function HomePage() {
             {REFORM_TIMELINE.map((milestone, index) => (
               <li
                 key={milestone.date}
-                className="reveal rounded-[18px] border border-line bg-surface p-8"
+                className="card-3d reveal rounded-[24px] p-8"
                 style={{ ["--reveal-delay" as string]: `${index * 120}ms` }}
               >
                 <div className="flex items-center gap-3">
@@ -282,13 +317,43 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ————————————————— Pourquoi Aequitas ————————————————— */}
+      <section className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="tricolore mx-auto" aria-hidden="true" />
+            <h2 className="display-2 mt-5 text-ink">Ce qui nous distingue.</h2>
+            <p className="lead mt-5">
+              Quatre engagements, tenus dans le produit et vérifiables sur ce site.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {DIFFERENTIATORS.map((item) => (
+              <div key={item.title} className="card-3d rounded-[24px] p-7">
+                <span className="inline-flex size-11 items-center justify-center rounded-[12px] bg-blue-soft text-blue">
+                  <item.icon className="size-5" aria-hidden="true" />
+                </span>
+                <h3 className="mt-5 text-[18px] font-semibold tracking-[-0.015em] text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ————————————————— Tarifs ————————————————— */}
       <section className="border-b border-line">
         <div className="mx-auto max-w-[var(--container-page)] px-5 py-20 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="display-2 text-ink">Un prix par mois, par entreprise.</h2>
+            <h2 className="display-2 text-ink">
+              À partir de 19 € par mois, par entreprise.
+            </h2>
             <p className="lead mt-6">
-              Hors taxes. 14 jours d&apos;essai, sans carte bancaire.
+              Hors taxes, utilisateurs inclus. 14 jours d&apos;essai, sans carte
+              bancaire.
             </p>
           </div>
 
@@ -299,10 +364,8 @@ export default function HomePage() {
                 <div
                   key={plan.slug}
                   className={cn(
-                    "relative flex h-full flex-col rounded-[18px] border bg-surface p-8 transition-shadow duration-200",
-                    plan.highlighted
-                      ? "border-navy shadow-lg lg:-my-4 lg:py-12"
-                      : "border-line hover:shadow-sm",
+                    "card-3d relative flex h-full flex-col rounded-[28px] p-8",
+                    plan.highlighted && "ring-2 ring-navy lg:-my-4 lg:py-12",
                   )}
                 >
                   {plan.highlighted ? (

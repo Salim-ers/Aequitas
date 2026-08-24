@@ -58,8 +58,8 @@ export function SoftwareJsonLd() {
         offers: {
           "@type": "AggregateOffer",
           priceCurrency: "EUR",
-          lowPrice: "29",
-          highPrice: "199",
+          lowPrice: "19",
+          highPrice: "119",
           offerCount: 3,
           url: `${url}/tarifs`,
         },

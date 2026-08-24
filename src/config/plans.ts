@@ -1,6 +1,14 @@
 /**
  * §13 / §112 — Source de vérité unique des offres.
- * Modifier un prix ici et dans Stripe ; jamais en dur ailleurs.
+ *
+ * ATTENTION — `monthlyPriceCents` n'est QUE l'affichage. Le montant
+ * réellement prélevé vient de `stripePriceIdMonthly`, c'est-à-dire du tarif
+ * créé dans Stripe. Modifier l'un sans l'autre fait voir un prix au client
+ * et lui en facturer un autre.
+ *
+ * Toute baisse de prix suppose donc : créer le nouveau tarif dans Stripe,
+ * mettre à jour la variable STRIPE_PRICE_* correspondante, puis seulement
+ * ajuster la valeur ci-dessous.
  */
 
 export type PlanSlug = "essentiel" | "pro" | "business" | "enterprise";
@@ -23,7 +31,11 @@ export type FeatureKey =
   | "advanced_permissions"
   | "accounting_export"
   | "sso"
-  | "priority_support";
+  | "priority_support"
+  | "bank_reconciliation"
+  | "client_portal"
+  | "supplier_ocr"
+  | "accountant_access";
 
 export type LimitKey =
   | "invoices_per_month"
@@ -69,15 +81,23 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
   essentiel: {
     slug: "essentiel",
     name: "Essentiel",
-    tagline: "Pour démarrer proprement.",
-    monthlyPriceCents: 2900,
-    yearlyPriceCents: 29000,
+    tagline: "Tout ce qu'il faut pour facturer, sans surcoût.",
+    monthlyPriceCents: 1900,
+    yearlyPriceCents: 19000,
     currency: "EUR",
     stripePriceIdMonthly: process.env.STRIPE_PRICE_ESSENTIAL,
     stripePriceIdYearly: process.env.STRIPE_PRICE_ESSENTIAL_YEARLY,
     highlighted: false,
     trialDays: TRIAL_DAYS_DEFAULT,
-    features: ["quotes", "invoices", "credit_notes", "suppliers", "exports", "factur_x"],
+    features: [
+      "quotes",
+      "invoices",
+      "credit_notes",
+      "suppliers",
+      "exports",
+      "factur_x",
+      "client_portal",
+    ],
     limits: {
       invoices_per_month: 100,
       users: 1,
@@ -91,6 +111,7 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       { label: "Journal d'audit" },
       { label: "Devis, factures, avoirs", soon: true },
       { label: "Clients et fournisseurs", soon: true },
+      { label: "Portail client", soon: true },
       { label: "Exports CSV et PDF", soon: true },
     ],
   },
@@ -98,8 +119,8 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
     slug: "pro",
     name: "Pro",
     tagline: "Pour une équipe qui facture tous les jours.",
-    monthlyPriceCents: 7900,
-    yearlyPriceCents: 79000,
+    monthlyPriceCents: 4900,
+    yearlyPriceCents: 49000,
     currency: "EUR",
     stripePriceIdMonthly: process.env.STRIPE_PRICE_PRO,
     stripePriceIdYearly: process.env.STRIPE_PRICE_PRO_YEARLY,
@@ -119,6 +140,10 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       "audit_log",
       "e_reporting",
       "supplier_import",
+      "client_portal",
+      "bank_reconciliation",
+      "supplier_ocr",
+      "accountant_access",
     ],
     limits: {
       invoices_per_month: 1000,
@@ -132,6 +157,8 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       { label: "1 000 factures par mois" },
       { label: "Rôles et permissions avancées" },
       { label: "Journal d'audit" },
+      { label: "Accès expert-comptable", soon: true },
+      { label: "Rapprochement bancaire", soon: true },
       { label: "Factures récurrentes et relances", soon: true },
       { label: "API et webhooks", soon: true },
     ],
@@ -140,8 +167,8 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
     slug: "business",
     name: "Business",
     tagline: "Pour plusieurs entités et des volumes élevés.",
-    monthlyPriceCents: 19900,
-    yearlyPriceCents: 199000,
+    monthlyPriceCents: 11900,
+    yearlyPriceCents: 119000,
     currency: "EUR",
     stripePriceIdMonthly: process.env.STRIPE_PRICE_BUSINESS,
     stripePriceIdYearly: process.env.STRIPE_PRICE_BUSINESS_YEARLY,
@@ -165,6 +192,10 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       "advanced_permissions",
       "accounting_export",
       "priority_support",
+      "client_portal",
+      "bank_reconciliation",
+      "supplier_ocr",
+      "accountant_access",
     ],
     limits: {
       invoices_per_month: 10_000,
@@ -178,6 +209,7 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       { label: "10 000 factures par mois" },
       { label: "Rôles et permissions avancées" },
       { label: "Support prioritaire" },
+      { label: "Lecture automatique des factures reçues", soon: true },
       { label: "Exports comptables", soon: true },
       { label: "API avancée et intégrations", soon: true },
     ],
@@ -212,6 +244,10 @@ export const PLANS: Readonly<Record<PlanSlug, Plan>> = {
       "accounting_export",
       "sso",
       "priority_support",
+      "client_portal",
+      "bank_reconciliation",
+      "supplier_ocr",
+      "accountant_access",
     ],
     limits: {
       invoices_per_month: -1,

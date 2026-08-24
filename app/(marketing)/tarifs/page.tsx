@@ -15,7 +15,7 @@ import { cn } from "@/src/lib/utils";
 export const metadata: Metadata = {
   title: "Tarifs",
   description:
-    "Quatre offres, un prix par mois et par entreprise. Essai de 14 jours, sans carte bancaire et sans engagement.",
+    "Quatre offres à partir de 19 € HT par mois et par entreprise, utilisateurs inclus. Essai de 14 jours, sans carte bancaire.",
 };
 
 /** §19 — Le tableau détaillé vit sous les cartes, pas dedans. */
@@ -29,6 +29,10 @@ const FEATURE_LABELS: { key: FeatureKey; label: string; group: string }[] = [
   { group: "Centraliser", key: "supplier_import", label: "Import de factures fournisseurs" },
   { group: "Centraliser", key: "exports", label: "Exports CSV et PDF" },
   { group: "Centraliser", key: "accounting_export", label: "Export comptable" },
+  { group: "Centraliser", key: "bank_reconciliation", label: "Rapprochement bancaire" },
+  { group: "Centraliser", key: "supplier_ocr", label: "Lecture automatique des factures reçues" },
+  { group: "Collaborer", key: "client_portal", label: "Portail client" },
+  { group: "Collaborer", key: "accountant_access", label: "Accès expert-comptable" },
   { group: "Facturation électronique", key: "factur_x", label: "Format Factur-X" },
   { group: "Facturation électronique", key: "e_reporting", label: "E-reporting" },
   { group: "Développeurs", key: "api_access", label: "Accès API" },
@@ -79,9 +83,9 @@ export default function PricingPage() {
           <SectionHeader
             align="center"
             eyebrow="Tarifs"
-            title="Un prix par mois, par entreprise."
+            title="À partir de 19 € par mois, par entreprise."
             as="h1"
-            description="Tous les montants sont hors taxes. Essai de 14 jours sur chaque offre, sans carte bancaire et sans engagement de durée."
+            description="Hors taxes, utilisateurs inclus dans chaque offre. Essai de 14 jours, sans carte bancaire et sans engagement de durée."
           />
         </div>
       </section>
@@ -106,10 +110,8 @@ export default function PricingPage() {
                 <div
                   key={plan.slug}
                   className={cn(
-                    "relative flex h-full flex-col rounded-[var(--radius-xl)] border bg-surface p-6",
-                    plan.highlighted
-                      ? "border-blue shadow-lg lg:-my-3 lg:py-9"
-                      : "border-line",
+                    "card-3d relative flex h-full flex-col rounded-[24px] p-7",
+                    plan.highlighted && "ring-2 ring-navy lg:-my-3 lg:py-10",
                   )}
                 >
                   {plan.highlighted ? (

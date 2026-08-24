@@ -37,6 +37,12 @@ export const FEATURE_AVAILABILITY: Readonly<Record<FeatureKey, Availability>> = 
   factur_x: "soon",
   e_reporting: "soon",
 
+  // Périmètre élargi de la feuille de route : rien n'est encore construit.
+  bank_reconciliation: "soon",
+  client_portal: "soon",
+  supplier_ocr: "soon",
+  accountant_access: "soon",
+
   // Aucune route /api/v1, aucune livraison de webhook sortant.
   api_access: "soon",
   webhooks: "soon",
